@@ -643,7 +643,7 @@ is performed by an established connection as an action within the Normal Phase.<
         <t>In the Normal Phase, the sender transitions to using 
             the normal CC method (e.g., in congestion avoidance if CWND is more than ssthresh).
             (Note that when the sender did not use the entire jump_cwnd the CWND was reduced
-	     on entering the Validating Phase./t>
+	     on entering the Validating Phase.</t>
         <t>Implementation requirements are provided in <xref target="req-normal"></xref>.</t>
 
     </section> <!-- End of define "Normal Phase:" -->
@@ -1165,53 +1165,52 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
 |Phase |Normal   |Recon.   |Unvalidated|Validating |Safe Retreat|
 +------+---------+---------+-----------+-----------+------------+
 |      |Observe  |Confirm  |Send faster|Validate   |Drain path; |
-|      |CC params|path     |using saved|new CWND   |Update PS |
-|      |         |         |           |Update PS  | |
+|      |CC params|path     |using saved|new CWND   |Update PS   |
+|      |         |         |           |Update PS  |            |
 +------+---------+---------+-----------+-----------+------------+
 |On    |    -    |CWND=IW  |PS=CWND;   |CWND=FS    |CWND=(PS/2) |
-|entry:|         |         |CWND       |           | |
-|      |         |         | =jump_cwnd|           | |
+|entry:|         |         |CWND       |           |            |
+|      |         |         | =jump_cwnd|           |            |
 +------+---------+---------+-----------+-----------+------------+
-|CWND: |When in  |CWND     |CWND is    |CWND can   |CWND is |
-|      |observe, |increases|not        |increase   |not |
-|      |measure  |using SS |increased  |using SS   |increased |
-|      |sav_cwnd |         |           |           | |
+|CWND: |When in  |CWND     |CWND is    |CWND can   |CWND is     |
+|      |observe, |increases|not        |increase   |not         |
+|      |measure  |using SS |increased  |using SS   |increased   |
+|      |sav_cwnd |         |           |           |            |
 +------+---------+---------+-----------+-----------+------------+
-|PS:   |    -    |    -    |            PS+=ACk’ed |
+|PS:   |    -    |    -    |            PS+=ACked               |
 +------+---------+---------+-----------+-----------+------------+
-|RTT:  |Measure  |Measure  |     -     |     -     |      - |
-|      |saved_rt |curr_rtt |           |           | |
+|RTT:  |Measure  |Measure  |     -     |     -     |      -     |
+|      |saved_rtt|curr_rtt |           |           |            |
 +------+---------+---------+-----------+-----------+------------+
-|If    |Normal   |Normal   |         Enter         |      - |
-|loss  |CC method|CC method          Safe          | |
-|or    |         |CR is not|         Retreat       | |
-|ECNCE:|         |allowed  |                       | |
+|If    |Normal   |Normal   |         Enter         |      -     |
+|loss  |CC method|CC method          Safe          |            |
+|or    |         |CR is not|         Retreat       |            |
+|ECNCE:|         |allowed  |                       |            |
 +------+---------+---------+-----------+-----------+------------+
 |Next  |Observe  |If (     |If( >1 RTT |If (last   |If (last    |
 |Phase:|(as      |FS=CWND  |has passed |unvalidated|unvalidated |
-|      | needed) |and CR   |or FS=CWND |ACK’ed}    |ACK’ed}, |
-|      |         |allowed),|or first   |enter |ssthresh=PS,|
-|      |         |enter    |unvalidated|Normal     |and then |
-|      |         |Unvalid- |ACK’ed),   |           |enter |
-|      |         |ing else |enter      |           |Normal |
-|      |         |enter    |Validating |           | |
-|      |         |Normal   |           |           | |
+|      | needed) |and CR   |or FS=CWND |ACKed)     |ACKed},     |
+|      |         |allowed),|or first   |enter      |ssthresh=PS |
+|      |         |enter    |unvalidated|Normal     |and then    |
+|      |         |Unvalid- |ACKed),    |           |enter       |
+|      |         |ing else |enter      |           |Normal      |
+|      |         |enter    |Validating |           |            |
+|      |         |Normal   |           |           |            |
 +------+---------+---------+-----------+-----------+------------+
- ]]></artwork>
+]]></artwork>
 </t>
 
 <t>Notes:
-SS = Slow Start FS= Flight Size; PS = Pipe Size.
-</t>
+SS = Slow Start FS= Flight Size; PS = Pipe Size.</t>
 
    <t>The remaining subsections provide informative examples of use.</t>
 
-	ACTIONS
+<t>XXXX ACTIONS
 Makes sure validating grows CWND
 Add pipesize text
-SWND is always based on PS - but explain the meaning of PS=CWND on ENTRY….
+SWND is always based on PS - but explain the meaning of PS=CWND on ENTRY
 
-Note then when CWND goes in Validating, based on received ACKs, this does not have any final impact on the cwnd fun the case that congestion is detected (and therefore Safe Retreat was entered).
+Note then when CWND goes in Validating, based on received ACKs, this does not have any final impact on the cwnd fun the case that congestion is detected (and therefore Safe Retreat was entered).</t>
 
     <section anchor="Examples-no loss" title="Example with No Loss">
 	<t>In the first example of using the Careful Resume method, 
@@ -1247,7 +1246,7 @@ Note then when CWND goes in Validating, based on received ACKs, this does not ha
 
     <section anchor="Examples-dl" title="Example with No Loss, Data-Limited">
     	<t>A data-limited sender will not fully utilize the available CWND when using Careful Resume,
-	and CWND is therefore reset on entry to the Validating Phase, as decsribed below.
+	and CWND is therefore reset on entry to the Validating Phase, as decsribed below.</t>
 
 	<t> the sender starts by sending 10 packets in the Reconnaissance Phase using IW,
 	and sends as described in the first example, transitioning to the Unvalidated Phase.
@@ -1280,7 +1279,7 @@ Note then when CWND goes in Validating, based on received ACKs, this does not ha
 
 	<t>It now sends 121 unvalidated packets (the remaining CWND).
 	This example considers what happens when one of the unvalidated packet is lost, which
-	we choose to be packet 64 (the 35th packet in the Unvalidated Phase).<t>
+	we choose to be packet 64 (the 35th packet in the Unvalidated Phase).</t>
 
 	<t>Acknowledgemendt confirm the first 34 unvalidated packets are received without loss.
 	The pipesize at this point is equal to 29 + 34 = 63 packets.</t>
