@@ -256,9 +256,7 @@ specify just the year. -->
 
         <t>In another example, an application connects after a disruption
         had temporarily reduced the path
-        capacity (e.g., after a link propagation
-        impairment, or where a user on a train journey travels through
-        different areas of connectivity). When the endpoint
+        capacity. When the endpoint
         returns to use a path with the original characteristics, using
         a rate that is based on the previously observed CC parameters.</t>
         <t>
@@ -312,14 +310,16 @@ specify just the year. -->
 	    a previously observed connection (see <xref target="CC-params"/>.</t>
         
         <t>Careful Resume (CR): The method specified in this document to select
-        initial CC parameters, that seeka to more rapidly and safely
+        initial CC parameters, that seeks to more rapidly and safely
         increase the initrial sending rate.</t>
 		
 	    <t>current_endpoint_token: The Endpoint Token of the current receiver;</t>
 	     
 	    <t>current_rtt: A sample measurement of the current RTT;</t>
 
-	    <t>endpoint_token: An Endpoint Token identifyingh a path to a receiver;</t>
+	    <t>endpoint_token: An Endpoint Token identifying a path to a receiver;</t>
+
+	    <t>flight size: The currently unacknowledged volume of data sent by the CC method;</t>
 
 	    <t>jump_cwnd: The resumed CWND, used in the Unvalidated Phase.</t>
 
@@ -356,19 +356,22 @@ specify just the year. -->
    <t>
  <artwork align="left" name="" type="" alt=""><![CDATA[
      
-Connect -> Reconnaissance --------------------> Normal
-             |                                   ^
-             v                                   |
-           Unvalidated --> Validating -----------+
-             |               |                   |
-             |               |                   |
-             +---------------+--> Safe Retreat --+
+Observe ...> Connect -> Reconnaissance --------------------> Normal
+(Normal)                 |                                    ^
+                         v                                    |
+                        Unvalidated --> Validating -----------+
+                         |               |                    |
+                         |               |                    |
+                         +---------------+--> Safe Retreat ---+
      
  ]]></artwork>
 </t>
 
+	
+<!-- Observe Phase is really a subaction of Normal !! -->
+	
 <t> Figure 1: Phases when a connection uses the Careful Resume. The Observe Phase
-is later performed by an established connection.</t>
+is performed by an established connection as an action within the Normal Phase.</t>
      
     <!-- These subsections to match next section format -->
 	
@@ -394,13 +397,15 @@ is later performed by an established connection.</t>
 		
 	  <t>Observe Phase (small CWND): If the measured CWND is less than four times the Initial Window (IW)
             (i.e. CWND less than IW*4),
-            a sender SHOULD NOT store and/or send CC parameters.</t>
+            a sender SHOULD NOT store and/or send CC parameters. The additional actions asscociated with
+	    performing Careful Resume for a small CWND would not justify the use of the method.</t>
 
+          <!-- The requirement below really applies to BDP Frame if adopted, otherwise needs explained -->
           <t>Observe Phase (sending CC Parameters): When sending the CC parameters to a receiver,
 	    these ought to be updated
             if there are significant changes in the saved CC parameters;
             The frequency of update SHOULD be less than
-            one update for several RTTs of time.</t>
+            one update for several RTTs <xref target="I-D.kuhn-quic-bdpframe-extension"></xref>.</t>
     </list></t>
 
             <t>Implementation notes are provided in <xref target="req-observe"></xref>.</t>
@@ -439,7 +444,8 @@ is later performed by an established connection.</t>
              is a strong indication that the previously observed CC
              parameters are not valid for the current path.
              An RTT measurement is confirmed when current_rtt is greater than
-             (saved_rtt / 2) and the current_rtt is less than or equal to (saved_rtt x 10).</t>
+             (saved_rtt / 2) and the current_rtt is less than or equal to (saved_rtt x 10)
+	     <xref target="sec-confirm-rtt"></xref>).</t>
              
              <t>Reconnaissance Phase (Avoiding using Carfeul Resume): A receiver can use a method (e.g.,
              <xref target="I-D.kuhn-quic-bdpframe-extension"></xref>)) to request
@@ -508,8 +514,8 @@ is later performed by an established connection.</t>
              
              <t>Unvalidated Phase (Confirming the path):
              If a sender determines that the previous CC parameters
-             are not valid (due to a detected change in the path)
-             (e.g., the RTT has changed), Careful Resume enters the
+             are not valid (due to a detected change in the path),
+             Careful Resume enters the
              Safe Retreat Phase.  
 	     (The sender cannot receive feedback for the jump_cwnd, because 
 	     less than an RTT has passed before the Unvalidated Phase was entered.
@@ -704,17 +710,13 @@ is later performed by an established connection.</t>
             <t>Observe Phase (application-limited): When the sender
             is application-limited or in an RTT following a burst of
             transmission, a sender typically transmits
-            much less data than allowed. Such observations ought to be discounted when
-            estimating the saved_cwnd.</t>
+            much less data than allowed. Such observations could to be discounted when
+            estimating the saved_cwnd (e.g., when a previous observation recorded
+	    a higher value of when the value is less than 4*IW.</t>
         </list></t>
     </section> <!-- Observe Phase  (measuring) -->
 
-    <section anchor="req-recon"  title="Confirming the Path in the Reconnaissance Phase">
-        <t>In the Reconnaissance Phase a sender initiates a connection
-        and starts sending initial data.
-        This measures the current minimum RTT.
-	If a decision is made to use Careful Resume, this is used to confirm the path.</t>
-	    
+    <section anchor="req-recon"  title="Confirming the Path in the Reconnaissance Phase">	    
         <t> The CC is not modified during the Reconnaissance Phase.
         A sender therefore needs to limit the initial data,
         sent in the first RTT of transmitted data,
@@ -744,7 +746,12 @@ is later performed by an established connection.</t>
         connections by 4-tuple and hence multiple connections from the same
         client device are served by different server processes.</t>
 
-        <section anchor="sec-confirm" title="Confirming the Path">
+	<t>In the Reconnaissance Phase a sender initiates a connection
+        and starts sending initial data.
+        This measures the current minimum RTT.
+	If a decision is made to use Careful Resume, this is used to confirm the path.</t>
+
+        <section anchor="sec-confirm-rtt" title="Confirming the RTT">
             <t>Path characteristics can change over time for many reasons,
             resulting in the previously observed CC parameters
             becoming irrelevant. The sender therefore compares the 
@@ -759,13 +766,20 @@ is later performed by an established connection.</t>
 		
              <t>A current RTT larger than that at the time the saved_cwnd was measured results
              in a proportionaly lower resumed rate, because the transmission using the CR method
-             is paced based on the current RTT.
-             An RTT sample more than ten times the
-             saved_RTT is regarded as too large, such a high RTT is indicative of a path change.
-             (The factor of ten accommodates both increases in latency from buffering
-             on a path, and any variation between samples).</t>
+             is paced based on the current RTT (i.e., the larger RTT samples reduces the paced
+	     sending rate in the Unvalidated Phase - and hence is still safe).</t>
+	     <t>Also note that when the RTT is incorrectly measured as larger
+	     than the actual path RTT, the sender will receive an acknowledgment for an
+             unvalidated packet before it might have completed the Unvalidated Phase, this
+	     acknowledgment resets the CWND to reflect the flight size, and the sender enters
+	     the Validating Phase.</t>
 
-            <t>The senders revert to the Normal Phase if congestion is detected.
+	     <t>Nonethless, it is still prudent to regard an RTT sample more than ten times the
+             saved_RTT as indicative of a path change.
+	     (The value of ten was chosen to accommodate both increases in latency from buffering
+	     on a path, and any variation between RTT samples). </t>
+
+            <t>A sender in Reconnaissance Phase reverts to the Normal Phase if congestion is detected.
             Some transport protocols implement methods that infer potential congestion
             from an increase in the RTT.
             In the Reconnaissance Phase, this indication occurs earlier than congestion
@@ -916,7 +930,7 @@ is later performed by an established connection.</t>
              
             <t>A simple conservative design sets CWND to IW and then
             resumes using normal slow-start.
-            This does not require measuring the measured at congestion.
+            This does not require measuring the pipe size during congestion.
             The resulting pattern of CWND growth resembles that which
             would have occurred had the design not been used.</t>
              
@@ -952,6 +966,8 @@ is later performed by an established connection.</t>
             <t>For BBR CC, it is recommended to enter the "probe bandwidth"
             state.</t>
         </list></t>
+	<t>In the Normal Phase, a sender can enter the Observation Phase to perform
+	observation of the path.</t>
         <t>{XXX-Editor note: A future revision should discuss updating
         the saved parameters, whether used or not, after reaching normal operation for use
         the next time even if that update is to just refresh the expiration time.}</t>
