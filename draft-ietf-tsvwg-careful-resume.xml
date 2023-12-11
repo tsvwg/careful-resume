@@ -405,7 +405,7 @@ is performed by an established connection as an action within the Normal Phase.<
 	    these ought to be updated
             if there are significant changes in the saved CC parameters;
             The frequency of update SHOULD be less than
-            one update for several RTTs of time <xref target="I-D.kuhn-quic-bdpframe-extension"></xref>.</t>
+            one update for several RTTs <xref target="I-D.kuhn-quic-bdpframe-extension"></xref>.</t>
     </list></t>
 
             <t>Implementation notes are provided in <xref target="req-observe"></xref>.</t>
