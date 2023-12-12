@@ -1382,7 +1382,8 @@ SWND is always based on PS - but explain the meaning of PS=CWND on ENTRY XXX</t>
         the recon. info is used to steer the next phase; clarified saved_cwnd can be computed
         from ACK rate; use jump once; that real server platforms are complex.
 	Clarified lifetime for saved CC params. Incorporates comments from Tong.</t>
-	<t>WG-06, SR updated following Hacakathon comments from Kazuho Oku, and added examples based on text by Ana Custura. </t>
+	<t>WG-06, SR updated following Hackathon comments from Kazuho Oku, and rework of use of pipe size.
+	Added an infromative summary of actions, on suggestion by Tong. Added examples based on text by Ana Custura. </t>
 
     </list></t>
 </section> <!-- End of Revisions -->
