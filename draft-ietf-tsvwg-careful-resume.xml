@@ -437,7 +437,7 @@ Examples of the transitions between phases are provided in <xref target="Example
 	    and sender enters the Normal Phase.</t>
 
              <t>Reconnaissance Phase (Confirming RTT): During this phase,
-             a sender MUST record the current minimum RTT for the connection.</t>  
+             a sender MUST record the minimum RTT for the current connection.</t>  
 		
              <t>Reconnaissance Phase (Avoiding using Careful Resume): A receiver can use a method (e.g.,
              <xref target="I-D.kuhn-quic-bdpframe-extension"></xref>)) to request
