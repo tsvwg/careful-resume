@@ -436,12 +436,12 @@ Examples of the transitions between phases are provided in <xref target="Example
 	    the CC parameters are no longer used
 	    and sender enters the Normal Phase.</t>
 
-             <t>Reconnaissance Phase (Confirming RTT): During this phase,
+             <t>Reconnaissance Phase (Confirming the RTT): During this phase,
              a sender MUST record the minimum RTT for the current connection.</t>  
 		
              <t>Reconnaissance Phase (Avoiding using Careful Resume): A receiver can use a method (e.g.,
              <xref target="I-D.kuhn-quic-bdpframe-extension"></xref>)) to request
-             that the sender enters the Normal Phase.</t>
+             that the sender instead enters the Normal Phase.</t>
 
 	     <t> {XXX-Editor note: Reconnaissance Phase (Is there a need for a minimum required number of RTT samples to confirm a path ???? }</t>
 		
@@ -490,33 +490,35 @@ Examples of the transitions between phases are provided in <xref target="Example
        <t>The sender only enters this phase when the saved CC parameters are
 	confirmed:</t>
 
-	<t><list> <t>Unvalidated Phase (Confirm Path before jump:) Since the CC information
-             is directly impacted by the RTT, a significant change in the minimum RTT
+	<t><list> <t>Unvalidated Phase (Confirming the path on entry): The calculation
+	     of a sending rate from a saved_cwnd
+             is directly impacted by the RTT, therefore a significant change in the RTT
              is a strong indication that the previously observed CC
-             parameters are not valid for the current path.
-             An RTT measurement is confirmed when the current_rtt is greater than or equal to
+             parameters may not be valid for the current path.
+             If the RTT measurement is
+	     not confirmed, i.e., 
+	     the current_rtt is greater than or equal to
              (saved_rtt / 2) and the current_rtt is less than or equal to (saved_rtt x 10)
-	     <xref target="sec-confirm-rtt"></xref>). If the RTT measurement is
-	     not confirmed the sender MUST enter the Normal Phase.</t>
+	     <xref target="sec-confirm-rtt"></xref>),
+	     the sender MUST enter the Normal Phase.</t>
 	</list></t>
 	    
-        <t>This phase paces transmission using an increased CWND (jump_cwnd)
-        that is calculated based on the saved CC parameters and current_RTT.</t>
+        <t>When the RTT is confirmed:</t>
         <t><list style="symbols">
-            <t> The variable PipeSize if initialised to CWND on
+            <t>Unvalidated Phase (Initialising PipeSize): The variable PipeSize if initialised to CWND on
                 entry to the Unvalidated Phase. This records the
                 value before the jump is applied.</t>
             
-             <t>Unvalidated Phase (jump_cwnd):
+             <t>Unvalidated Phase (Setting the jump_cwnd):
              To avoid starving other flows that could have either started
              or increased their used capacity after the Observation Phase,
              the jump_cwnd MUST be no more than half of the saved_cwnd.
              Hence, jump_cwnd is less than  or equal to the (saved_cwnd/2). CWND = jump_cwnd. </t>
              
-             <t>Unvalidated Phase (Pacing): Transmission using an unvalidated
+             <t>Unvalidated Phase (Pacing tranmission): Transmission using an unvalidated
              CWND MUST use pacing.</t>
              
-             <t>Unvalidated Phase (Confirming the path):
+             <t>Unvalidated Phase (Confirming the path during tranmssion)
              If a sender determines that the previous CC parameters
              are not valid (due to a detected path change),
              the Safe Retreat Phase is entered.
@@ -525,12 +527,13 @@ Examples of the transitions between phases are provided in <xref target="Example
 	     Therefore, any detected congestion must have resulted from packets sent
              before the Unvalidated Phase.)</t>
              
-             <t>Unvalidated Phase (Receiving Acknowledgements):
+             <t>Unvalidated Phase (Receiving acknowledgements for reconnaisance packets):
                  The variable PipeSize if increased by the amount of data that is acknowledged
                  by each acknowledgment (in bytes). This indicated a previously unvalidated packet has been
                  succesfuly sent over the path.</t>
 
-             <t>The sender enters the Validating Phase when an acknowledgement is
+             <t>Unvalidated Phase (Receiving acknowledgements for an unvalidated packet):
+	     The sender enters the Validating Phase when the first acknowledgement is
              received for the first packet number (or higher) that was sent in the Unvalidated Phase.</t>
         </list></t> <!-- End of list of actions -->
 
@@ -545,7 +548,7 @@ Examples of the transitions between phases are provided in <xref target="Example
         fully utilised, the CWND will be reset to the flight size to match the smaller capacity being validated.)
         </t>
         <t><list style="symbols">
-            <t>Validating Phase (Limiting CWND on Entry):
+            <t>Validating Phase (Limiting CWND on entry):
             On entry to the Validating Phase, the CWND is set to the flight size.</t>
 		
             <t>Validating Phase (Updating CWND): The CWND is updated using the
@@ -554,18 +557,19 @@ Examples of the transitions between phases are provided in <xref target="Example
             indicates
             a packet has been successfully sent across the path.</t>
             
-            <t>Validating Phase (Receiving Acknowledgements):
+            <t>Validating Phase (Receiving acknowledgements for unvalidated packets):
                 The variable PipeSize if increased upon each
                 acknowledgment that indicates a packet has been
                 successfuly sent over the path. This records
                 the validated PipeSize in bytes.</t>
 
-            <t>Validating Phase (Congestion Indication):
+            <t>Validating Phase (Congestion indication):
             If a sender determines that congestion was experienced
             (e.g., packet loss or ECN-CE marking), Careful Resume
             enters the Safe Retreat Phase.</t>
             
-            <t>The sender enters the Normal Phase when an acknowledgement is
+            <t>Validating Phase (Receiving acknowledgement for all unvalidated packets):
+	    The sender enters the Normal Phase when an acknowledgement is
             received for the last packet number (or higher)
             that was sent in the Unvalidated Phase.</t>
         </list></t> <!-- End of list of actions -->
@@ -580,7 +584,7 @@ Examples of the transitions between phases are provided in <xref target="Example
         from Slow Start to Recovery <xref target="RFC9002"></xref> .)</t>
 
         <t><list style="symbols">
-            <t>Safe Retreat Phase (Saved information): The set of saved CC parameters for
+            <t>Safe Retreat Phase (Removing saved information): The set of saved CC parameters for
             the path are deleted, to prevent these
             from being used again by other flows.</t>
 		
@@ -607,7 +611,8 @@ Examples of the transitions between phases are provided in <xref target="Example
             reset the ssthresh when leaving this phase, it does
             not modify CWND.</t>
 				
-            <t>The sender enters Normal Phase
+            <t>Safe Retreat Phase (Receiving acknowledgement for all unvalidated packets):
+	    The sender enters Normal Phase
             when the last packet (or later) sent during the
             Unvalidated Phase has been acknowledged. The sender
             MUST set the ssthresh to no morethan the PipeSize.</t>
@@ -622,6 +627,7 @@ Examples of the transitions between phases are provided in <xref target="Example
         can be lost when there is congestion.
         Loss recovery commences using the reduced CWND
         that was set on entry to the Safe Retreat Phase.
+		
         <!--The way CWND is updated
                 is different from the design for TCP <xref target="RFC5681"></xref>
                 and from QUIC Loss Detection and Congestion Control <xref target="RFC9002"></xref>.-->
