@@ -327,8 +327,8 @@ specify just the year. -->
 
 	    <t>max_jump : The maximum configured jump_cwnd;</t>
 
-	    <t>PipeSize: An estimate of the validated capacity available to a
-            connection;</t>
+		<!--- XXX RS to check -->
+	    <t>PipeSize: An meaure of the available capacity based on validation of the acknowledged data;</t>
 
             <t>saved_cwnd: A value of CWND derived from observation of a
             previous connection, which reflects capacity
@@ -369,7 +369,8 @@ Observe ...> Connect -> Reconnaissance --------------------> Normal
 </t>
 	
 <t> Figure 1: Phases when a connection uses the Careful Resume. The Observe Phase
-is performed by an established connection as an action within the Normal Phase. Examples of the transitions between phases are provided in <xref target="Examples"></xref>.</t>
+is performed by an established connection as an action within the Normal Phase. 
+Examples of the transitions between phases are provided in <xref target="Examples"></xref>.</t>
      
     <!-- These subsections to match next section format -->
 	
@@ -411,16 +412,14 @@ is performed by an established connection as an action within the Normal Phase. 
     </section> <!-- End of define Observe Phase:-->
           
     <section anchor="rec-phase" title="Reconnaissance Phase">
-        <t> When a sender resumes transmission, it enters the Reconnaissance Phase.
-        In this phase, the sender transmits initial data, limited by the IW,
-        and monitors its reception using normal CC (i.e., the CC is unchanged).</t>
+	<!--- XXX RS Check -->
+        <t> A sender enters the Reconnaissance Phase after connection.
+        In this phase, the sender transmits initial data. The CWND is initialised to the IW,
+        and MAY be increased using normal CC (i.e., the CC is unchanged).</t>
 
         <t>The phase seeks to determine if the path is consistent with
-        a set of previously observed CC parameters, allowing it to either use the CR method
-        or to revert to the Normal Phase. During this phase
-        a sender records the current minimum RTT for the connection.</t>
-
-        <t>There are a set of conditions that need to be confirmed before the sender is
+        a previously observed path (saved in the CC parameters).
+	There are a set of conditions that need to be confirmed before the sender is
         permitted to enter the Unvalidated Phase:
 
         <list style="symbols"> <!-- list of phase -->
@@ -437,14 +436,9 @@ is performed by an established connection as an action within the Normal Phase. 
 	    the CC parameters are no longer used
 	    and sender enters the Normal Phase.</t>
 
-             <t>Reconnaissance Phase (Confirming RTT): Since the CC information
-             is directly impacted by the RTT, a significant change in the minimum RTT
-             is a strong indication that the previously observed CC
-             parameters are not valid for the current path.
-             An RTT measurement is confirmed when current_rtt is greater than
-             (saved_rtt / 2) and the current_rtt is less than or equal to (saved_rtt x 10)
-	     <xref target="sec-confirm-rtt"></xref>).</t>
-             
+             <t>Reconnaissance Phase (Confirming RTT): During this phase,
+             a sender MUST record the current minimum RTT for the connection.</t>  
+		
              <t>Reconnaissance Phase (Avoiding using Careful Resume): A receiver can use a method (e.g.,
              <xref target="I-D.kuhn-quic-bdpframe-extension"></xref>)) to request
              that the sender enters the Normal Phase.</t>
@@ -462,7 +456,7 @@ is performed by an established connection as an action within the Normal Phase. 
             MUST enter the Normal Phase.</t>
 
             <t>Reconnaissance Phase (Data-limited sender):
-            If the sender is data limited <xref target="RFC7661"></xref>, 
+            If the sender is data-limited <xref target="RFC7661"></xref>, 
 	    it might send insufficient data
             to be able to validate transmission at the higher rate.
             Careful Resume is allowed to remain in the Reconnaissance Phase and to not
@@ -493,10 +487,19 @@ is performed by an established connection as an action within the Normal Phase. 
         to more rapidly get up to speed.
 	</t>
 	    
-        <!--The sender only enters this phase when there are saved CC parameters for the same
-        pair of endpoints and this information is currently valid 
-	<xref target="req-lifetime"></xref>).-->
+       <t>The sender only enters this phase when there are saved CC parameters are
+	confirmed:</t>
 
+	<t><list> <t>Unvalidated Phase (Confirm Path before jump:) Since the CC information
+             is directly impacted by the RTT, a significant change in the minimum RTT
+             is a strong indication that the previously observed CC
+             parameters are not valid for the current path.
+             An RTT measurement is confirmed when current_rtt is greater than or equal to
+             (saved_rtt / 2) and the current_rtt is less than or equal to (saved_rtt x 10)
+	     <xref target="sec-confirm-rtt"></xref>). If the path is
+	     not confirmed the sender MUST enter the Normal Phase.</t>
+	</list></t>
+	    
         <t>This phase paces transmission using an increased CWND (jump_cwnd)
         that is calculated based on the saved CC parameters and current_RTT.</t>
         <t><list style="symbols">
@@ -517,16 +520,15 @@ is performed by an established connection as an action within the Normal Phase. 
              If a sender determines that the previous CC parameters
              are not valid (due to a detected path change),
              the Safe Retreat Phase is entered.
-	     (In this phase, the sender does not receive feedback for the jump in CWND, because
+	     (The sender has not yet received feedback for the jump in CWND, because
 	     less than an RTT has passed before the Unvalidated Phase was entered.
 	     Therefore, any detected congestion must have resulted from packets sent
              before the Unvalidated Phase.)</t>
              
              <t>Unvalidated Phase (Receiving Acknowledgements):
-                 The variable PipeSize if increased upon each
-                 acknowledgment that indicates a packet has been
-                 sucessfuly sent over the path. This records
-                 the validated PipeSize in bytes.</t>
+                 The variable PipeSize if increased by the amount of data that is acknowledged
+                 by each acknowledgment (in bytes). This indicated a previously unvalidated packet has been
+                 succesfuly sent over the path.</t>
 
              <t>The sender enters the Validating Phase when an acknowledgement is
              received for the first packet number (or higher) that was sent in the Unvalidated Phase.</t>
@@ -543,8 +545,9 @@ is performed by an established connection as an action within the Normal Phase. 
         fully utilised, the CWND will be reset to the flight size to match the smaller capacity being validated.)
         </t>
         <t><list style="symbols">
-            <t>Validating Phase (Limiting CWND):
+            <t>Validating Phase (Limiting CWND on Entry):
             On entry to the Validating Phase, the CWND is set to the flight size.</t>
+		
             <t>Validating Phase (Updating CWND): The CWND is updated using the
             normal rules for the current congestion controller, this typically
             allows CWND to be increased for each ACK recieved that
@@ -570,9 +573,9 @@ is performed by an established connection as an action within the Normal Phase. 
     
     <section anchor="ret-phase" title="Safe Retreat Phase">
         
-        <t>This phase is entered when capacity was not validated,
-        and drains the path of unvalidated packets.
-        It is entered when the first loss/ECN-CE marking is detected.
+        <t>This phase is entered when the first loss/ECN-CE marking is 
+	detected is detected for unvalidated packets,
+        and drains the path of other unvalidated packets.
         (This trigger is the same as used by a QUIC sender to transition
         from Slow Start to Recovery <xref target="RFC9002"></xref> .)</t>
 
@@ -597,17 +600,17 @@ is performed by an established connection as an action within the Normal Phase. 
             <t>Safe Retreat Phase (Increasing CWND):
             The CWND MUST NOT be increased in this Phase.</t>
 
-	        <t>Safe Retreat Phase (Tracking PipeSize):
+	    <t>Safe Retreat Phase (Tracking PipeSize):
             The sender continues to update
             the PipeSize after processing each ACK.
             This value is used to
-            reset the ssthresh on exit of the phase, it does
+            reset the ssthresh when leaving this phase, it does
             not modify CWND.</t>
 				
             <t>The sender enters Normal Phase
             when the last packet (or later) sent during the
             Unvalidated Phase has been acknowledged. The sender
-            MUST set the ssthresh to the PipeSize.</t>
+            MUST set the ssthresh to no morethan the PipeSize.</t>
         </list></t>
      
         <t>Implementation requirements are provided in
@@ -709,8 +712,8 @@ is performed by an established connection as an action within the Normal Phase. 
             saved_cwnd based on
             the flight_size, or an averaged CWND.</t>
 		
-            <t>Observe Phase (application-limited): When the sender
-            is application-limited or in an RTT following a burst of
+            <t>Observe Phase (Data-limited sender): When the sender
+            is data-limited, or in an RTT following a burst of
             transmission, a sender typically transmits
             much less data than allowed. Such observations could to be discounted when
             estimating the saved_cwnd (e.g., when a previous
@@ -818,7 +821,7 @@ is performed by an established connection as an action within the Normal Phase. 
 	    adjusts the cwnd (Section 4.4.3). The NVP SHOULD NOT exceed five minutes."
 	    Section 5 of <xref target="RFC7661"></xref> discusses the rationale for
 	    choosing that period.
-	    However, RFC 7661 targets rate-limited connections using normal
+	    However, RFC 7661 targets data-limited connections using normal
 	    CC. The method described in the present specification includes additional
 	    mechanisms to avoid and mitigate the effects of overshoot, and therefore
 	    this can be used to justify a longer lifetime of the saved_cwnd using
@@ -862,26 +865,23 @@ is performed by an established connection as an action within the Normal Phase. 
         
         <section title="Exit from the Unvalidated Phase because of Variable Network Conditions">
             <t><list style="symbols">
-                <t>Unvalidated Phase: Careful Resume is REQUIRED be robust to
+                <t>Careful Resume has been designed to be robust to
             changes in network conditions
-            due to variations in the forwarding path, reconfiguration of
+            due to variations in the forwarding path, such as reconfiguration of
             equipment, or changes in the link conditions. This is mitigated
             by path confirmation.</t>
 
-                <t>Unvalidated Phase: Careful Resume is REQUIRED to be robust to changes
+                <t>Careful Resume has been designed to be robust to changes
                 in network traffic, including the
                 arrival of new flows that compete for capacity at a shared bottleneck.
                 This is mitigated by jumping to no more than a half of
                 the saved_cwnd and by using pacing.</t>
-                <t>Unvalidated Phase: Careful Resume is REQUIRED to prevent unduly suppressing flows
+		    
+                <t>Careful Resume has been designed to prevent unduly suppressing flows
                 that used the capacity since the available capacity was measured. This is further
                 mitigated by bounding the duration of the Unvalidated Phase (and the following
                 Validating Phase).</t>
 
-                <t>Unvalidated Phase: The sender transitions to the Safe Retreat Phase
-                when a packet loss is detected or acknowledgments indicate sent
-                packets were ECN CE-marked. These are an indication of potential
-                congestion.</t>
             </list></t>
         </section> <!--  Unvalidated Phase:  Subsection: Network Conditions -->
 
@@ -903,8 +903,12 @@ is performed by an established connection as an action within the Normal Phase. 
     <section anchor="req-retreat" title="Safety Requirements for the Safe Retreat Phase">
          <t>This section defines the safety requirements
          after congestion has been detected during the Unvalidated Phase.</t>
-         
-         <t>The Safe Retreat reaction is required to differ from a traditional
+
+	<t>Careful Resume sets a safe CWND value to drain unvalidated packets
+	from the path when a packet loss is detected or acknowledgments indicate sent
+        packets were ECN CE-marked using the Safe Retreat Phase.
+
+         <t>The Safe Retreat reaction differs from a traditional
          reaction to detected congestion, because
          the jump_cwnd can result in a significantly higher rate than would be allowed by the
          slow-start mechanism. This could aggressively feed a congested bottleneck,
@@ -922,15 +926,12 @@ is performed by an established connection as an action within the Normal Phase. 
         when there might be significant overshoot in the use of the capacity, which can
         be the case when the Safe Retreat Phase is entered.</t>
 
-        <t>The CWND is reduced on entry to the Safe Retreat Phase to
-        a safe starting value.</t>
-
         <t>Acknowledgements
          for unvalidated packets are tracked to
          measure the maximum capacity, called the PipeSize
          (The first unvalidated packet can be determined by
          recording the sequence number
-         of the first packet sent in the phase.)
+         of the first packet sent in this phase.)
          This PipSize is not a safe measure of the currently
          available share of the capacity whenever
          there was also a significant overshoot at the bottleneck,
@@ -1230,7 +1231,7 @@ SWND is always based on PS - but explain the meaning of PS=CWND on ENTRY XXX</t>
 	During this phase, the CWND can be increased for each ACK for an unvalidated packet, because
 	this indicates that the packet was indeed validated.</t>
 
-	<t>When an ACK is received for the last packet sent in the unvalidated phase,
+	<t>When an ACK is received for the last packet sent in the Unvalidated Phase,
 	the sender completes using Careful Resume. It enters the Normal Phase. If CWND is less than ssthresh,
 	a Reno or Cubic sender in the Normal Phase is permitted to use slow start to grow the CWND towards
 	the ssthresh, and will then enter congestion avoidance.</t>
@@ -1244,15 +1245,15 @@ SWND is always based on PS - but explain the meaning of PS=CWND on ENTRY XXX</t>
 	and sends as described in the first example, transitioning to the Unvalidated Phase.
 	The CWND is set to 150 packets, and the PipeSize us set to the flight size (29 packets).</t>
 		
-	<t>The sender then becomes CWND-limited and only sends 50 unvalidated packets.</t>
+	<t>The sender then becomes data-limited and only sends 50 unvalidated packets.</t>
 	
 	<t> After ~1-RTT (detected by using local timestamps or by receiving an ACK for the first
 	unvalidated packet), the sender has still not fully used the CWND. It then enters 
 	the Validating Phase and resets the CWND to the current flight size, (i.e., 50 packets).
-	During this phase the CWND can be increased when ACKs validate packets.
+	During this phase, the CWND can be increased when ACKs validate packets.
 	The PipeSize also increases with each ACK received.</t>
 
-	<t>When an ACK is received for the last packet sent in the unvalidated phase,
+	<t>When an ACK is received for the last packet sent in the Unvalidated Phase,
 	the sender completes using Careful Resume. It enters the Normal Phase. If CWND is less than ssthresh,
 	a Reno or Cubic sender in the Normal Phase is permitted to use slow start to grow the CWND towards
 	the ssthresh, and will then enter congestion avoidance.</t>
@@ -1284,7 +1285,7 @@ SWND is always based on PS - but explain the meaning of PS=CWND on ENTRY XXX</t>
 	sender still does not know if the remaining unvalidated packets will be
 	successfully acknowledged. A conservative CWND calculation ensures the sender drains
 	the path after this potentially severe congestion event.
-	During this phase there is no further increase in CWND.</t>
+	There is no further increase in CWND in this phase.</t>
 
 	<t>The sender continues to receives ACKs for the remaining unvalidated 86 (121-35) packets
 	(recall the 35th unvalidated packet was lost had packet number 29+35=64).
@@ -1373,8 +1374,8 @@ SWND is always based on PS - but explain the meaning of PS=CWND on ENTRY XXX</t>
         and follows the setting of the TSVWG milestone
         with an intended status of "Proposed Standard".</t>
         <t>WG -02 includes steps to complete the spec. In particular, consideration of application-limited
-        senders; selection of reasoned parameters; specification of safe retreat; and
-            improvements to the consistency throughout. Added the validating phase.</t>
+        senders; selection of reasoned parameters; specification of the Safe Retreat Phase; and
+            improvements to the consistency throughout. Added the Validating Phase.</t>
         <t>WG -03, explain entry to Validating Phase, editorial tidy.</t>
         <t>WG -04, update based on review comments from Kazuho Oku.</t>
         <t>WG-05, update based on review comments from Neal Cardwell. WG feedback from IETF-118.
