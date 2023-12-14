@@ -414,8 +414,8 @@ Examples of the transitions between phases are provided in <xref target="Example
     <section anchor="rec-phase" title="Reconnaissance Phase">
 	<!--- XXX RS Check -->
         <t> A sender enters the Reconnaissance Phase after connection.
-        In this phase, the sender transmits initial data. The CWND is initialised to the IW,
-        and MAY be increased using normal CC (i.e., the CC is unchanged).</t>
+        In this phase, the CWND is initialised to the IW, and the sender transmits initial data.
+        The CWND MAY be increased using normal CC as acknoweldgments confirm delivery of packets (i.e., the CC is unchanged).</t>
 
         <t>The phase seeks to determine if the path is consistent with
         a previously observed path (saved in the CC parameters).
