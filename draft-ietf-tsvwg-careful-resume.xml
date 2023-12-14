@@ -904,9 +904,9 @@ Examples of the transitions between phases are provided in <xref target="Example
          <t>This section defines the safety requirements
          after congestion has been detected during the Unvalidated Phase.</t>
 
-	<t>Careful Resume sets a safe CWND value to drain unvalidated packets
+	<t>The Safe Reterat sets a safe CWND value to drain unvalidated packets
 	from the path when a packet loss is detected or acknowledgments indicate sent
-        packets were ECN CE-marked using the Safe Retreat Phase.
+        packets were ECN CE-marked.</t>
 
          <t>The Safe Retreat reaction differs from a traditional
          reaction to detected congestion, because
