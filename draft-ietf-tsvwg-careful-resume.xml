@@ -494,9 +494,9 @@ Examples of the transitions between phases are provided in <xref target="Example
              is directly impacted by the RTT, a significant change in the minimum RTT
              is a strong indication that the previously observed CC
              parameters are not valid for the current path.
-             An RTT measurement is confirmed when current_rtt is greater than or equal to
+             An RTT measurement is confirmed when the current_rtt is greater than or equal to
              (saved_rtt / 2) and the current_rtt is less than or equal to (saved_rtt x 10)
-	     <xref target="sec-confirm-rtt"></xref>). If the path is
+	     <xref target="sec-confirm-rtt"></xref>). If the RTT measurement is
 	     not confirmed the sender MUST enter the Normal Phase.</t>
 	</list></t>
 	    
