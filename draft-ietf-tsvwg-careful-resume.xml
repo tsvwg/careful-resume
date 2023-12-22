@@ -1084,7 +1084,6 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
     <references title="Informative References">
 	  <?rfc include="reference.I-D.ietf-quic-qlog-quic-events.xml"?>
           <?rfc include="reference.I-D.irtf-iccrg-sallantin-initial-spreading.xml"?>
-          <?rfc include="reference.I-D.hughes-restart.xml"?>
     <?rfc include="reference.I-D.cardwell-iccrg-bbr-congestion-control.xml"?>
           <?rfc include="reference.I-D.kuhn-quic-bdpframe-extension.xml"?>
           <?rfc include="reference.RFC.3465.xml"?>
@@ -1099,7 +1098,24 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
       <?rfc include="reference.RFC.9040.xml"?>
       <?rfc include="reference.RFC.9406.xml"?>
 
-
+<reference anchor="I-D.hughes-restart.xml" target="https://www.ietf.org/archive/id/draft-hughes-restart-00.txt">
+       <front>
+          <title>Issues in TCP Slow-Start Restart After Idle</title>
+          <author initials="A.S." surname="Hughes" fullname="Amy Hughes">
+           <organization>ISI</organization>
+            </author>
+	   <author initials="J." surname="Touch" fullname="Joe Touch">
+           <organization>ISI</organization>
+            </author>
+	   <author initials="J."surname="Heidemann" fullname="John Heidemann">
+           <organization>ISI</organization>
+            </author>
+            <date month="December" year="2001" />
+        </front>
+        <seriesInfo name="" value="" />
+        <refcontent></refcontent>
+   </reference>
+	    
       <reference anchor="MAPRG111">
         <front>
           <title>Feedback from using QUIC's 0-RTT-BDP extension over SATCOM
