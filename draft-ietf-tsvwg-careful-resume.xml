@@ -459,8 +459,8 @@ Examples of the transitions between phases are provided in <xref target="Example
             If another connection has already started to use the saved_cwnd, the sender
             MUST enter the Normal Phase.</t>
 
-            <t>Reconnaissance Phase (Data-limited sender):
-            If the sender is data-limited <xref target="RFC7661"></xref>, 
+            <t>Reconnaissance Phase (Rate-limited sender):
+            If the sender is rate-limited <xref target="RFC7661"></xref>, 
 	    it might send insufficient data
             to be able to validate transmission at the higher rate.
             Careful Resume is allowed to remain in the Reconnaissance Phase and to not
@@ -722,8 +722,8 @@ Examples of the transitions between phases are provided in <xref target="Example
             saved_cwnd based on
             the flight_size, or an averaged CWND.</t>
 		
-            <t>Observe Phase (Data-limited sender): When the sender
-            is data-limited, or in an RTT following a burst of
+            <t>Observe Phase (Rate-limited sender): When the sender
+            is rate-limited, or in an RTT following a burst of
             transmission, a sender typically transmits
             much less data than allowed. Such observations could to be discounted when
             estimating the saved_cwnd (e.g., when a previous
@@ -831,7 +831,7 @@ Examples of the transitions between phases are provided in <xref target="Example
 	    adjusts the cwnd (Section 4.4.3). The NVP SHOULD NOT exceed five minutes."
 	    Section 5 of <xref target="RFC7661"></xref> discusses the rationale for
 	    choosing that period.
-	    However, RFC 7661 targets data-limited connections using normal
+	    However, RFC 7661 targets rate-limited connections using normal
 	    CC. The method described in the present specification includes additional
 	    mechanisms to avoid and mitigate the effects of overshoot, and therefore
 	    this can be used to justify a longer lifetime of the saved_cwnd using
@@ -1250,7 +1250,7 @@ SWND is always based on PS - but explain the meaning of PS=CWND on ENTRY XXX</t>
 	<t>It now sends 121 unvalidated packets. This is the unused portion of the CWND.
 	Each time a packet is sent, the sender checks whether 1 RTT has passed since entering the
 	Unvalidated Phase (otherwise, the Validating Phase is entered). This check triggers only
-	for cases where the sender is data-limited, see the following example.</t>
+	for cases where the sender is rate-limited, see the following example.</t>
 
 	<t>The PipeSize will increase after each ACK is received.</t>
 	
@@ -1265,15 +1265,15 @@ SWND is always based on PS - but explain the meaning of PS=CWND on ENTRY XXX</t>
 	the ssthresh, and will then enter congestion avoidance.</t>
     </section>
 
-    <section anchor="Examples-dl" title="Example with No Loss, Data-Limited">
-    	<t>A data-limited sender will not fully utilize the available CWND when using Careful Resume,
+    <section anchor="Examples-dl" title="Example with No Loss, Rate-Limited">
+    	<t>A rate-limited sender will not fully utilize the available CWND when using Careful Resume,
 	and CWND is therefore reset on entry to the Validating Phase, as described below.</t>
 
 	<t>The sender in this example starts by sending IW packets (10) in the Reconnaissance Phase,
 	and sends as described in the first example, transitioning to the Unvalidated Phase.
 	This sets the CWND to 150 packets, and the PipeSize is set to the flight size (29 packets).</t>
 		
-	<t>The sender then becomes data-limited because it only sends 50 unvalidated packets.</t>
+	<t>The sender then becomes rate-limited because it only sends 50 unvalidated packets.</t>
 	
 	<t> After ~1 RTT (detected by using local timestamps or by receiving an ACK for the first
 	unvalidated packet), the sender will still not have fully used the CWND. It then enters 
@@ -1402,7 +1402,7 @@ SWND is always based on PS - but explain the meaning of PS=CWND on ENTRY XXX</t>
         <t>WG -01 included review comments and suggestions from John Border,
         and follows the setting of the TSVWG milestone
         with an intended status of "Proposed Standard".</t>
-        <t>WG -02 includes steps to complete the spec. In particular, consideration of application-limited
+        <t>WG -02 includes steps to complete the spec. In particular, consideration of rate-limited
         senders; selection of reasoned parameters; specification of the Safe Retreat Phase; and
             improvements to the consistency throughout. Added the Validating Phase.</t>
         <t>WG -03, explain entry to Validating Phase, editorial tidy.</t>
@@ -1414,6 +1414,7 @@ SWND is always based on PS - but explain the meaning of PS=CWND on ENTRY XXX</t>
 	Clarified lifetime for saved CC params. Incorporates comments from Tong.</t>
 	<t>WG-06, SR updated following Hackathon comments from Kazuho Oku, and rework of use of pipe size.
 	Added an informative summary of actions, on suggestion by Tong. Added examples based on text by Ana Custura. </t>
+	<t>WG-07, Use "rate-limited" uniformally instead of application and data limited.</t>
 
     </list></t>
 </section> <!-- End of Revisions -->
