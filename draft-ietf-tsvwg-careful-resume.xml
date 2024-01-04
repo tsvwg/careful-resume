@@ -502,7 +502,7 @@ Examples of the transitions between phases are provided in <xref target="Example
              If the RTT measurement is
 	     not confirmed, i.e., 
 	     the current_rtt is greater than or equal to
-             (saved_rtt / 2) and the current_rtt is less than or equal to (saved_rtt x 10)
+             (saved_rtt / 2) or the current_rtt is less than or equal to (saved_rtt x 10)
 	     <xref target="sec-confirm-rtt"></xref>),
 	     the sender MUST enter the Normal Phase.</t>
 	</list></t>
