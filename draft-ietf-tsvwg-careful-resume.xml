@@ -321,7 +321,7 @@ specify just the year. -->
 
 	    <t>endpoint_token: An Endpoint Token identifying a path to a receiver;</t>
 
-	    <t>flight size: The currently unacknowledged volume of data sent by the CC method;</t>
+	    <t>flight_size: The currently unacknowledged volume of data sent by the CC method;</t>
 
 	    <t>jump_cwnd: The resumed CWND, used in the Unvalidated Phase.</t>
 
@@ -549,11 +549,11 @@ Examples of the transitions between phases are provided in <xref target="Example
         sent in the Unvalidated Phase were received without inducing congestion.
         The CWND remains unvalidated and the sender typically remains in this phase for one RTT.
          (Note: When the full jump_cwnd is not
-        fully utilised, the CWND will be reset to the flight size to match the smaller capacity being validated.)
+        fully utilised, the CWND will be reset to the flight_size to match the smaller capacity being validated.)
         </t>
         <t><list style="symbols">
             <t>Validating Phase (Limiting CWND on entry):
-            On entry to the Validating Phase, the CWND is set to the flight size.</t>
+            On entry to the Validating Phase, the CWND is set to the flight_size.</t>
 		
             <t>Validating Phase (Updating CWND): The CWND is updated using the
             normal rules for the current congestion controller, this typically
@@ -786,7 +786,7 @@ Examples of the transitions between phases are provided in <xref target="Example
 	     <t>Also note that when the RTT is incorrectly measured as larger
 	     than the actual path RTT, the sender will receive an acknowledgment for an
              unvalidated packet before it might have completed the Unvalidated Phase, this
-	     acknowledgment resets the CWND to reflect the flight size, and the sender enters
+	     acknowledgment resets the CWND to reflect the flight_size, and the sender enters
 	     the Validating Phase.</t>
 
 	     <t>an RTT sample more than ten times the
@@ -900,7 +900,7 @@ Examples of the transitions between phases are provided in <xref target="Example
     <section anchor="req-val" title="Safety Requirements for the Validating Phase">
         <t>When a sender completes the Unvalidated Phase, either by sending a jump_cwnd of data
         or after one RTT, it ceases to use the unvalidated CWND. That is, CWND is reset
-        to the flight size, and the sender awaits reception of the acknowledgments to validate the
+        to the flight_size, and the sender awaits reception of the acknowledgments to validate the
         use of this capacity. New packets are sent when previously
         sent data is newly acknowledged. The purpose is to trigger a
         safe retreat in the case when the capacity is not validated.</t>
@@ -1224,7 +1224,7 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
 </t>
 
 <t>Notes:
-SS = Slow Start FS= Flight Size; PS = PipeSize.</t>
+SS = slow start FS= flight_size; PS = PipeSize.</t>
 
    <t>The remaining subsections provide informative examples of use.</t>
 
@@ -1236,14 +1236,14 @@ SWND is always based on PS - but explain the meaning of PS=CWND on ENTRY XXX</t>
 	<t>In the first example of using the Careful Resume method, 
 	the sender starts by sending IW (10) packets in the Reconnaissance Phase, 
 	and then continues in a subsequent RTT to send more packets until the sender 
-	becomes CWND-limited (i.e., flight size=CWND).</t>
+	becomes CWND-limited (i.e., flight_size = CWND).</t>
 	    
 	<t>The sender then
 	confirms the RTT and other conditions for using Careful Resume.
 	In this example, this is confirmed when the sender has 29 packets in flight.
 	The sender enters the Unvalidated Phase.
 	This confirmation could have happened earlier if data was available to send. The
-	sender initialises the PipeSize to to the CWND (the same as the flight size, 29 packets)
+	sender initialises the PipeSize to to the CWND (the same as the flight_size, i.e., 29 packets)
 	and sets the CWND to 150 packets (based upon a previously
 	observed saved_cwnd of 300 packets).</t>
 	    
@@ -1255,7 +1255,7 @@ SWND is always based on PS - but explain the meaning of PS=CWND on ENTRY XXX</t>
 	<t>The PipeSize will increase after each ACK is received.</t>
 	
 	<t>When the first unvalidated packet is acknowledged (packet number 30) the sender
-	enters the Validating Phase. This transition would also occur if the flight size increases to equal CWND.
+	enters the Validating Phase. This transition would also occur if the flight_size increases to equal CWND.
 	During this phase, the CWND can be increased for each ACK for an unvalidated packet, because
 	this indicates that the packet was indeed validated.</t>
 
@@ -1271,13 +1271,13 @@ SWND is always based on PS - but explain the meaning of PS=CWND on ENTRY XXX</t>
 
 	<t>The sender in this example starts by sending IW packets (10) in the Reconnaissance Phase,
 	and sends as described in the first example, transitioning to the Unvalidated Phase.
-	This sets the CWND to 150 packets, and the PipeSize is set to the flight size (29 packets).</t>
+	This sets the CWND to 150 packets, and the PipeSize is set to the flight_size (i.e., 29 packets).</t>
 		
 	<t>The sender then becomes rate-limited because it only sends 50 unvalidated packets.</t>
 	
 	<t> After ~1 RTT (detected by using local timestamps or by receiving an ACK for the first
 	unvalidated packet), the sender will still not have fully used the CWND. It then enters 
-	the Validating Phase and resets the CWND to the current flight size, (i.e., 50 packets).
+	the Validating Phase and resets the CWND to the current flight_size, (i.e., 50 packets).
 	During this phase, the CWND can be increased for each ACK that validates reception of a packet.
 	The PipeSize also increases with each ACK received, to reflect the discovered capacity.</t>
 
@@ -1296,7 +1296,7 @@ SWND is always based on PS - but explain the meaning of PS=CWND on ENTRY XXX</t>
 	
      <section anchor="Examples-loss-unval" title="Example with Loss detected in the Validating Phase">
 	<t>As in the first Example the sender enters the Unvalidated Phase it sets the CWND to 150 packets
-	with the PipeSize initialized to the flight size (29 packets).</t>
+	with the PipeSize initialized to the flight_size (i.e., 29 packets).</t>
 
 	<t>The sender now sends 121 unvalidated packets (the remaining unused CWND).
 	This example considers the case when one of the unvalidated packet is lost, which
@@ -1412,7 +1412,7 @@ SWND is always based on PS - but explain the meaning of PS=CWND on ENTRY XXX</t>
         the recon. info is used to steer the next phase; clarified saved_cwnd can be computed
         from ACK rate; use jump once; that real server platforms are complex.
 	Clarified lifetime for saved CC params. Incorporates comments from Tong.</t>
-	<t>WG-06, SR updated following Hackathon comments from Kazuho Oku, and rework of use of pipe size.
+	<t>WG-06, SR updated following Hackathon comments from Kazuho Oku, and rework of use of PipeSize.
 	Added an informative summary of actions, on suggestion by Tong. Added examples based on text by Ana Custura. </t>
 	<t>WG-07, Use "rate-limited" uniformally instead of application and data limited.</t>
 
