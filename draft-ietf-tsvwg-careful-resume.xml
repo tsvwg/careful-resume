@@ -1037,16 +1037,16 @@ CarefulResumePhase = " reconnaissance "
 
 
 CarefulResumeStateParameters = {
-pipesize: uint32,
-cr_mark: uint32,
-? cwnd: uint32,
-? ssthresh: uint32
+pipesize: uint64,
+cr_mark: uint64,
+? cwnd: uint64,
+? ssthresh: uint64
 }
 
 
 CarefulResumeRestoredParameters = {
-previous_cwnd: uint32,
-previous_rtt: uint32
+previous_cwnd: uint64,
+previous_rtt: float32
 }
 
 ]]></sourcecode>
