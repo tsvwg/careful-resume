@@ -585,7 +585,7 @@ Examples of the transitions between phases are provided in <xref target="Example
 	detected is detected for unvalidated packets,
         and drains the path of other unvalidated packets.
         (This trigger is the same as used by a QUIC sender to transition
-        from Slow Start to Recovery <xref target="RFC9002"></xref> .)</t>
+        from Slow Start to Recovery <xref target="RFC9002"></xref>.)</t>
 
         <t><list style="symbols">
             <t>Safe Retreat Phase (Removing saved information): The set of saved CC parameters for
@@ -619,7 +619,7 @@ Examples of the transitions between phases are provided in <xref target="Example
 	    The sender enters Normal Phase
             when the last packet (or later) sent during the
             Unvalidated Phase has been acknowledged. The sender
-            MUST set the ssthresh to no morethan the PipeSize.</t>
+            MUST set the ssthresh to no more than the PipeSize.</t>
         </list></t>
      
         <t>Implementation requirements are provided in
@@ -1230,7 +1230,7 @@ SS = slow start FS= flight_size; PS = PipeSize.</t>
 
 <t>XXXX ACTIONS
 Add PipeSize text
-SWND is always based on PS - but explain the meaning of PS=CWND on ENTRY XXX</t>
+CWND is always based on PS - but explain the meaning of PS=CWND on ENTRY XXX</t>
 
     <section anchor="Examples-no loss" title="Example with No Loss">
 	<t>In the first example of using the Careful Resume method, 
