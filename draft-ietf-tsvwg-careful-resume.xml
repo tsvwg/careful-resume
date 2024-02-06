@@ -548,11 +548,19 @@ Examples of the transitions between phases are provided in <xref target="Example
         <t>The Validating Phase checks that packets
         sent in the Unvalidated Phase were received without inducing congestion.
         The CWND remains unvalidated and the sender typically remains in this phase for one RTT.
-         (Note: When the full jump_cwnd is not
+         (Note 1: When flight_size is less than or equal to the PipeSize (the validated window), there
+	 is no additional data to validate, and the Normal phase is entered and CWND is reset to the PipeSize).
+	 (Note 2: When the full jump_cwnd is not
         fully utilised, the CWND will be reset to the flight_size to match the smaller capacity being validated.)
+
         </t>
         <t><list style="symbols">
-            <t>Validating Phase (Limiting CWND on entry):
+            <t>Validating Phase (Check flight_size on entry):
+            On entry to the Validating Phase, if the flight_size is less
+	    equal to the PipeSize, the Normal phase is entered and CWND
+	    is reset to the PipeSize.</t>
+
+	    <t>Validating Phase (Limiting CWND on entry):
             On entry to the Validating Phase, the CWND is set to the flight_size.</t>
 		
             <t>Validating Phase (Updating CWND): The CWND is updated using the
@@ -1190,9 +1198,12 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
 |      |CC params|path     |using saved |new CWND   |Update PS   |
 |      |         |         |            |Update PS  |            |
 +------+---------+---------+------------+-----------+------------+
-|On    |    -    |CWND=IW  |PS=CWND;    |CWND=FS    |CWND=(PS/2) |
-|entry:|         |         |CWND        |           |            |
-|      |         |         |=jump_cwnd  |           |            |
+|On    |    -    |CWND=IW  |PS=CWND;    |If (FS>PS) |CWND=(PS/2) |
+|entry:|         |         |CWND        |{CWND=FS}  |            |
+|      |         |         |=jump_cwnd  |else;      |            |
+|      |         |         |            |{CWND=PS;  |            |
+|      |         |         |            |enter      |
+|      |         |         |            |Normal}    |            |
 +------+---------+---------+------------+-----------+------------+
 |CWND: |When in  |CWND     |CWND is not |CWND can   |CWND is not |
 |      |observe, |increases|increased   |increase   |increased   |
@@ -1415,6 +1426,8 @@ CWND is always based on PS - but explain the meaning of PS=CWND on ENTRY XXX</t>
 	<t>WG-06, SR updated following Hackathon comments from Kazuho Oku, and rework of use of PipeSize.
 	Added an informative summary of actions, on suggestion by Tong. Added examples based on text by Ana Custura. </t>
 	<t>WG-07, Use "rate-limited" uniformally instead of application and data limited.</t>
+	<t>WG-08, Updated to exit early when unvalidated cwnd not utilised, detected in tests by Q Misell. Change 
+	pipe_size to be PipeSize.</t>
 
     </list></t>
 </section> <!-- End of Revisions -->
