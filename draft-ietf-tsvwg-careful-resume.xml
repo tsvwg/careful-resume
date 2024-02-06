@@ -597,7 +597,8 @@ Examples of the transitions between phases are provided in <xref target="Example
             no more than the (PipeSize/2).
             This avoids persistent starvation by allowing capacity for other flows to regain
             their share of the total capacity.</t>
-            
+
+	    <t>Note: The minimum CWND in QUIC is 2 packets (see: <xref target="RFC9002"></xref> section 4.8).</t>
             <t>Safe Retreat Phase (QUIC recovery): When the CWND is reduced,
             a QUIC sender can immediately send a single packet prior to the reduction
             <xref target="RFC9002"></xref>.
