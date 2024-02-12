@@ -1021,7 +1021,7 @@ state_data: CarefulResumeStateParameters,
 
 
 ? trigger: "packet_loss"	;Loss triggers moving to safe retreat
-"cwnd_limited"			;trigger for moving to unvalidated
+"congestion_window_limited"			;trigger for moving to unvalidated
 "cr_mark_acknowledged"		;trigger for moving to validating or normal
 "rtt_not_validated"		;trigger for moving to normal, when CR not allowed
 "ECN_CE"			;trigger for moving to safe retreat.
@@ -1039,13 +1039,13 @@ CarefulResumePhase = " reconnaissance "
 CarefulResumeStateParameters = {
 pipesize: uint64,
 cr_mark: uint64,
-? cwnd: uint64,
+? congestion_window: uint64,
 ? ssthresh: uint64
 }
 
 
 CarefulResumeRestoredParameters = {
-previous_cwnd: uint64,
+previous_congestion_window: uint64,
 previous_rtt: float32
 }
 
