@@ -1014,41 +1014,41 @@ Examples of the transitions between phases are provided in <xref target="Example
 RecoveryCarefulResumePhaseUpdated = {
 ? old: CarefulResumePhase,
 new: CarefulResumePhase,
-
-
 state_data: CarefulResumeStateParameters,
 ? restored_data: CarefulResumeRestoredParameters,
-
-
-? trigger: "packet_loss"	;Loss triggers moving to safe retreat
-"congestion_window_limited"			;trigger for moving to unvalidated
-"cr_mark_acknowledged"		;trigger for moving to validating or normal
-"rtt_not_validated"		;trigger for moving to normal, when CR not allowed
-"ECN_CE"			;trigger for moving to safe retreat.
-"exit_recovery"			;trigger for moving to normal, 1 rtt after a congestion event 
+? trigger:
+        ; for the Safe Retreat phase
+        "packet_loss" /
+        ; for the Unvalidated phase
+        "congestion_window_limited" /
+        ; for the Validating or Normal phases
+        "cr_mark_acknowledged" /
+        ; for the Normal phase, when CR not allowed
+        "rtt_not_validated" /
+        ; for the Safe Retreat phase
+        "ECN_CE" /
+        ; for the Normal phase 1 RTT after a congestion event
+        "exit_recovery"
 }
 
-
-CarefulResumePhase = " reconnaissance " 
-"unvalidated" 
-"validating"  
-"normal" 
-"safe_retreat"
-
+CarefulResumePhase =
+        "reconnaissance" /
+        "unvalidated" /
+        "validating" /
+        "normal" /
+        "safe_retreat"
 
 CarefulResumeStateParameters = {
-pipesize: uint64,
-cr_mark: uint64,
-? congestion_window: uint64,
-? ssthresh: uint64
+pipesize: uint,
+cr_mark: uint,
+? congestion_window: uint,
+? ssthresh: uint
 }
-
 
 CarefulResumeRestoredParameters = {
-previous_congestion_window: uint64,
+previous_congestion_window: uint,
 previous_rtt: float32
 }
-
 ]]></sourcecode>
 		</figure>
    
