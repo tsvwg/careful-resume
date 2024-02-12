@@ -1011,14 +1011,44 @@ Examples of the transitions between phases are provided in <xref target="Example
 		<figure anchor="qlog-def">
 	         <!--- 	<name>cr_phase</name> -->
 <sourcecode type="cddl"><![CDATA[
-XX Fix me as CDDL XX
-<!-- CrState::OBSERVE => { 0 }
-CrState::RECON => { 1 }
-CrState::UNVAL => { 2 }
-CrState::VALIDATE => { 3 }
-CrState::NORMAL => { 4 }
-CrState::RETREAT => { 100 } -->
+RecoveryCarefulResumePhaseUpdated = {
+? old: CarefulResumePhase,
+new: CarefulResumePhase,
+state_data: CarefulResumeStateParameters,
+? restored_data: CarefulResumeRestoredParameters,
+? trigger:
+        ; for the Safe Retreat phase
+        "packet_loss" /
+        ; for the Unvalidated phase
+        "congestion_window_limited" /
+        ; for the Validating or Normal phases
+        "cr_mark_acknowledged" /
+        ; for the Normal phase, when CR not allowed
+        "rtt_not_validated" /
+        ; for the Safe Retreat phase
+        "ECN_CE" /
+        ; for the Normal phase 1 RTT after a congestion event
+        "exit_recovery"
+}
 
+CarefulResumePhase =
+        "reconnaissance" /
+        "unvalidated" /
+        "validating" /
+        "normal" /
+        "safe_retreat"
+
+CarefulResumeStateParameters = {
+pipesize: uint,
+cr_mark: uint,
+? congestion_window: uint,
+? ssthresh: uint
+}
+
+CarefulResumeRestoredParameters = {
+previous_congestion_window: uint,
+previous_rtt: float32
+}
 ]]></sourcecode>
 		</figure>
    
@@ -1031,7 +1061,7 @@ CrState::RETREAT => { 100 } -->
         Ana Custura, and Neal Cardwell for
         their fruitful comments on earlier versions of this document.</t>
         <t>The authors would like to particularly thank Tom Jones for co-authoring
-        several previous versions of this document. Ana Custura developed the qlog support.</t>
+        several previous versions of this document. Ana Custura and Robin Marx developed the qlog support.</t>
     </section>
 
     <section anchor="sec-IANA" title="IANA Considerations">
