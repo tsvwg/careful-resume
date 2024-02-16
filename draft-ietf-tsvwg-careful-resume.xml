@@ -10,7 +10,7 @@
 <?rfc sortrefs="yes" ?>
 <?rfc compact="yes" ?>
 <?rfc subcompact="no" ?>
-<rfc category="std" docName="draft-ietf-tsvwg-careful-resume-06"
+<rfc category="std" docName="draft-ietf-tsvwg-careful-resume-07"
      ipr="trust200902">
     <!-- category values: std, bcp, info, exp, and historic
     ipr values: full3667, noModification3667, noDerivatives3667
@@ -81,7 +81,7 @@ full title is longer than 39 characters -->
       </address>
     </author>
 
-    <date year="2023" />
+    <date year="2024" />
 
     <!-- If the month and year are both specified and are the current ones, xml2rfc will fill
 in the current day for you. If only the current year is specified, xml2rfc will fill
@@ -1456,7 +1456,7 @@ CWND is always based on PS - but explain the meaning of PS=CWND on ENTRY XXX</t>
 	<t>WG-06, SR updated following Hackathon comments from Kazuho Oku, and rework of use of PipeSize.
 	Added an informative summary of actions, on suggestion by Tong. Added examples based on text by Ana Custura. </t>
 	<t>WG-07, Use "rate-limited" uniformally instead of application and data limited.</t>
-	<t>WG-08, Updated to exit early when unvalidated cwnd not utilised, detected in tests by Q Misell. Change 
+	<t>Updated to exit early when unvalidated cwnd not utilised, detected in tests by Q Misell. Change 
 	pipe_size to be PipeSize.</t>
 
     </list></t>
