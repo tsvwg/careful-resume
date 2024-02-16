@@ -1199,7 +1199,7 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
 +------+---------+---------+------------+-----------+------------+
 |On    |    -    |CWND=IW  |PS=CWND;    |If (FS>PS) |CWND=(PS/2) |
 |entry:|         |         |CWND        |{CWND=FS}  |            |
-|      |         |         |=jump_cwnd  |else;      |            |
+|      |         |         |=jump_cwnd  |else       |            |
 |      |         |         |            |{CWND=PS;  |            |
 |      |         |         |            |enter      |
 |      |         |         |            |Normal}    |            |
