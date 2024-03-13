@@ -1221,46 +1221,46 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
 
  <t>
  <artwork align="left" name="table" type="" alt=""><![CDATA[
-+------+---------+---------+------------+-----------+------------+
-|Phase |Normal   |Recon.   |Unvalidated |Validating |Safe Retreat|
-+------+---------+---------+------------+-----------+------------+
-|      |Observe  |Confirm  |Send faster |Validate   |Drain path; |
-|      |CC params|path     |using saved |new CWND   |Update PS   |
-|      |         |         |            |Update PS  |            |
-+------+---------+---------+------------+-----------+------------+
-|On    |    -    |CWND=IW  |PS=CWND;    |If (FS>PS) |CWND=(PS/2) |
-|entry:|         |         |CWND        |{CWND=FS}  |            |
-|      |         |         |=jump_cwnd  |else       |            |
-|      |         |         |            |{CWND=PS;  |            |
-|      |         |         |            |enter      |
-|      |         |         |            |Normal}    |            |
-+------+---------+---------+------------+-----------+------------+
-|CWND: |When in  |CWND     |CWND is not |CWND can   |CWND is not |
-|      |observe, |increases|increased   |increase   |increased   |
-|      |measure  |using SS |            |using SS   |            |
-|      |sav_cwnd |         |            |           |            |
-+------+---------+---------+------------+-----------+------------+
-|PS:   |    -    |    -    |              PS+=ACked              |
-+------+---------+---------+------------+-----------+------------+
-|RTT:  |Measure  |Measure  |      -     |     -     |      -     |
-|      |saved_rtt|current  |            |           |            |
-|      |         |_rtt     |            |           |            |
-+------+---------+---------+------------+-----------+------------+
-|If    |Normal   |Normal   |          Enter         |      -     |
-|loss  |CC method|CC method|          Safe          |            |
-|or    |         |CR is not|          Retreat       |            |
-|ECNCE:|         |allowed  |                        |            |
-+------+---------+---------+------------+-----------+------------+
-|Next  |Observe  |If (     |If( >1 RTT  |If (last   |If (last    |
-|Phase:|(as      |FS=CWND  |has passed  |unvalidated|unvalidated |
-|      |needed)  |and CR   |or FS=CWND  |packet is  |packet is   |
-|      |         |confirmed|or first    |ACKed)     |ACKed},     |
-|      |         |), enter |unvalidated |enter      |ssthresh=PS |
-|      |         |Unvalid- |packet is   |Normal     |and then    |
-|      |         |ing else |ACKed),     |           |enter       |
-|      |         |enter    |enter       |           |Normal      |
-|      |         |Normal   |Validating  |           |            |
-+------+---------+---------+------------+-----------+------------+
++------+----------+---------+------------+-----------+------------+
+|Phase |Normal    |Recon.   |Unvalidated |Validating |Safe Retreat|
++------+----------+---------+------------+-----------+------------+
+|      |Observe   |Confirm  |Send faster |Validate   |Drain path; |
+|      |CC params |path     |using saved |new CWND;  |Update PS   |
+|      |          |         |CC params   |Update PS  |            |
++------+----------+---------+------------+-----------+------------+
+|On    |    -     |CWND=IW  |PS=CWND;    |If (FS>PS) |CWND=(PS/2) |
+|entry:|          |         |CWND        |{CWND=FS}  |            |
+|      |          |         |=jump_cwnd  |else       |            |
+|      |          |         |            |{CWND=PS;  |            |
+|      |          |         |            |enter      |
+|      |          |         |            |Normal}    |            |
++------+----------+---------+------------+-----------+------------+
+|CWND: |When in   |CWND     |CWND is not |CWND can   |CWND is not |
+|      |observe,  |increases|increased   |increase   |increased   |
+|      |measure   |using SS |            |using SS   |            |
+|      |saved_cwnd|         |            |           |            |
++------+----------+---------+------------+-----------+------------+
+|PS:   |    -     |    -    |              PS+=ACked              |
++------+----------+---------+------------+-----------+------------+
+|RTT:  |Measure   |Measure  |      -     |     -     |      -     |
+|      |saved_rtt |current  |            |           |            |
+|      |          |_rtt     |            |           |            |
++------+----------+---------+------------+-----------+------------+
+|If    |Normal    |Normal   |          Enter         |      -     |
+|loss  |CC method |CC method|          Safe          |            |
+|or    |          |CR is not|          Retreat       |            |
+|ECNCE:|          |allowed  |                        |            |
++------+----------+---------+------------+-----------+------------+
+|Next  |Observe   |If (     |If( >1 RTT  |If (last   |If (last    |
+|Phase:|(as       |FS=CWND  |has passed  |unvalidated|unvalidated |
+|      |needed)   |and CR   |or FS=CWND  |packet is  |packet is   |
+|      |          |confirmed|or first    |ACKed)     |ACKed},     |
+|      |          |), enter |unvalidated |enter      |ssthresh=PS |
+|      |          |Unvalid- |packet is   |Normal     |and then    |
+|      |          |ing else |ACKed),     |           |enter       |
+|      |          |enter    |enter       |           |Normal      |
+|      |          |Normal   |Validating  |           |            |
++------+----------+---------+------------+-----------+------------+
 ]]></artwork>
 </t>
 
