@@ -1054,8 +1054,8 @@ cr_mark: uint,
 }
 
 CarefulResumeRestoredParameters = {
-previous_congestion_window: uint,
-previous_rtt: float32
+saved_cwnd: uint,
+saved_rtt: float32
 }
 ]]></sourcecode>
 		</figure>
