@@ -1006,7 +1006,10 @@ Examples of the transitions between phases are provided in <xref target="Example
 	<t>The event and data structure definitions in this section are
 	expressed in the Concise Data Definition Language (CDDL)
 	<xref target="RFC8610"></xref> and its
-	extensions described in <xref target="I-D.ietf-quic-qlog-quic-events"></xref>.</t>
+	extensions described in <xref target="I-D.ietf-quic-qlog-quic-events"></xref>.
+	The current convention is to use long names for variables.
+	For example, "cwnd" is expanded as "congestion_window"
+	and "saved_cwnd" is expanded as "saved_congestion_window" below.</t>
 	
 	<section title="cr_phase Event">
 		<!--<name>cr_phase</name>-->
@@ -1029,8 +1032,10 @@ state_data: CarefulResumeStateParameters,
         "packet_loss" /
         ; for the Unvalidated phase
         "congestion_window_limited" /
-        ; for the Validating or Normal phases
-        "cr_mark_acknowledged" /
+        ; for the Validating phase
+        "first_unvalidated_packet_acknowledged" /
+	; for the Normal phase
+        "last_unvalidated_packet_acknowledged" /
         ; for the Normal phase, when CR not allowed
         "rtt_not_validated" /
         ; for the Safe Retreat phase
@@ -1048,13 +1053,14 @@ CarefulResumePhase =
 
 CarefulResumeStateParameters = {
 pipesize: uint,
-cr_mark: uint,
+first_unvalidated_packet: uint,
+last_unvalidated_packet: uint,	
 ? congestion_window: uint,
 ? ssthresh: uint
 }
 
 CarefulResumeRestoredParameters = {
-saved_cwnd: uint,
+saved_congestion_window: uint,
 saved_rtt: float32
 }
 ]]></sourcecode>
@@ -1263,15 +1269,19 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
 +------+---------+---------+------------+-----------+------------+
 ]]></artwork>
 </t>
-
 <t>Notes:
 SS = slow start FS= flight_size; PS = PipeSize.</t>
+<t>Note:
+For an implementation that keeps track of transmitted data in terms of packets: 
+In the Unvalidated Phase, the first unvalidated packet is the highest sent packet number recorded on entry to this phase.
+In the Valadating and Safe Retreat Phases, the last unvalidated packet is also the highest sent packet number recorded on entry to this phase.
+</t>
 
-   <t>The remaining subsections provide informative examples of use.</t>
-
-<t>XXXX ACTIONS
+<t>Note: XXXX ACTIONS
 Add PipeSize text
 CWND is always based on PS - but explain the meaning of PS=CWND on ENTRY XXX</t>
+
+<t>The remaining subsections provide informative examples of use.</t>
 
     <section anchor="Examples-no loss" title="Example with No Loss">
 	<t>In the first example of using the Careful Resume method, 
