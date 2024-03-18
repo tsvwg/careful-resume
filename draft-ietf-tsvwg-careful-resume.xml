@@ -1230,7 +1230,7 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
 |Phase |Normal   |Recon.   |Unvalidated |Validating |Safe Retreat|
 +------+---------+---------+------------+-----------+------------+
 |      |Observe  |Confirm  |Send faster |Validate   |Drain path; |
-|      |CC params|path     |using saved |new CWND   |Update PS   |
+|      |CC params|path     |using saved |new CWND;  |Update PS   |
 |      |         |         |            |Update PS  |            |
 +------+---------+---------+------------+-----------+------------+
 |On    |    -    |CWND=IW  |PS=CWND;    |If (FS>PS) |CWND=(PS/2) |
@@ -1268,17 +1268,15 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
 +------+---------+---------+------------+-----------+------------+
 ]]></artwork>
 </t>
-<t>Notes:
-SS = slow start FS= flight_size; PS = PipeSize.</t>
+<t>The following abbreviations are used
+SS = slow start FS= flight_size; PS = PipeSize. The PipeSize is set to the cwnd
+on entry to the Unvalidated Phase to match the validated part of the cwnd.
+This is updated as additional packets are acknowledged.</t>
 <t>Note:
 For an implementation that keeps track of transmitted data in terms of packets: 
 In the Unvalidated Phase, the first unvalidated packet is the highest sent packet number recorded on entry to this phase.
 In the Valadating and Safe Retreat Phases, the last unvalidated packet is also the highest sent packet number recorded on entry to this phase.
 </t>
-
-<t>Note: XXXX ACTIONS
-Add PipeSize text
-CWND is always based on PS - but explain the meaning of PS=CWND on ENTRY XXX</t>
 
 <t>The remaining subsections provide informative examples of use.</t>
 
