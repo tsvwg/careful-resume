@@ -273,7 +273,7 @@ specify just the year. -->
         expected for other sizes of transfer and for different path
         characteristics when a path has a large BDP.</t>
 
-        <t>{XXX-Editor note: A future revision would helpfully provide further Path Examples here.}</t>
+        <!-- XXX-Editor note: A future revision would helpfully provide further Path Examples here.} -->
     </section> <!-- Introduction: End of examples -->
    
 </section> <!-- End of introduction and motivation -->
@@ -329,7 +329,6 @@ specify just the year. -->
 
 	    <t>max_jump : The maximum configured jump_cwnd;</t>
 
-		<!--- XXX RS to check -->
 	    <t>PipeSize: A measure of the validated available capacity based on the acknowledged data;</t>
 
             <t>saved_cwnd: A value of CWND derived from observation of a
@@ -414,7 +413,6 @@ Examples of the transitions between phases are provided in <xref target="Example
     </section> <!-- End of define Observe Phase:-->
           
     <section anchor="rec-phase" title="Reconnaissance Phase">
-	<!--- XXX RS Check -->
         <t> A sender enters the Reconnaissance Phase after connection setup.
         In this phase, the CWND is initialised to the IW, and the sender transmits initial data.
         The CWND MAY be increased using normal CC as each acknowledgment
@@ -446,8 +444,8 @@ Examples of the transitions between phases are provided in <xref target="Example
              <xref target="I-D.kuhn-quic-bdpframe-extension"></xref>) to request
              that the sender instead enters the Normal Phase.</t>
 
-	     <t> {XXX-Editor note: Reconnaissance Phase (Is there a need for a minimum
-	     required number of RTT samples to confirm a path ???? }</t>
+	     <!--{XXX-Editor note: Reconnaissance Phase (Is there a need for a minimum
+	     required number of RTT samples to confirm a path ???? }-->
 		
             <t>Reconnaissance Phase (Detected congestion): If the sender detects
             congestion (e.g., packet loss or ECN-CE marking), the sender does not use the Careful
@@ -845,8 +843,8 @@ Examples of the transitions between phases are provided in <xref target="Example
 	    this can be used to justify a longer lifetime of the saved_cwnd using
 	    the Careful Resume method.</t>
 		
-            <t>{XXX-Editor NOTE: A future revision of this document could specify a maximum time that
-            CC Parameters can be cached - Ought this to me minutes, hours, days?}</t>
+            <!--{XXX-Editor NOTE: A future revision of this document could specify a maximum time that
+            CC Parameters can be cached - Ought this to me minutes, hours, days?}-->
         </section> <!-- End of Reconnaissance:Liftetime of Params -->
             
         <section anchor="req-pace" title="Pacing in the Unvalidated Phase">
@@ -969,11 +967,14 @@ Examples of the transitions between phases are provided in <xref target="Example
             <t>For BBR CC, it is recommended to enter the "probe bandwidth"
             state.</t>
         </list></t>-->
+	    
 	<t>In the Normal Phase, a sender can enter the Observation Phase to perform
 	observation of the path.</t>
+	    
         <t>{XXX-Editor note: A future revision should discuss updating
         the saved parameters, whether used or not, after reaching normal operation for use
         the next time even if that update is to just refresh the expiration time.}</t>
+	    
     </section><!-- End of Normal Phase -->
     <section anchor="flow-control" title="Limitations from Transport Protocols">
 
