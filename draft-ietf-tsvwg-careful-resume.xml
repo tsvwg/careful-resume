@@ -996,7 +996,6 @@ Examples of the transitions between phases are provided in <xref target="Example
 </section> <!--  End of Guidelines -->
 
 <section anchor="sec-QLOG" title="QLOG support for QUIC">
-	<t> {XXX-Editor note: This section to be completed XXX}</t>
     <t>This section provides definitions that enable the
 	Careful Resume method
 	to generate qlog events when using QUIC.
