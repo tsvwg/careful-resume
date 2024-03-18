@@ -1270,8 +1270,8 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
 </t>
 <t>The following abbreviations are used
 SS = slow start FS= flight_size; PS = PipeSize. The PipeSize is set to the cwnd
-on entry to the Unvalidated Phase to match the validated part of the cwnd.
-This is updated as additional packets are acknowledged.</t>
+on entry to the Unvalidated Phase. This tracks the validated part of the cwnd and
+is updated as each additional packet is acknowledged.</t>
 <t>Note:
 For an implementation that keeps track of transmitted data in terms of packets: 
 In the Unvalidated Phase, the first unvalidated packet is the highest sent packet number recorded on entry to this phase.
