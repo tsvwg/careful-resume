@@ -1274,8 +1274,8 @@ on entry to the Unvalidated Phase. This tracks the validated part of the cwnd an
 is updated as each additional packet is acknowledged.</t>
 <t>Note:
 For an implementation that keeps track of transmitted data in terms of packets: 
-In the Unvalidated Phase, the first unvalidated packet is the highest sent packet number recorded on entry to this phase.
-In the Valadating and Safe Retreat Phases, the last unvalidated packet is also the highest sent packet number recorded on entry to this phase.
+In the Unvalidated Phase, the first unvalidated packet corresponds to the highest sent packet recorded on entry to this phase.
+In the Valadating and Safe Retreat Phases, corresponds to the last unvalidated packet is also the highest sent packet recorded on entry to this phase.
 </t>
 
 <t>The remaining subsections provide informative examples of use.</t>
