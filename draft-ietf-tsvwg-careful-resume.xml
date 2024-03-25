@@ -6,7 +6,7 @@
 <?rfc strict="yes" ?>
 <?rfc toc="yes"?>
 <?rfc tocdepth="4"?>
-<?rfc symrefs="yes"?>
+<?rfc symrefs="yes"?>( 
 <?rfc sortrefs="yes" ?>
 <?rfc compact="yes" ?>
 <?rfc subcompact="no" ?>
@@ -1251,14 +1251,14 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
 |or    |         |CR is not|          Retreat       |            |
 |ECNCE:|         |allowed  |                        |            |
 +------+---------+---------+------------+-----------+------------+
-|Next  |Observe  |If (     |If( >1 RTT  |If (last   |If (last    |
+|Next  |Observe  |If (     |If (>1 RTT  |If (last   |If (last    |
 |Phase:|(as      |FS=CWND  |has passed  |unvalidated|unvalidated |
 |      |needed)  |and CR   |or FS=CWND  |packet is  |packet is   |
-|      |         |confirmed|or first    |ACKed)     |ACKed},     |
-|      |         |), enter |unvalidated |enter      |ssthresh=PS |
+|      |         |confirmed|or first    |ACKed)     |ACKed),     |
+|      |         |), enter |unvalidated |enter      |{ssthresh=PS|
 |      |         |Unvalid- |packet is   |Normal     |and then    |
 |      |         |ing else |ACKed),     |           |enter       |
-|      |         |enter    |enter       |           |Normal      |
+|      |         |enter    |enter       |           |Normal}     |
 |      |         |Normal   |Validating  |           |            |
 +------+---------+---------+------------+-----------+------------+
 ]]></artwork>
