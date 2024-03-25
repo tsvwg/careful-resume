@@ -396,7 +396,7 @@ Examples of the transitions between phases are provided in <xref target="Example
             information after each observation.
             If the measured CWND is less than four times the Initial Window (IW)
             (i.e., CWND less than IW*4),
-            a sender ought not store and/or send CC parameters. The additional actions associated with
+            a sender can choose to not store and/or send CC parameters, because the additional actions associated with
 	    performing Careful Resume for a small CWND would not justify the use of the method.</t>
 
           <!-- The requirement below really applies to BDP Frame if adopted, otherwise needs explained -->
