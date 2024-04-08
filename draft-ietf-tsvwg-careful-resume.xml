@@ -1020,8 +1020,8 @@ Examples of the transitions between phases are provided in <xref target="Example
 	         <!--- 	<name>cr_phase</name> -->
 <sourcecode type="cddl"><![CDATA[
 RecoveryCarefulResumePhaseUpdated = {
-? old: CarefulResumePhase,
-new: CarefulResumePhase,
+? old_phase: CarefulResumePhase,
+new_phase: CarefulResumePhase,
 state_data: CarefulResumeStateParameters,
 ? restored_data: CarefulResumeRestoredParameters,
 ? trigger:
