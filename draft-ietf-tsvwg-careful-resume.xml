@@ -1255,16 +1255,17 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
 |or    |         |CR is not|          Retreat       |            |
 |ECNCE:|         |allowed  |                        |            |
 +------+---------+---------+------------+-----------+------------+
-|Next  |Observe  |If (     |If (>1 RTT  |If (last   |If (last    |
-|Phase:|(as      |FS=CWND  |has passed  |unvalidated|unvalidated |
-|      |needed)  |and CR   |or FS=CWND  |packet is  |packet is   |
-|      |         |confirmed|or first    |ACKed)     |ACKed),     |
-|      |         |), enter |unvalidated |enter      |{ssthresh=PS|
-|      |         |Unvalid- |packet is   |Normal     |and then    |
-|      |         |ing else |ACKed),     |           |enter       |
-|      |         |enter    |enter       |           |Normal}     |
+|Next  |Observe  |If (     |If (FS=CWND |If (ACK for|If (ACK for |
+|Phase:|(as      |FS=CWND  |or >1 RTT   |>= last    |>= last     |
+|      |needed)  |and CR   |has passed  |unvalidated|unvalidated |
+|      |         |confirmed|or ACK for  |packet),   |packet),    |
+|      |         |), enter |>= last     |enter      |{ssthresh=PS|
+|      |         |Unvalid- |unvalidated |Normal     |and enter   |
+|      |         |ing else |packet),    |           |Normal}     |
+|      |         |enter    |enter       |           |            |
 |      |         |Normal   |Validating  |           |            |
 +------+---------+---------+------------+-----------+------------+
+
 ]]></artwork>
 </t>
 <t>The following abbreviations are used
