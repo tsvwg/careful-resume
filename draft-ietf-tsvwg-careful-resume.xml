@@ -1255,7 +1255,7 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
 |or    |         |CR is not|          Retreat       |            |
 |ECNCE:|         |allowed  |                        |            |
 +------+---------+---------+------------+-----------+------------+
-|Next  |Observe  |If (     |If (FS=CWND |If (ACK for|If (ACK for |
+|Next  |Observe  |If (     |If (FS=CWND |If (ACK    |If (ACK     |
 |Phase:|(as      |FS=CWND  |or >1 RTT   |>= last    |>= last     |
 |      |needed)  |and CR   |has passed  |unvalidated|unvalidated |
 |      |         |confirmed|or ACK for  |packet),   |packet),    |
