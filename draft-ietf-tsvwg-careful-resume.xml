@@ -1221,7 +1221,7 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
     <t> The table below is provided to illustrate the operation of Careful Resume. 
     This table is informative, please refer to the body of the document 
     for the normative specification. The description is based on a Normal 
-    CC using Reno or Cubic.</t>
+    CC that uses Reno or Cubic. The PipeSize tracks the validated CWND.</t>
 
  <t>
  <artwork align="left" name="table" type="" alt=""><![CDATA[
@@ -1255,16 +1255,17 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
 |or    |         |CR is not|          Retreat       |            |
 |ECNCE:|         |allowed  |                        |            |
 +------+---------+---------+------------+-----------+------------+
-|Next  |Observe  |If (     |If (>1 RTT  |If (last   |If (last    |
-|Phase:|(as      |FS=CWND  |has passed  |unvalidated|unvalidated |
-|      |needed)  |and CR   |or FS=CWND  |packet is  |packet is   |
-|      |         |confirmed|or first    |ACKed)     |ACKed),     |
-|      |         |), enter |unvalidated |enter      |{ssthresh=PS|
-|      |         |Unvalid- |packet is   |Normal     |and then    |
-|      |         |ing else |ACKed),     |           |enter       |
-|      |         |enter    |enter       |           |Normal}     |
+|Next  |Observe  |If (     |If (FS=CWND |If (ACK    |If (ACK     |
+|Phase:|(as      |FS=CWND  |or >1 RTT   |>= last    |>= last     |
+|      |needed)  |and CR   |has passed  |unvalidated|unvalidated |
+|      |         |confirmed|or ACK for  |packet),   |packet),    |
+|      |         |), enter |>= last     |enter      |{ssthresh=PS|
+|      |         |Unvalid- |unvalidated |Normal     |and enter   |
+|      |         |ing else |packet),    |           |Normal}     |
+|      |         |enter    |enter       |           |            |
 |      |         |Normal   |Validating  |           |            |
 +------+---------+---------+------------+-----------+------------+
+
 ]]></artwork>
 </t>
 <t>The following abbreviations are used
@@ -1464,6 +1465,9 @@ In the Valadating and Safe Retreat Phases, corresponds to the last unvalidated p
 	<t>WG-07, Use "rate-limited" uniformally instead of application and data limited.</t>
 	<t>Updated to exit early when unvalidated cwnd not utilised, detected in tests by Q Misell. Change 
 	pipe_size to be PipeSize.</t>
+	    <t>WG-08, Updated CDDL, and made constraints in the Observe Phase into guidance, they say what 
+	makes sense - but do not need to be followed for conformance. Updated table in annexe to align
+	with text.</t>
 
     </list></t>
 </section> <!-- End of Revisions -->
