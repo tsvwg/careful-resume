@@ -529,7 +529,7 @@ Examples of the transitions between phases are provided in <xref target="Example
              
              <t>Unvalidated Phase (Receiving acknowledgements for reconnaisance packets):
                  The variable PipeSize if increased by the amount of data that is acknowledged
-                 by each acknowledgment (in bytes). This indicated a previously unvalidated packet has been
+                 by each acknowledgment (in bytes). This indicates a previously unackowledged packet has been
                  succesfuly sent over the path.</t>
 
              <t>Unvalidated Phase (Receiving acknowledgements for an unvalidated packet):
