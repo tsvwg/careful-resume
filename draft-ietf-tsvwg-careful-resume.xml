@@ -544,19 +544,16 @@ Examples of the transitions between phases are provided in <xref target="Example
         <t>The Validating Phase checks that packets
         sent in the Unvalidated Phase were received without inducing congestion.
         The CWND remains unvalidated and the sender typically remains in this phase for one RTT.
-         (Note 1: When flight_size is less than or equal to the PipeSize (the validated window), there is no need to validate the data in flight, CWND is reset to the PipeSize and the Normal phase is immediately entered).
-	 (Note 2: When the jump_cwnd is not
-        fully utilised, the CWND will be reset to the flight_size, to match the smaller capacity being validated.)
-
         </t>
         <t><list style="symbols">
             <t>Validating Phase (Check flight_size on entry):
             On entry to the Validating Phase, if the flight_size is less
-	    equal to the PipeSize, the Normal phase is entered and CWND
-	    is reset to the PipeSize.</t>
+	    equal to the PipeSize, the Normal phase is entered and CWND.
+	    There is no need to validate the data in flight.</t>
 
 	    <t>Validating Phase (Limiting CWND on entry):
-            On entry to the Validating Phase, the CWND is set to the flight_size.</t>
+            On entry to the Validating Phase, the CWND is set to the flight_size.
+	    This corresponds to the capacity being validated.</t>
 		
             <t>Validating Phase (Updating CWND): The CWND is updated using the
             normal rules for the current congestion controller, this typically
