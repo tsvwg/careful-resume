@@ -154,7 +154,7 @@ specify just the year. -->
     from successfully sharing the capacity at a common bottleneck).</t>
 
     <t>This document proposes a CC method that is expected to
-     reduce the time to complete a transfer
+    reduce the time to complete a transfer
     when the transfer sends significantly more data than allowed by the
     Initial congestion Window (IW), and
     where the BDP of the path is also significantly
@@ -361,7 +361,9 @@ specify just the year. -->
 Observe ...> Connect -> Reconnaissance --------------------> Normal
 (Normal)                 |                                    ^
                          v                                    |
-                        Unvalidated --> Validating -----------+
+                        Unvalidated --------------------------+
+	                 |      |                             |
+	                 |      +--> Validating --------------+
                          |               |                    |
                          |               |                    |
                          +---------------+--> Safe Retreat ---+
@@ -500,7 +502,7 @@ Examples of the transitions between phases are provided in <xref target="Example
 	     the current_rtt is greater than or equal to
              (saved_rtt / 2) or the current_rtt is less than or equal to (saved_rtt x 10)
 	     (see <xref target="sec-confirm-rtt"></xref>),
-	     the sender MUST enter the Normal Phase.</t>
+	     the sender MUST enter the Normal Phase (see trigger rtt_not_validated in <xref target="sec-QLOG").</t>
 	</list></t>
 	    
         <t>When the RTT is confirmed:</t>
@@ -533,8 +535,9 @@ Examples of the transitions between phases are provided in <xref target="Example
                  succesfuly sent over the path.</t>
 
              <t>Unvalidated Phase (Receiving acknowledgements for an unvalidated packet):
-	     The sender enters the Validating Phase when the first acknowledgement is
-             received for the first packet number (or higher) that was sent in the Unvalidated Phase.</t>
+	     The sender enters the Validating Phase when an acknowledgement is
+             received for the first packet number (or higher) that was sent in the Unvalidated Phase
+	     (see first_unvalidated_packet_acknowledged  in <xref target="sec-QLOG").</t>
         </list></t> <!-- End of list of actions -->
 
         <t>Implementation notes are provided in <xref target="req-unvalid"></xref>. </t>
@@ -553,7 +556,8 @@ Examples of the transitions between phases are provided in <xref target="Example
             <t>Validating Phase (Check flight_size on entry):
             On entry to the Validating Phase, if the flight_size is less
 	    equal to the PipeSize, the Normal phase is entered and CWND
-	    is reset to the PipeSize.</t>
+	    is reset to the PipeSize
+	    (see congestion_window_limited  in <xref target="sec-QLOG").</t>
 
 	    <t>Validating Phase (Limiting CWND on entry):
             On entry to the Validating Phase, the CWND is set to the flight_size.</t>
@@ -573,12 +577,14 @@ Examples of the transitions between phases are provided in <xref target="Example
             <t>Validating Phase (Congestion indication):
             If a sender determines that congestion was experienced
             (e.g., packet loss or ECN-CE marking), Careful Resume
-            enters the Safe Retreat Phase.</t>
+            enters the Safe Retreat Phase
+	    (see trigger packet_loss and ECN_CE  in <xref target="sec-QLOG").</t>
             
             <t>Validating Phase (Receiving acknowledgement for all unvalidated packets):
 	    The sender enters the Normal Phase when an acknowledgement is
             received for the last packet number (or higher)
-            that was sent in the Unvalidated Phase.</t>
+            that was sent in the Unvalidated Phase
+	    (see last_unvalidated_packet_acknowledged  in <xref target="sec-QLOG").</t>
         </list></t> <!-- End of list of actions -->
     </section> <!-- End of define Validating Phase -->
     
@@ -610,7 +616,7 @@ Examples of the transitions between phases are provided in <xref target="Example
             similar to TCP as described in Section 5 of <xref target="RFC6675"></xref>.)</t>
 
             <t>Safe Retreat Phase (Increasing CWND):
-            The CWND MUST NOT be increased in this Phase.</t>
+            The CWND MUST NOT be increased in the Safe Retreat Phase.</t>
 
 	    <t>Safe Retreat Phase (Tracking PipeSize):
             The sender continues to update
@@ -623,7 +629,8 @@ Examples of the transitions between phases are provided in <xref target="Example
 	    The sender enters Normal Phase
             when the last packet (or later) sent during the
             Unvalidated Phase has been acknowledged. The sender
-            MUST set the ssthresh to no more than the PipeSize.</t>
+            MUST set the ssthresh to no more than the PipeSize
+	    (see exit_recovery  in <xref target="sec-QLOG").</t>
         </list></t>
      
         <t>Implementation requirements are provided in
