@@ -1070,7 +1070,7 @@ saved_rtt: float32
 <section anchor="sec-acknowledgments" title="Acknowledgments">
         <t>The authors would like to thank John Border, Gabriel Montenegro, Patrick McManus,
         Ian Swett, Igor Lubashev, Robin Marx, Roland Bless, Franklin Simo, Kazuho Oku, Tong,
-        Ana Custura, and Neal Cardwell for
+        Ana Custura, Neal Cardwell, and Joerg Deutschmann for
         their fruitful comments on earlier versions of this document.</t>
         <t>The authors would like to particularly thank Tom Jones for co-authoring
         several previous versions of this document. Ana Custura and Robin Marx developed the qlog support.</t>
@@ -1278,7 +1278,11 @@ In the Unvalidated Phase, the first unvalidated packet corresponds to the highes
 In the Valadating and Safe Retreat Phases, corresponds to the last unvalidated packet is also the highest sent packet recorded on entry to this phase.
 </t>
 
-<t>The remaining subsections provide informative examples of use.</t>
+<t>The remaining subsections provide informative examples of use.
+Although the QLOG variables are expressed in bytes,
+to simplify the description, these examples 
+are described in term of packet numbers.
+</t>
 
     <section anchor="Examples-no loss" title="Example with No Loss">
 	<t>In the first example of using the Careful Resume method, 
