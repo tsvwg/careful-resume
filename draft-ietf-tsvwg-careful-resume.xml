@@ -587,15 +587,19 @@ Examples of the transitions between phases are provided in <xref target="Example
     <section anchor="ret-phase" title="Safe Retreat Phase">
         
         <t>This phase is entered when the first loss/ECN-CE marking is 
-	detected is detected for unvalidated packets,
-        and drains the path of other unvalidated packets.
+	detected for unvalidated packets. On entry to the Safe Retreat Phase, the sender MUST
+        drain the path of any other unvalidated packets before entering the Normal Phase.
         (This trigger is the same as used by a QUIC sender to transition
         from Slow Start to Recovery <xref target="RFC9002"></xref>.)</t>
 
         <t><list style="symbols">
             <t>Safe Retreat Phase (Removing saved information): The set of saved CC parameters for
             the path are deleted, to prevent these
-            from being used again by other flows.</t>
+            from being used again by other flows.
+	    If the congestion control algorithm for the current connection has updated variables (e.g., RTO settings,
+	    other terms for growing cwnd, etc.) since entering the Unvalidated Phase, then the value of those
+	    variables MUST NOT be further considered when making CC decisions during Safe Retreat or in any subsequent state.
+	    </t>
 		
             <t>Safe Retreat Phase (Re-initializing CC): On entry,
             the CWND MUST be reduced to
