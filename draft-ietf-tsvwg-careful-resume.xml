@@ -595,7 +595,11 @@ Examples of the transitions between phases are provided in <xref target="Example
         <t><list style="symbols">
             <t>Safe Retreat Phase (Removing saved information): The set of saved CC parameters for
             the path are deleted, to prevent these
-            from being used again by other flows.</t>
+            from being used again by other flows.
+	    If the transport protocol calculated some variables (e.g., for the RTO settings, 
+	    for growing cwnd, etc.) before congestion detection, then the state of those 
+	    variables must not be further considered when making CC decisions in Safe Retreat or any subsequent state.
+	    </t>
 		
             <t>Safe Retreat Phase (Re-initializing CC): On entry,
             the CWND MUST be reduced to
