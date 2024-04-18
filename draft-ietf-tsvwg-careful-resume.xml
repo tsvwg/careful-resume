@@ -588,7 +588,7 @@ Examples of the transitions between phases are provided in <xref target="Example
         
         <t>This phase is entered when the first loss/ECN-CE marking is 
 	detected for unvalidated packets. In contrast to normal loss recovery, the sender MUST
-        drain the path of any other unvalidated packets, before normal congestion
+        drain the path of any other unvalidated packets before normal congestion
 	control is resumed.
         (This trigger is the same as used by a QUIC sender to transition
         from Slow Start to Recovery <xref target="RFC9002"></xref>.)</t>
