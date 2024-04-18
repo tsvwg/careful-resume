@@ -1247,8 +1247,9 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
 +------+---------+---------+------------+-----------+------------+
 |CWND: |When in  |CWND     |CWND is not |CWND can   |CWND is not |
 |      |observe, |increases|increased   |increase   |increased   |
-|      |measure  |using SS |            |using SS   |            |
-|      |sav_cwnd |         |            |           |            |
+|      |measure  |using    |            |using      |            |
+|      |sav_cwnd |normal CC|            |normal CC  |            |
+|      |         |methods  |            |methods    |            |
 +------+---------+---------+------------+-----------+------------+
 |PS:   |    -    |    -    |              PS+=ACked              |
 +------+---------+---------+------------+-----------+------------+
