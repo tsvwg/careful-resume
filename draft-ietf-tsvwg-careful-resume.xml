@@ -588,8 +588,7 @@ Examples of the transitions between phases are provided in <xref target="Example
         
         <t>This phase is entered when the first loss/ECN-CE marking is 
 	detected for unvalidated packets. On entry to the Safe Retreat Phase, the sender MUST
-        drain the path of any other unvalidated packets before normal congestion
-	control is resumed.
+        drain the path of any other unvalidated packets before entering the Normal Phase.
         (This trigger is the same as used by a QUIC sender to transition
         from Slow Start to Recovery <xref target="RFC9002"></xref>.)</t>
 
