@@ -453,6 +453,9 @@ Examples of the transitions between phases are provided in <xref target="Example
             <t>Reconnaissance Phase (Detected congestion): If the sender detects
             congestion (e.g., packet loss or ECN-CE marking), the sender does not use the Careful
 	    Resume method and MUST enter the Normal Phase to respond to the detected congestion.
+	    If the transport protocol calculated some variables (e.g., for the RTO setting, for growing cwnd, etc.)
+            before congestion detection, then the state of those variables must not be further considered 
+            when making CC decisions in Safe Retreat or any subsequent state.
 	    </t>
 
             <t>Reconnaissance Phase (Using saved_cwnd):
