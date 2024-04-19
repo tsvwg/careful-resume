@@ -1033,8 +1033,6 @@ new_phase: CarefulResumePhase,
 state_data: CarefulResumeStateParameters,
 ? restored_data: CarefulResumeRestoredParameters,
 ? trigger:
-        ; for the Safe Retreat phase
-        "packet_loss" /
         ; for the Unvalidated phase
         "congestion_window_limited" /
         ; for the Validating phase
@@ -1043,7 +1041,9 @@ state_data: CarefulResumeStateParameters,
         "last_unvalidated_packet_acknowledged" /
         ; for the Normal phase, when CR not allowed
         "rtt_not_validated" /
-        ; for the Safe Retreat phase
+	; for the Safe Retreat phase
+        "packet_loss" /
+	; for the Safe Retreat phase
         "ECN_CE" /
         ; for the Normal phase 1 RTT after a congestion event
         "exit_recovery"
