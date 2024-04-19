@@ -596,9 +596,10 @@ Examples of the transitions between phases are provided in <xref target="Example
             <t>Safe Retreat Phase (Removing saved information): The set of saved CC parameters for
             the path are deleted, to prevent these
             from being used again by other flows.
-	    If the congestion control algorithm for the current connection has updated variables (e.g., RTO settings,
-	    other terms for growing cwnd, etc.) since entering the Unvalidated Phase, then the value of those
-	    variables MUST NOT be further considered when making CC decisions during Safe Retreat or in any subsequent state.
+	    To avoid persistent overshoot, on entering the Normal Phase,
+	    the congestion control algorithm needs to itself determine the path capacity
+	    (e.g., using SS or bandwidth probing), which MUST NOT consider capacity information
+	    deduced from packets sent in the Unvalidated Phase.
 	    </t>
 		
             <t>Safe Retreat Phase (Re-initializing CC): On entry,
