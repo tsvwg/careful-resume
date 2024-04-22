@@ -549,25 +549,27 @@ Examples of the transitions between phases are provided in <xref target="Example
     </section> <!-- End of define Unvalidated Phase -->
 
     <section anchor="val-phase" title="Validating Phase">
-        <t>The Validating Phase checks that packets
+        <t>The Validating Phase checks that the packets
         sent in the Unvalidated Phase were received without inducing congestion.
         The CWND remains unvalidated and the sender typically remains in this phase for one RTT.
         </t>
         <t><list style="symbols">
             <t>Validating Phase (Check flight_size on entry):
             On entry to the Validating Phase, if the flight_size is less
-	    equal to the PipeSize, the Normal phase is entered and CWND.
-	    There is no need to validate the data in flight.</t>
+	    equal to the PipeSize (the validated window),
+	    the CWND is reset to the PipeSize and
+	    the Normal phase is then immediately entered.
+	    There is no need to validate the current data in flight.</t>
 
 	    <t>Validating Phase (Limiting CWND on entry):
             On entry to the Validating Phase, the CWND is set to the flight_size.
-	    This corresponds to the capacity being validated.</t>
+	    This corresponds to the capacity being validated
+	    (see trigger rate_limited in <xref target="sec-QLOG"></xref>).</t>
 		
             <t>Validating Phase (Updating CWND): The CWND is updated using the
             normal rules for the current congestion controller, this typically
             allows CWND to be increased for each ACK received that
-            indicates
-            a packet has been successfully sent across the path.</t>
+            indicates a packet has been successfully sent across the path.</t>
             
             <t>Validating Phase (Receiving acknowledgements for unvalidated packets):
                 The variable PipeSize is increased upon each
@@ -1395,7 +1397,7 @@ are described in term of packet numbers.
 
 	<t>At the point where all packets sent in the Unvalidated Phase have been either acknowledged
 	or declared lost, the sender enters the Normal Phase, but first updates ssthresh.
-	Because CWND will now now be less than ssthresh, a sender in the Normal Phase is permitted to use 
+	Because CWND will now be less than ssthresh, a sender in the Normal Phase is permitted to use 
 	slow start to grow the CWND towards the ssthresh, after which it will enter congestion avoidance.</t>
      </section>
 		    
