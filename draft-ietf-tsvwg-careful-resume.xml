@@ -6,11 +6,11 @@
 <?rfc strict="yes" ?>
 <?rfc toc="yes"?>
 <?rfc tocdepth="4"?>
-<?rfc symrefs="yes"?>( 
+<?rfc symrefs="yes"?>
 <?rfc sortrefs="yes" ?>
 <?rfc compact="yes" ?>
 <?rfc subcompact="no" ?>
-<rfc category="std" docName="draft-ietf-tsvwg-careful-resume-07"
+<rfc category="std" docName="draft-ietf-tsvwg-careful-resume-08"
      ipr="trust200902">
     <!-- category values: std, bcp, info, exp, and historic
     ipr values: full3667, noModification3667, noDerivatives3667
@@ -154,7 +154,7 @@ specify just the year. -->
     from successfully sharing the capacity at a common bottleneck).</t>
 
     <t>This document proposes a CC method that is expected to
-     reduce the time to complete a transfer
+    reduce the time to complete a transfer
     when the transfer sends significantly more data than allowed by the
     Initial congestion Window (IW), and
     where the BDP of the path is also significantly
@@ -227,7 +227,7 @@ specify just the year. -->
         </list></t>
 
             <!--QUIC introduces the concept of transport parameters (Section 4 of
-                <xref target="RFC9000">). -->
+                <xref target="RFC9000"></xref>). -->
             <t>A related document proposes an extension for QUIC that allows
             sender-generated CC parameters to be stored at the receiver
             <xref target="I-D.kuhn-quic-bdpframe-extension"></xref>.
@@ -366,7 +366,9 @@ specify just the year. -->
 Observe ...> Connect -> Reconnaissance --------------------> Normal
 (Normal)                 |                                    ^
                          v                                    |
-                        Unvalidated --> Validating -----------+
+                        Unvalidated --------------------------+
+                         |      |                             |
+                         |      +--> Validating --------------+
                          |               |                    |
                          |               |                    |
                          +---------------+--> Safe Retreat ---+
@@ -505,7 +507,7 @@ Examples of the transitions between phases are provided in <xref target="Example
 	     the current_rtt is greater than or equal to
              (saved_rtt / 2) or the current_rtt is less than or equal to (saved_rtt x 10)
 	     (see <xref target="sec-confirm-rtt"></xref>),
-	     the sender MUST enter the Normal Phase.</t>
+	     the sender MUST enter the Normal Phase (see trigger rtt_not_validated in <xref target="sec-QLOG"></xref>).</t>
 	</list></t>
 	    
         <t>When the RTT is confirmed:</t>
@@ -538,8 +540,9 @@ Examples of the transitions between phases are provided in <xref target="Example
                  succesfully sent over the path.</t>
 
              <t>Unvalidated Phase (Receiving acknowledgements for an unvalidated packet):
-	     The sender enters the Validating Phase when the first acknowledgement is
-             received for the first packet number (or higher) that was sent in the Unvalidated Phase.</t>
+	     The sender enters the Validating Phase when an acknowledgement is
+             received for the first packet number (or higher) that was sent in the Unvalidated Phase
+	     (see first_unvalidated_packet_acknowledged  in <xref target="sec-QLOG"></xref>).</t>
         </list></t> <!-- End of list of actions -->
 
         <t>Implementation notes are provided in <xref target="req-unvalid"></xref>. </t>
@@ -575,12 +578,14 @@ Examples of the transitions between phases are provided in <xref target="Example
             <t>Validating Phase (Congestion indication):
             If a sender determines that congestion was experienced
             (e.g., packet loss or ECN-CE marking), Careful Resume
-            enters the Safe Retreat Phase.</t>
+            enters the Safe Retreat Phase
+	    (see trigger packet_loss and ECN_CE  in <xref target="sec-QLOG"></xref>).</t>
             
             <t>Validating Phase (Receiving acknowledgement for all unvalidated packets):
 	    The sender enters the Normal Phase when an acknowledgement is
             received for the last packet number (or higher)
-            that was sent in the Unvalidated Phase.</t>
+            that was sent in the Unvalidated Phase
+	    (see last_unvalidated_packet_acknowledged  in <xref target="sec-QLOG"></xref>).</t>
         </list></t> <!-- End of list of actions -->
     </section> <!-- End of define Validating Phase -->
     
@@ -617,7 +622,7 @@ Examples of the transitions between phases are provided in <xref target="Example
             similar to TCP as described in Section 5 of <xref target="RFC6675"></xref>.)</t>
 
             <t>Safe Retreat Phase (Increasing CWND):
-            The CWND MUST NOT be increased in this Phase.</t>
+            The CWND MUST NOT be increased in the Safe Retreat Phase.</t>
 
 	    <t>Safe Retreat Phase (Tracking PipeSize):
             The sender continues to update
@@ -630,7 +635,8 @@ Examples of the transitions between phases are provided in <xref target="Example
 	    The sender enters Normal Phase
             when the last packet (or later) sent during the
             Unvalidated Phase has been acknowledged. The sender
-            MUST set the ssthresh to no more than the PipeSize.</t>
+            MUST set the ssthresh to no more than the PipeSize
+	    (see exit_recovery  in <xref target="sec-QLOG"></xref>).</t>
         </list></t>
      
         <t>Implementation requirements are provided in
@@ -914,7 +920,7 @@ Examples of the transitions between phases are provided in <xref target="Example
         to the flight_size, and the sender awaits reception of the acknowledgments to validate the
         use of this capacity. New packets are sent when previously
         sent data is newly acknowledged. The purpose is to trigger a
-        safe retreat in the case when the capacity is not validated.</t>
+        safe retreat when the capacity is not validated.</t>
         <t>Note that the CWND is increased during the Validating Phase,
             based on received ACKs. This allows new data to be sent,
             but this does not have any final impact on the CWND
@@ -1033,17 +1039,19 @@ new_phase: CarefulResumePhase,
 state_data: CarefulResumeStateParameters,
 ? restored_data: CarefulResumeRestoredParameters,
 ? trigger:
-        ; for the Safe Retreat phase
-        "packet_loss" /
-        ; for the Unvalidated phase
+        ; for the Unvalidated phase, when no unvalidated packets
         "congestion_window_limited" /
         ; for the Validating phase
         "first_unvalidated_packet_acknowledged" /
-	; for the Normal phase
+	; for the Normal phase, and no remaining unvalidated packets to be acknowledged
         "last_unvalidated_packet_acknowledged" /
         ; for the Normal phase, when CR not allowed
         "rtt_not_validated" /
-        ; for the Safe Retreat phase
+        ; for the Normal phase, when the application sends fewer unvalidated packets than permitted by CWND
+        "rate_limited" /
+	; for the Safe Retreat phase, when loss detected
+        "packet_loss" /
+	; for the Safe Retreat phase, when ECN congestion experienced reported
         "ECN_CE" /
         ; for the Normal phase 1 RTT after a congestion event
         "exit_recovery"
@@ -1077,7 +1085,7 @@ saved_rtt: float32
 <section anchor="sec-acknowledgments" title="Acknowledgments">
         <t>The authors would like to thank John Border, Gabriel Montenegro, Patrick McManus,
         Ian Swett, Igor Lubashev, Robin Marx, Roland Bless, Franklin Simo, Kazuho Oku, Tong,
-        Ana Custura, and Neal Cardwell for
+        Ana Custura, Neal Cardwell, and Joerg Deutschmann for
         their fruitful comments on earlier versions of this document.</t>
         <t>The authors would like to particularly thank Tom Jones for co-authoring
         several previous versions of this document. Ana Custura and Robin Marx developed the qlog support.</t>
@@ -1287,7 +1295,11 @@ In the Unvalidated Phase, the first unvalidated packet corresponds to the highes
 In the Validating and Safe Retreat Phases, corresponds to the last unvalidated packet is also the highest sent packet recorded on entry to this phase.
 </t>
 
-<t>The remaining subsections provide informative examples of use.</t>
+<t>The remaining subsections provide informative examples of use.
+Although the QLOG variables are expressed in bytes,
+to simplify the description, these examples 
+are described in term of packet numbers.
+</t>
 
     <section anchor="Examples-no loss" title="Example with No Loss">
 	<t>In the first example of using the Careful Resume method, 
