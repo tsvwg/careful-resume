@@ -362,8 +362,8 @@ Observe ...> Connect -> Reconnaissance --------------------> Normal
 (Normal)                 |                                    ^
                          v                                    |
                         Unvalidated --------------------------+
-	                 |      |                             |
-	                 |      +--> Validating --------------+
+                         |      |                             |
+                         |      +--> Validating --------------+
                          |               |                    |
                          |               |                    |
                          +---------------+--> Safe Retreat ---+
