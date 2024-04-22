@@ -344,7 +344,7 @@ specify just the year. -->
 	    <t>Unvalidated Packet: A packet sent when the CWND has been increased
 	    beyond the size normally permitted by the congestion control algorithm;
 	    if such a packet is acknowledged, it contributes to the PipeSize, but
-	    if congestion is detected, it triggers the Safe Retreat Phase.</t>
+	    if congestion is detected, it triggers entry to the Safe Retreat Phase.</t>
  
         </list>
         </t>
@@ -361,7 +361,8 @@ specify just the year. -->
     uses Careful Resume, as shown in Figure 1.</t>
 
    <t>
- <artwork align="left" name="" type="" alt=""><![CDATA[
+<figure title="Key transistions between Phases in Careful Resume">
+<artwork align="left" name="" type="" alt=""><![CDATA[
      
 Observe ...> Connect -> Reconnaissance --------------------> Normal
 (Normal)                 |                                    ^
@@ -373,7 +374,9 @@ Observe ...> Connect -> Reconnaissance --------------------> Normal
                          |               |                    |
                          +---------------+--> Safe Retreat ---+
      
- ]]></artwork>
+]]></artwork>
+</figure>
+
 </t>
 	
 <t> Figure 1: Phases when a connection uses the Careful Resume. The Observe Phase
@@ -428,7 +431,7 @@ Examples of the transitions between phases are provided in <xref target="Example
 	There are a set of conditions that need to be confirmed before the sender is
         permitted to enter the Unvalidated Phase:
 
-        <list style="symbols"> <!-- list of phase -->
+        <list style="symbols"> <!-- list of phases -->
 
             <t>Reconnaissance Phase (Endpoint change):
             If the current remote endpoint is not the same as a saved endpoint,
@@ -558,7 +561,7 @@ Examples of the transitions between phases are provided in <xref target="Example
             On entry to the Validating Phase, if the flight_size is less
 	    equal to the PipeSize (the validated window),
 	    the CWND is reset to the PipeSize and
-	    the Normal phase is then immediately entered.
+	    the Normal Phase is then immediately entered.
 	    There is no need to validate the current data in flight.</t>
 
 	    <t>Validating Phase (Limiting CWND on entry):
@@ -922,7 +925,7 @@ Examples of the transitions between phases are provided in <xref target="Example
         to the flight_size, and the sender awaits reception of the acknowledgments to validate the
         use of this capacity. New packets are sent when previously
         sent data is newly acknowledged. The purpose is to trigger a
-        safe retreat when the capacity is not validated.</t>
+        entry to the Safe Retreat Phase when the capacity is not validated.</t>
         <t>Note that the CWND is increased during the Validating Phase,
             based on received ACKs. This allows new data to be sent,
             but this does not have any final impact on the CWND
@@ -933,7 +936,7 @@ Examples of the transitions between phases are provided in <xref target="Example
          <t>This section defines the safety requirements
          after congestion has been detected during the Unvalidated Phase.</t>
 
-	<t>The Safe Retreat Phse sets a safe CWND value to drain unvalidated packets
+	<t>The Safe Retreat Phase sets a safe CWND value to drain unvalidated packets
 	from the path when a packet loss is detected or acknowledgments indicate sent
         packets were ECN CE-marked.</t>
 
@@ -1032,51 +1035,51 @@ Examples of the transitions between phases are provided in <xref target="Example
 		described in <xref target="sec-phase"></xref> of this specification.</t>
        		 <t>Definition:</t>
 
-		<figure anchor="qlog-def">
+		<figure anchor="qlog-def" title="Definitions of qlog events.">
 	         <!--- 	<name>cr_phase</name> -->
 <sourcecode type="cddl"><![CDATA[
-RecoveryCarefulResumePhaseUpdated = {
-? old_phase: CarefulResumePhase,
-new_phase: CarefulResumePhase,
-state_data: CarefulResumeStateParameters,
-? restored_data: CarefulResumeRestoredParameters,
-? trigger:
-        ; for the Unvalidated phase, when no unvalidated packets
+    RecoveryCarefulResumePhaseUpdated = {
+    ? old_phase: CarefulResumePhase,
+    new_phase: CarefulResumePhase,
+    state_data: CarefulResumeStateParameters,
+    ? restored_data: CarefulResumeRestoredParameters,
+    ? trigger:
+        ; for the Unvalidated Phase, when no unvalidated packets
         "congestion_window_limited" /
-        ; for Validating phase
+        ; for Validating Phase
         "first_unvalidated_packet_acknowledged" /
-        ; for Normal phase, and no unvalidated packets to be acknowledged
+        ; for Normal Phase, no unvalidated packets to be acknowledged
         "last_unvalidated_packet_acknowledged" /
-        ; for Normal phase, when CR not allowed
+        ; for Normal Phase, when CR not allowed
         "rtt_not_validated" /
-        ; for Normal phase, when fewer unvalidated packets than CWND permits
+        ; for Normal Phase, fewer packets than CWND permits
         "rate_limited" /
-        ; for Safe Retreat phase, when loss detected
+        ; for Safe Retreat Phase, when loss detected
         "packet_loss" /
-        ; for Safe Retreat phase, when ECN congestion experienced
+        ; for Safe Retreat Phase, when ECN congestion experienced
         "ECN_CE" /
-        ; for Normal phase 1 RTT after a congestion event
+        ; for Normal Phase 1 RTT after a congestion event
         "exit_recovery"
 }
 
 CarefulResumePhase =
-        "reconnaissance" /
-        "unvalidated" /
-        "validating" /
-        "normal" /
-        "safe_retreat"
+    "reconnaissance" /
+    "unvalidated" /
+    "validating" /
+    "normal" /
+    "safe_retreat"
 
 CarefulResumeStateParameters = {
-        pipesize: uint,
-        first_unvalidated_packet: uint,
-        last_unvalidated_packet: uint,	
-        ? congestion_window: uint,
-        ? ssthresh: uint
+    pipesize: uint,
+    first_unvalidated_packet: uint,
+    last_unvalidated_packet: uint,	
+    ? congestion_window: uint,
+    ? ssthresh: uint
 }
 
 CarefulResumeRestoredParameters = {
-        saved_congestion_window: uint,
-        saved_rtt: float32
+    saved_congestion_window: uint,
+    saved_rtt: float32
 }
 ]]></sourcecode>
 		</figure>
@@ -1241,8 +1244,9 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
     for the normative specification. The description is based on a Normal 
     CC that uses Reno or CUBIC. The PipeSize tracks the validated CWND.</t>
 
- <t>
- <artwork align="left" name="table" type="" alt=""><![CDATA[
+<t>
+<figure title="Illustration of the operation of Careful Resume">
+<artwork align="left" name="table" type="" alt=""><![CDATA[
 +------+---------+---------+------------+-----------+------------+
 |Phase |Normal   |Recon.   |Unvalidated |Validating |Safe Retreat|
 +------+---------+---------+------------+-----------+------------+
@@ -1286,15 +1290,20 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
 +------+---------+---------+------------+-----------+------------+
 
 ]]></artwork>
+</figure>
 </t>
+	
 <t>The following abbreviations are used
 SS = slow start FS= flight_size; PS = PipeSize. The PipeSize is set to the CWND
 on entry to the Unvalidated Phase. This tracks the validated portion of the CWND and
 is updated as each additional packet is acknowledged.</t>
+	
 <t>Note:
 For an implementation that keeps track of transmitted data in terms of packets: 
-In the Unvalidated Phase, the first unvalidated packet corresponds to the highest sent packet recorded on entry to this phase.
-In the Validating and Safe Retreat Phases, corresponds to the last unvalidated packet is also the highest sent packet recorded on entry to this phase.
+In the Unvalidated Phase, the first unvalidated packet corresponds
+to the highest sent packet recorded on entry to this phase.
+In the Validating and Safe Retreat Phases, corresponds to the last unvalidated packet
+is also the highest sent packet recorded on entry to this phase.
 </t>
 
 <t>The remaining subsections provide informative examples of use.
