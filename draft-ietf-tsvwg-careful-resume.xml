@@ -1384,7 +1384,7 @@ are described in term of packet numbers.
 
 	<t>At the point where all packets sent in the Unvalidated Phase have been either acknowledged
 	or declared lost, the sender enters the Normal Phase, but first updates ssthresh.
-	Because CWND will now now less than ssthresh, a sender in the Normal Phase is permitted to use 
+	Because CWND will now be less than ssthresh, a sender in the Normal Phase is permitted to use 
 	slow start to grow the CWND towards the ssthresh, after which it will enter congestion avoidance.</t>
      </section>
 		    
