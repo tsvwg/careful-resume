@@ -145,7 +145,7 @@ specify just the year. -->
     The slow-start design can increase queuing (latency or jitter) and/or
     congestion packet loss for the flow. Any overshoot can have a
     detrimental effect on other flows sharing a common bottleneck. 
-    A sender can use a method to observe the rated of acknowledged data,
+    A sender can use a method to observe the rate of acknowledged data,
     and seek to avoid overshooting the bottleneck capacity (e.g., Hystart++
     <xref target="RFC9406"></xref>).
     In the extreme case, an overshoot can result in persistent congestion
@@ -161,7 +161,7 @@ specify just the year. -->
     more than the IW.
     It introduces an alternative method to select initial CC parameters,
     that seek to more rapidly and safely grow the sending rate controlled by
-    then congestion window (CWND). CC methods that are rate-based can make
+    the congestion window (CWND). CC methods that are rate-based can make
     similar adjustments to their target sending rate.</t>
      
     <t>This method is based on temporal sharing (sometimes known as
@@ -268,7 +268,7 @@ specify just the year. -->
         <xref target="IJSCN"></xref>
         could require 9 seconds to complete a 5.3 MB transfer
         using standard CC, whereas a sender using Careful Resume
-        could be reduce this transfer time to 4 seconds. The time to complete a 1 MB transfer could
+        could reduce this transfer time to 4 seconds. The time to complete a 1 MB transfer could
         similarly be reduced by 62 % <xref target="MAPRG111"></xref>. This benefit is also
         expected for other sizes of transfer and for different path
         characteristics when a path has a large BDP.</t>
@@ -343,7 +343,7 @@ specify just the year. -->
 
 	    <t>Unvalidated Packet: A packet sent when the CWND has been increased
 	    beyond the size normally permitted by the congestion control algorithm;
-	    if such a packet is acknowledged, it contributes to the pipesize; but
+	    if such a packet is acknowledged, it contributes to the PipeSize ; but
 	    if there is loss or congestion, it triggers the Safe Retreat Phase.
  
         </list>
@@ -510,7 +510,7 @@ Examples of the transitions between phases are provided in <xref target="Example
 	    
         <t>When the RTT is confirmed:</t>
         <t><list style="symbols">
-            <t>Unvalidated Phase (Initialising PipeSize): The variable PipeSize if initialised to CWND on
+            <t>Unvalidated Phase (Initialising PipeSize): The variable PipeSize is initialised to CWND on
                 entry to the Unvalidated Phase. This records the
                 value before the jump is applied.</t>
             
@@ -520,10 +520,10 @@ Examples of the transitions between phases are provided in <xref target="Example
              the jump_cwnd MUST be no more than half of the saved_cwnd.
              Hence, jump_cwnd is less than  or equal to the (saved_cwnd/2). CWND = jump_cwnd. </t>
              
-             <t>Unvalidated Phase (Pacing tranmission): Transmission using an unvalidated
+             <t>Unvalidated Phase (Pacing trandmission): Transmission using an unvalidated
              CWND MUST use pacing.</t>
              
-             <t>Unvalidated Phase (Confirming the path during tranmssion)
+             <t>Unvalidated Phase (Confirming the path during transmission)
              If a sender determines that the previous CC parameters
              are not valid (due to a detected path change),
              the Safe Retreat Phase is entered.
@@ -532,10 +532,10 @@ Examples of the transitions between phases are provided in <xref target="Example
 	     Therefore, any detected congestion must have resulted from packets sent
              before the Unvalidated Phase.)</t>
              
-             <t>Unvalidated Phase (Receiving acknowledgements for reconnaisance packets):
-                 The variable PipeSize if increased by the amount of data that is acknowledged
-                 by each acknowledgment (in bytes). This indicates a previously unackowledged packet has been
-                 succesfuly sent over the path.</t>
+             <t>Unvalidated Phase (Receiving acknowledgements for reconnaissance packets):
+                 The variable PipeSize is increased by the amount of data that is acknowledged
+                 by each acknowledgment (in bytes). This indicates a previously unacknowledged packet has been
+                 succesfully sent over the path.</t>
 
              <t>Unvalidated Phase (Receiving acknowledgements for an unvalidated packet):
 	     The sender enters the Validating Phase when the first acknowledgement is
@@ -562,14 +562,14 @@ Examples of the transitions between phases are provided in <xref target="Example
 		
             <t>Validating Phase (Updating CWND): The CWND is updated using the
             normal rules for the current congestion controller, this typically
-            allows CWND to be increased for each ACK recieved that
+            allows CWND to be increased for each ACK received that
             indicates
             a packet has been successfully sent across the path.</t>
             
             <t>Validating Phase (Receiving acknowledgements for unvalidated packets):
-                The variable PipeSize if increased upon each
+                The variable PipeSize is increased upon each
                 acknowledgment that indicates a packet has been
-                successfuly sent over the path. This records
+                successfully sent over the path. This records
                 the validated PipeSize in bytes.</t>
 
             <t>Validating Phase (Congestion indication):
@@ -707,7 +707,7 @@ Examples of the transitions between phases are provided in <xref target="Example
     <section anchor="req-observe" title="Determining the Current Path Capacity in the Observe Phase">
             
         <t>There are various approaches to measuring the capacity used by a connection.
-        Congestion controllers, such as CUBIC or Reno, can estimate the
+        Congestion controllers, such as CUBIC <xref="RFRC9438">or Reno, can estimate the
         capacity by utilizing the
         CWND or flight_size. A different approach could
         estimate the same parameters for a rate-based congestion
@@ -736,7 +736,7 @@ Examples of the transitions between phases are provided in <xref target="Example
             <t>Observe Phase (Rate-limited sender): When the sender
             is rate-limited, or in an RTT following a burst of
             transmission, a sender typically transmits
-            much less data than allowed. Such observations could to be discounted when
+            much less data than allowed. Such observations could be discounted when
             estimating the saved_cwnd (e.g., when a previous
             observation recorded a higher value.)</t>
         </list></t>
@@ -953,7 +953,7 @@ Examples of the transitions between phases are provided in <xref target="Example
          (The first unvalidated packet can be determined by
          recording the sequence number
          of the first packet sent in this phase.)
-         This PipSize is not a safe measure of the currently
+         This PipeSize is not a safe measure of the currently
          available share of the capacity whenever
          there was also a significant overshoot at the bottleneck,
           but may be used to reset ssthresh.</t>
@@ -1123,6 +1123,7 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
       <?rfc include="reference.RFC.8801.xml"?>
 
       <?rfc include="reference.RFC.9000.xml"?>
+      <?rfc include="reference.RFC.9438.xml"?>
 
       <!-- <?rfc include="reference.RFC.9001.xml"?> -->
 
@@ -1228,7 +1229,7 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
     <t> The table below is provided to illustrate the operation of Careful Resume. 
     This table is informative, please refer to the body of the document 
     for the normative specification. The description is based on a Normal 
-    CC that uses Reno or Cubic. The PipeSize tracks the validated CWND.</t>
+    CC that uses Reno or CUBIC. The PipeSize tracks the validated CWND.</t>
 
  <t>
  <artwork align="left" name="table" type="" alt=""><![CDATA[
@@ -1268,8 +1269,8 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
 |      |needed)  |and CR   |has passed  |unvalidated|unvalidated |
 |      |         |confirmed|or ACK      |packet),   |packet),    |
 |      |         |), enter |>= last     |enter      |{ssthresh=PS|
-|      |         |Unvalid- |unvalidated |Normal     |and enter   |
-|      |         |ing else |packet),    |           |Normal}     |
+|      |         |Unvalidat|unvalidated |Normal     |and enter   |
+|      |         |-ing else|packet),    |           |Normal}     |
 |      |         |enter    |enter       |           |            |
 |      |         |Normal   |Validating  |           |            |
 +------+---------+---------+------------+-----------+------------+
@@ -1277,13 +1278,13 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
 ]]></artwork>
 </t>
 <t>The following abbreviations are used
-SS = slow start FS= flight_size; PS = PipeSize. The PipeSize is set to the cwnd
-on entry to the Unvalidated Phase. This tracks the validated part of the cwnd and
+SS = slow start FS= flight_size; PS = PipeSize. The PipeSize is set to the CWND
+on entry to the Unvalidated Phase. This tracks the validated portion of the CWND and
 is updated as each additional packet is acknowledged.</t>
 <t>Note:
 For an implementation that keeps track of transmitted data in terms of packets: 
 In the Unvalidated Phase, the first unvalidated packet corresponds to the highest sent packet recorded on entry to this phase.
-In the Valadating and Safe Retreat Phases, corresponds to the last unvalidated packet is also the highest sent packet recorded on entry to this phase.
+In the Validating and Safe Retreat Phases, corresponds to the last unvalidated packet is also the highest sent packet recorded on entry to this phase.
 </t>
 
 <t>The remaining subsections provide informative examples of use.</t>
@@ -1299,7 +1300,7 @@ In the Valadating and Safe Retreat Phases, corresponds to the last unvalidated p
 	In this example, this is confirmed when the sender has 29 packets in flight.
 	The sender enters the Unvalidated Phase.
 	This confirmation could have happened earlier if data was available to send. The
-	sender initialises the PipeSize to to the CWND (the same as the flight_size, i.e., 29 packets)
+	sender initialises the PipeSize to the CWND (the same as the flight_size, i.e., 29 packets)
 	and sets the CWND to 150 packets (based upon a previously
 	observed saved_cwnd of 300 packets).</t>
 	    
@@ -1317,7 +1318,7 @@ In the Valadating and Safe Retreat Phases, corresponds to the last unvalidated p
 
 	<t>When an ACK is received for the last packet sent in the Unvalidated Phase,
 	the sender completes using Careful Resume. It enters the Normal Phase. If CWND is less than ssthresh,
-	a Reno or Cubic sender in the Normal Phase is permitted to use slow start to grow the CWND towards
+	a Reno or CUBIC sender in the Normal Phase is permitted to use slow start to grow the CWND towards
 	the ssthresh, and will then enter congestion avoidance.</t>
     </section>
 
@@ -1339,7 +1340,7 @@ In the Valadating and Safe Retreat Phases, corresponds to the last unvalidated p
 
 	<t>When an ACK is received for the last packet sent in the Unvalidated Phase,
 	the sender has completed using Careful Resume. It enters the Normal Phase. If CWND is less than ssthresh,
-	a Reno or Cubic sender in the Normal Phase is permitted to use slow start to grow the CWND towards
+	a Reno or CUBIC sender in the Normal Phase is permitted to use slow start to grow the CWND towards
 	the ssthresh, and will then enter congestion avoidance.</t>
     </section>
 	    
@@ -1364,7 +1365,7 @@ In the Valadating and Safe Retreat Phases, corresponds to the last unvalidated p
 	<t>The loss is then detected (by receiving three ACKs that do not cover packet number 35),
 	the sender then enters the Safe Retreat Phase because the window was not validated.
 	The PipeSize at this point is equal to 29 + 34 = 66 packets. Assuming IW=10.
-	The CWND is reset to Max(10,ps/2) = Max(10,66/2) = 33 packets.
+	The CWND is reset to max(10,ps/2) = max(10,66/2) = 33 packets.
 	This CWND is used during the Safe Retreat Phase, because congestion was detected and the
 	sender still does not know if the remaining unvalidated packets will be
 	successfully acknowledged. A conservative CWND calculation ensures the sender drains
@@ -1382,7 +1383,7 @@ In the Valadating and Safe Retreat Phases, corresponds to the last unvalidated p
 
 	<t>At the point where all packets sent in the Unvalidated Phase have been either acknowledged
 	or declared lost, the sender enters the Normal Phase, but first updates ssthresh.
-	Because CWND will now now less than ssthresh, a sender in the Normal Phase is permitted to use 
+	Because CWND will now now be less than ssthresh, a sender in the Normal Phase is permitted to use 
 	slow start to grow the CWND towards the ssthresh, after which it will enter congestion avoidance.</t>
      </section>
 		    
@@ -1470,8 +1471,8 @@ In the Valadating and Safe Retreat Phases, corresponds to the last unvalidated p
 	Clarified lifetime for saved CC params. Incorporates comments from Tong.</t>
 	<t>WG-06, SR updated following Hackathon comments from Kazuho Oku, and rework of use of PipeSize.
 	Added an informative summary of actions, on suggestion by Tong. Added examples based on text by Ana Custura. </t>
-	<t>WG-07, Use "rate-limited" uniformally instead of application and data limited.</t>
-	<t>Updated to exit early when unvalidated cwnd not utilised, detected in tests by Q Misell. Change 
+	<t>WG-07, Use "rate-limited" uniformaly instead of application and data limited.</t>
+	<t>Updated to exit early when unvalidated CWND  not utilised, detected in tests by Q Misell. Change 
 	pipe_size to be PipeSize.</t>
 	    <t>WG-08, Updated CDDL, and made constraints in the Observe Phase into guidance, they say what 
 	makes sense - but do not need to be followed for conformance. Updated table in annexe to align
