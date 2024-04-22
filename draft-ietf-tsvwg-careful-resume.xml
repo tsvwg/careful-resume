@@ -715,7 +715,7 @@ Examples of the transitions between phases are provided in <xref target="Example
     <section anchor="req-observe" title="Determining the Current Path Capacity in the Observe Phase">
             
         <t>There are various approaches to measuring the capacity used by a connection.
-        Congestion controllers, such as CUBIC <xref="RFRC9438">or Reno, can estimate the
+        Congestion controllers, such as Reno or CUBIC <xref="RFRC9438""></xref>, can estimate the
         capacity by utilizing the
         CWND or flight_size. A different approach could
         estimate the same parameters for a rate-based congestion
