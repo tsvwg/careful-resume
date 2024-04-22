@@ -556,8 +556,7 @@ Examples of the transitions between phases are provided in <xref target="Example
             <t>Validating Phase (Check flight_size on entry):
             On entry to the Validating Phase, if the flight_size is less
 	    equal to the PipeSize, the Normal phase is entered and CWND
-	    is reset to the PipeSize
-	    (see congestion_window_limited  in <xref target="sec-QLOG").</t>
+	    is reset to the PipeSize.</t>
 
 	    <t>Validating Phase (Limiting CWND on entry):
             On entry to the Validating Phase, the CWND is set to the flight_size.</t>
