@@ -227,7 +227,7 @@ specify just the year. -->
         </list></t>
 
             <!--QUIC introduces the concept of transport parameters (Section 4 of
-                <xref target="RFC9000">). -->
+                <xref target="RFC9000"></xref>). -->
             <t>A related document proposes an extension for QUIC that allows
             sender-generated CC parameters to be stored at the receiver
             <xref target="I-D.kuhn-quic-bdpframe-extension"></xref>.
@@ -502,7 +502,7 @@ Examples of the transitions between phases are provided in <xref target="Example
 	     the current_rtt is greater than or equal to
              (saved_rtt / 2) or the current_rtt is less than or equal to (saved_rtt x 10)
 	     (see <xref target="sec-confirm-rtt"></xref>),
-	     the sender MUST enter the Normal Phase (see trigger rtt_not_validated in <xref target="sec-QLOG">).</t>
+	     the sender MUST enter the Normal Phase (see trigger rtt_not_validated in <xref target="sec-QLOG"></xref>).</t>
 	</list></t>
 	    
         <t>When the RTT is confirmed:</t>
@@ -537,7 +537,7 @@ Examples of the transitions between phases are provided in <xref target="Example
              <t>Unvalidated Phase (Receiving acknowledgements for an unvalidated packet):
 	     The sender enters the Validating Phase when an acknowledgement is
              received for the first packet number (or higher) that was sent in the Unvalidated Phase
-	     (see first_unvalidated_packet_acknowledged  in <xref target="sec-QLOG">).</t>
+	     (see first_unvalidated_packet_acknowledged  in <xref target="sec-QLOG"></xref>).</t>
         </list></t> <!-- End of list of actions -->
 
         <t>Implementation notes are provided in <xref target="req-unvalid"></xref>. </t>
@@ -577,13 +577,13 @@ Examples of the transitions between phases are provided in <xref target="Example
             If a sender determines that congestion was experienced
             (e.g., packet loss or ECN-CE marking), Careful Resume
             enters the Safe Retreat Phase
-	    (see trigger packet_loss and ECN_CE  in <xref target="sec-QLOG">).</t>
+	    (see trigger packet_loss and ECN_CE  in <xref target="sec-QLOG"></xref>).</t>
             
             <t>Validating Phase (Receiving acknowledgement for all unvalidated packets):
 	    The sender enters the Normal Phase when an acknowledgement is
             received for the last packet number (or higher)
             that was sent in the Unvalidated Phase
-	    (see last_unvalidated_packet_acknowledged  in <xref target="sec-QLOG">).</t>
+	    (see last_unvalidated_packet_acknowledged  in <xref target="sec-QLOG"></xref>).</t>
         </list></t> <!-- End of list of actions -->
     </section> <!-- End of define Validating Phase -->
     
@@ -629,7 +629,7 @@ Examples of the transitions between phases are provided in <xref target="Example
             when the last packet (or later) sent during the
             Unvalidated Phase has been acknowledged. The sender
             MUST set the ssthresh to no more than the PipeSize
-	    (see exit_recovery  in <xref target="sec-QLOG">).</t>
+	    (see exit_recovery  in <xref target="sec-QLOG"></xref>).</t>
         </list></t>
      
         <t>Implementation requirements are provided in
