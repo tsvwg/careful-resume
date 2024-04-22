@@ -715,7 +715,7 @@ Examples of the transitions between phases are provided in <xref target="Example
     <section anchor="req-observe" title="Determining the Current Path Capacity in the Observe Phase">
             
         <t>There are various approaches to measuring the capacity used by a connection.
-        Congestion controllers, such as Reno or CUBIC <xref="RFRC9438""></xref>, can estimate the
+        Congestion controllers, such as Reno or CUBIC <xref target="RFC9438"></xref>, can estimate the
         capacity by utilizing the
         CWND or flight_size. A different approach could
         estimate the same parameters for a rate-based congestion
@@ -1043,19 +1043,19 @@ state_data: CarefulResumeStateParameters,
 ? trigger:
         ; for the Unvalidated phase, when no unvalidated packets
         "congestion_window_limited" /
-        ; for the Validating phase
+        ; for Validating phase
         "first_unvalidated_packet_acknowledged" /
-	; for the Normal phase, and no remaining unvalidated packets to be acknowledged
+        ; for Normal phase, and no unvalidated packets to be acknowledged
         "last_unvalidated_packet_acknowledged" /
-        ; for the Normal phase, when CR not allowed
+        ; for Normal phase, when CR not allowed
         "rtt_not_validated" /
-        ; for the Normal phase, when the application sends fewer unvalidated packets than permitted by CWND
+        ; for Normal phase, when fewer unvalidated packets than CWND permits
         "rate_limited" /
-	; for the Safe Retreat phase, when loss detected
+        ; for Safe Retreat phase, when loss detected
         "packet_loss" /
-	; for the Safe Retreat phase, when ECN congestion experienced reported
+        ; for Safe Retreat phase, when ECN congestion experienced
         "ECN_CE" /
-        ; for the Normal phase 1 RTT after a congestion event
+        ; for Normal phase 1 RTT after a congestion event
         "exit_recovery"
 }
 
@@ -1067,16 +1067,16 @@ CarefulResumePhase =
         "safe_retreat"
 
 CarefulResumeStateParameters = {
-pipesize: uint,
-first_unvalidated_packet: uint,
-last_unvalidated_packet: uint,	
-? congestion_window: uint,
-? ssthresh: uint
+        pipesize: uint,
+        first_unvalidated_packet: uint,
+        last_unvalidated_packet: uint,	
+        ? congestion_window: uint,
+        ? ssthresh: uint
 }
 
 CarefulResumeRestoredParameters = {
-saved_congestion_window: uint,
-saved_rtt: float32
+        saved_congestion_window: uint,
+        saved_rtt: float32
 }
 ]]></sourcecode>
 		</figure>
@@ -1488,9 +1488,10 @@ are described in term of packet numbers.
 	<t>WG-07, Use "rate-limited" uniformaly instead of application and data limited.</t>
 	<t>Updated to exit early when unvalidated CWND  not utilised, detected in tests by Q Misell. Change 
 	pipe_size to be PipeSize.</t>
-	    <t>WG-08, Updated CDDL, and made constraints in the Observe Phase into guidance, they say what 
+	    <t>WG-08, Updated CDDL (AC), and made constraints in the Observe Phase into guidance, they say what 
 	makes sense - but do not need to be followed for conformance. Updated table in annexe to align
-	with text.</t>
+	with text. Formatted CDDL and added cross-refs to triggers in the text (from a comments by JD and AC).
+	Fixed typos and consistency (JD, RS, GF).</t>
 
     </list></t>
 </section> <!-- End of Revisions -->
