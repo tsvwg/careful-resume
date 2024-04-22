@@ -547,7 +547,9 @@ Examples of the transitions between phases are provided in <xref target="Example
         <t>The Validating Phase checks that packets
         sent in the Unvalidated Phase were received without inducing congestion.
         The CWND remains unvalidated and the sender typically remains in this phase for one RTT.
-         (Note 1: When flight_size is less than or equal to the PipeSize (the validated window), there is no need to validate the data in flight, CWND is reset to the PipeSize and the Normal phase is immediately entered).
+         (Note 1: When flight_size is less than or equal to the PipeSize (the validated window),
+	 there is no need to validate the data in flight, CWND is reset to the PipeSize
+	 and the Normal phase is immediately entered - trigger rate_limited in <xref target="sec-QLOG"></xref>).
 	 (Note 2: When the jump_cwnd is not
         fully utilised, the CWND will be reset to the flight_size, to match the smaller capacity being validated.)
 
@@ -913,7 +915,7 @@ Examples of the transitions between phases are provided in <xref target="Example
         to the flight_size, and the sender awaits reception of the acknowledgments to validate the
         use of this capacity. New packets are sent when previously
         sent data is newly acknowledged. The purpose is to trigger a
-        safe retreat in the case when the capacity is not validated.</t>
+        safe retreat when the capacity is not validated.</t>
         <t>Note that the CWND is increased during the Validating Phase,
             based on received ACKs. This allows new data to be sent,
             but this does not have any final impact on the CWND
@@ -1040,6 +1042,8 @@ state_data: CarefulResumeStateParameters,
         "last_unvalidated_packet_acknowledged" /
         ; for the Normal phase, when CR not allowed
         "rtt_not_validated" /
+        ; for the Normal phase, when the application sends fewer unvalidated packets than permitted by CWND
+        "rate_limited" /
 	; for the Safe Retreat phase, when loss detected
         "packet_loss" /
 	; for the Safe Retreat phase, when ECN congestion experienced reported
