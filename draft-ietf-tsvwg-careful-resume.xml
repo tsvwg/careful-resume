@@ -547,7 +547,7 @@ Examples of the transitions between phases are provided in <xref target="Example
         <t>The Validating Phase checks that packets
         sent in the Unvalidated Phase were received without inducing congestion.
         The CWND remains unvalidated and the sender typically remains in this phase for one RTT.
-         (Note 1:)
+
 
         </t>
         <t><list style="symbols">
