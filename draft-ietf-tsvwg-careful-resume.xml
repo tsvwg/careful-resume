@@ -528,7 +528,7 @@ Examples of the transitions between phases are provided in <xref target="Example
              <t>Unvalidated Phase (Pacing trandmission): Transmission using an unvalidated
              CWND MUST use pacing.</t>
              
-             <t>Unvalidated Phase (Confirming the path during transmission)
+             <t>Unvalidated Phase (Confirming the path during transmission):
              If a sender determines that the previous CC parameters
              are not valid (due to a detected path change),
              the Safe Retreat Phase is entered.
