@@ -1421,9 +1421,8 @@ Simplified State Table Illustrating Operation of Careful Resume
         </list></t>
         
         <t>The Endpoint Token could include other information such as the DSCP, ports, flow
-        label, etc and could include any other information the sender chooses to
-        include, and potentially including PvD information <xref target="RFC8801"></xref> or
-        information relating to its public-facing IP address.
+        label, etc and other information (e.g., including PvD information <xref target="RFC8801"></xref> or
+        information relating to its public-facing IP address).
         However, although such additional information might improve the path
         differentiation, it could also reduce the re-usability of the
         token.</t>
