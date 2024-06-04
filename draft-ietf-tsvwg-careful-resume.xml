@@ -1274,7 +1274,7 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
 |      |         |Normal   |            |           |            |
 +------+---------+---------+------------+-----------+------------+
 
-Simplified State Table showing operation of Careful Resume
+Simplified State Table Illustrating Operation of Careful Resume
 ]]></artwork>
 </t>
     <t>The following abbreviations are used
@@ -1398,13 +1398,14 @@ Simplified State Table showing operation of Careful Resume
 
 </section> <!--- worked examples-->
 
-<section anchor="endpoint_token" title="Appendix: An Endpoint Token">
+<section anchor="endpoint_token" title="An Endpoint Token">
 
-    <t> This annex discusses an Endpoint Token to allow a sender to identify its own
-    view of the network path that it is using. In <xref target="I-D.kuhn-quic-bdpframe-extension"></xref>
+    <t> The Endpoint Token is implementation-dependent. Its pupose is to allow a sender to identify its own
+    view of the network path that it is using to reach a remote endpoint.
+     <!-- In <xref target="I-D.kuhn-quic-bdpframe-extension"></xref>
     this Endpoint Token could be shared and used as an
     opaque path identifier to other parties and the sender can verify if
-    this is one of its current paths.</t>
+    this is one of its current paths.---> </t>
 
     <section title="Creating an Endpoint Token">
         <t>When computing the Endpoint Token, the sender includes information to identify
@@ -1426,6 +1427,7 @@ Simplified State Table showing operation of Careful Resume
         However, although such additional information might improve the path
         differentiation, it could also reduce the re-usability of the
         token.</t>
+	
 	<!---
         When communicating an Endpoint Token, the sender has to ensure the following:
         <list style="numbers">
@@ -1450,7 +1452,7 @@ Simplified State Table showing operation of Careful Resume
 
 </section> <!-- End of An Endpoint Token -->
       
-<section anchor="rev" title="Appendix: Revision details">
+<section anchor="rev" title="Internet Draft Revision details">
     <t>Previous individual submissions were discussed in TSVWG and QUIC.
     <list>
         <t>WG -00 included clarifications and restructuring to form the 1st WG draft.</t>
@@ -1475,10 +1477,10 @@ Simplified State Table showing operation of Careful Resume
         detected in tests by Q Misell. Change
         pipe_size to be PipeSize.</t>
         <t>WG-08, Updated CDDL, and made constraints in the Observe Phase into guidance, they say what
-        makes sense - but do not need to be followed for conformance. Updated table in annexe to align
+        makes sense - but do not need to be followed for conformance. Updated table in the appendix to align
         with text.</t>
         <t>WG-09, Cleaning text to separate guidelines and specification
-        and adjust wording for clarity based on questions received during implementation.
+        and adjust wording to improve clarity based on questions received during implementation.
         </t>
 
     </list></t>
