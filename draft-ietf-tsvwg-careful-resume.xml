@@ -139,21 +139,21 @@ specify just the year. -->
 
     <t>A CC method typically takes time to ramp-up the sending rate,
     called the "slow-start phase", informally known as the time to "Get up
-    to speed". This slow-start phase defines a time in which a sender
+    to speed". This defines a time in which a sender
     intentionally uses less capacity than might be available, with the
     intention to avoid or limit overshooting the available capacity for the path.
-    The slow-start design can increase queuing (latency or jitter) and/or
+    The design can increase queuing (latency or jitter) and/or
     congestion packet loss for the flow. Any overshoot can have a
     detrimental effect on other flows sharing a common bottleneck. 
     A sender can use a method to observe the rated of acknowledged data,
-    and seek to avoid overshooting the bottleneck capacity (e.g., Hystart++
+    and seek to avoid an overshoot of the bottleneck capacity (e.g., Hystart++
     <xref target="RFC9406"></xref>).
     In the extreme case, an overshoot can result in persistent congestion
     with unwanted starvation of
     other flows <xref target="RFC8867"></xref> (i.e., preventing other flows
     from successfully sharing the capacity at a common bottleneck).</t>
 
-    <t>This document proposes a CC method that is expected to
+    <t>The present document specifies a CC method that is expected to
     reduce the time to complete a transfer
     when the transfer sends significantly more data than allowed by the
     Initial congestion Window (IW), and
@@ -179,11 +179,11 @@ specify just the year. -->
     <section anchor="CC-params" title="Use of saved CC parameters by a Sender">
         <t>CC parameters are used by Careful Resume for three functions:
         <list style="numbers">
-            <t>Information about the utilised path capacity (saved_cwnd) to
-            determine an appropriate set of CC parameters for re-using the path.</t>
             <t>Information to characterize the saved path to
             confirm whether the current path
             is consistent with a saved path.</t>
+	    <t>Information about the utilised path capacity to
+            determine CC parameters that can be re-used.</t>
 	    <t>Information to check the validity of the saved CC parameters, including
 	    the time for which the parameters remain valid.</t>
         </list></t>
@@ -196,7 +196,7 @@ specify just the year. -->
             to assure safe use and to be robust to changes
             in traffic patterns, network routing, and link/node conditions.
             There are cases where using the saved parameters of a previous
-            connection is not appropriate (e.g., <xref target="rec-phase"></xref>).</t>
+            connection is not appropriate (see <xref target="rec-phase"></xref>).</t>
     </section>  <!-- End of use with care -->
           
     <section anchor="rec-choice" title="Receiver Preference">
@@ -206,12 +206,8 @@ specify just the year. -->
             is not available at the sender, or might benefit from
             understanding that Careful Resume might be used.
             In these cases, a receiver
-            could explicitly ask to enable or inhibit tuning of the CC
-            when an application initiates a new session or resume an
-            existing one.
-            A receiver could also tune policies for using the connection
-            (e.g., managing the
-            receiver window or flow credit).</t>
+            could explicitly ask to enable or inhibit Carfeul Resume
+            when an application initiates a new session.</t>
 	    
             <t> Examples where a receiver might request not to use Careful Resume include:
             <list style="numbers">
@@ -231,12 +227,22 @@ specify just the year. -->
             <t>A related document proposes an extension for QUIC that allows
             sender-generated CC parameters to be stored at the receiver
             <xref target="I-D.kuhn-quic-bdpframe-extension"></xref>.
-            Transferring the information to a receiver releases the need for a
+	    This avoids the need for a
             sender to retain transport state for each
-            receiver, and allows a receiver to express a preference for whether
-            to use the method.</t>
+            receiver.
+	    It also allows the receiver to express a preference for whether
+            a sender ought use Careful Resume.</t>
     </section> <!-- End of Receiver Preference -->
 
+    <section anchor="transport-design" title="Transport Protocol Interaction">
+	The CWND is one factor that limits the
+	sending rate of a transport protocol. Other mechanisms also constrain
+	the maxmimum sending rate. These include the sender pacing rate and the
+        receiver-advertised window (or flow credit).
+	The transport protocol might also need to update these methods when using
+	Careful Resume to fully utilise the CWND.
+    </section> <!-- End of Other factors -->
+	
     <section anchor="sec-use_case" title="Examples of Scenarios of Interest">
 
         <t> This section provides a set of examples where Careful Resume is expected to improve performance.</t>
@@ -248,18 +254,17 @@ specify just the year. -->
         (e.g., remote execution of an application, or a
         bidirectional video conference call).</t>
 
-        <t>In one example, an application uses a series of connections over a path
-        (i.e., resumes a connection to the same endpoint).
+        <t>In one example, an application uses a series of connections over a path.
         Without a new method,
         each connection would need to individually
         discover appropriate CC parameters, whereas Careful Resume allows the flow
-        to use a rate that is based on the previously observed CC parameters.</t>
+        to use a rate based on the previously observed CC parameters.</t>
 
         <t>In another example, an application connects after a disruption
         had temporarily reduced the path
         capacity. When the endpoint
-        returns to use a path with the original characteristics, using
-        a rate that is based on the previously observed CC parameters.</t>
+        returns to use the path using Careful Resume, the
+        sending rate can be based on the previously observed CC parameters.</t>
         <t>
         There is particular benefit for
         any path with an RTT that is much larger than typical
@@ -300,51 +305,45 @@ specify just the year. -->
 
     <section anchor="sec-terms_def" title="Notation and Terms">
         <t> The document uses language drawn
-        from a range of IETF RFCs.  It defines current, and saved values for a set of CC
-        parameters:
+        from a range of IETF RFCs. The Endpoint Token is described in <xref target="endpoint_token"></xref>.
+ The following terms are defined:
         <list>
 
             <!-- GF (Feb 2023): Removed the IW from this information block??? -->
             <!-- it could potentially be in the BDP Frame ID, but is not needed here -->
             <!--    <t>IW: Initial Window <xref target="RFC9002"></xref>;</t> -->
 
-	    <t>CC parameters: A set of saved congestion control parameters from
-	    a previously observed connection (see <xref target="CC-params"/>).</t>
+	    <t>CC parameters: A set of saved CC parameters from
+	    a previously observed connection (see <xref target="CC-params"/>);</t>
         
         <t>Careful Resume (CR): The method specified in this document to select
         initial CC parameters, that seeks to more rapidly and safely
-        increase the initial sending rate.</t>
+        increase the initial sending rate;</t>
 		
 	    <t>current_endpoint_token: The Endpoint Token of the current receiver;</t>
 	     
 	    <t>current_rtt: A sample measurement of the current RTT;</t>
 
-	    <t>endpoint_token: An Endpoint Token identifying a path to a receiver;</t>
+	    <t>Endpoint Token: A token identifying the path to a receiver;</t>
 
-	    <t>flight_size: The currently unacknowledged volume of data sent by the CC method;</t>
+	    <t>flight_size: The currently volume of unacknowledged sent data;</t>
 
-	    <t>jump_cwnd: The resumed CWND, used in the Unvalidated Phase.</t>
+	    <t>jump_cwnd: The CWND used in the Unvalidated Phase based on the saved_cwnd;</t>
 
-	    <t>LifeTime: The time for which the saved CC parameters can be safely re-used.</t>
+	    <t>LifeTime: The time for which the saved CC parameters can be safely re-used;</t>
 
-	    <t>max_jump : The maximum configured jump_cwnd;</t>
+	    <t>max_jump: The configured maximum jump_cwnd;</t>
 
-	    <t>PipeSize: A measure of the validated available capacity based on the acknowledged data;</t>
+	    <t>PipeSize: A measure of the validated available capacity, based on the acknowledged data and measured in bytes;</t>
 
-            <t>saved_cwnd: A value of CWND derived from observation of a
-            previous connection, which reflects capacity
-            that was utilised by the observed connection;</t>
+            <t>saved_cwnd: The CWND derived from observation of a
+            previous connection, which reflects the (validated) capacity
+            utilised by the observed connection;</t>
 
-	    <t>saved_endpoint_token: The Endpoint Token of a previous connection to a
-            receiver;</t>
+	    <t>saved_endpoint_token: The Endpoint Token of an observed connection;</t>
 
-            <t>saved_rtt: The preserved minimum RTT, e.g., corresponding to the minimum
-            of a set RTT of measurements over the last 5 minutes of a connection.</t>
- 
+            <t>saved_rtt: The preserved minimum RTT.</t>
         </list>
-        </t>
-
-        <t>The Endpoint Token is described in <xref target="endpoint_token"></xref>.
         </t>
 
     </section> <!-- End of Notation: End of terms -->
@@ -378,34 +377,28 @@ Examples of the transitions between phases are provided in <xref target="Example
     <!-- These subsections to match next section format -->
 	
     <section title="Observe Phase">
-        <t>During a previous established connection, the CC parameters for the specific path
-        to an endpoint are saved. This characterizes the path and
-        determines the saved_cwnd.
-	The saved_cwnd is a measure of the currently utilised capacity for the connection,
-	measured as the number of bytes sent over a RTT. This could be computed
-	by measuring the volume of data acknowledged in one RTT.
-        The CC parameters also include the minimum RTT
-        (saved_rtt) and the receiver
-        Endpoint Token (saved_endpoint_token).</t> 
-	<t>An implementation
-        can store the CC parameters at the server (or could exchange this information
-        with a receiver <xref target="I-D.kuhn-quic-bdpframe-extension"></xref>).</t>
+        <t>During a previous established connection, a set of CC parameters for the specific path
+        to an endpoint are saved including the current_endpoint_token and the LifeTime.</t> 
 	    
         <t><list style="symbols">
-	 <t>Observe Phase: The sender updates the stored CC parameters
-            and/or sends the updated CC parameter
-            information after each observation.
-            If the measured CWND is less than four times the Initial Window (IW)
-            (i.e., CWND less than IW*4),
-            a sender can choose to not store and/or send CC parameters, because the additional actions associated with
-	    performing Careful Resume for a small CWND would not justify the use of the method.</t>
-
-          <!-- The requirement below really applies to BDP Frame if adopted, otherwise needs explained -->
+	 <t>Observe Phase(saved_cwnd): 
+	The saved_cwnd is a measure of the currently utilised capacity for the connection,
+	measured as the volume of bytes sent during a RTT. This could be computed
+	by measuring the volume of data acknowledged in one RTT.
+	If the measured CWND is less than four times the Initial Window (IW)
+        (i.e., a CWND less than IW*4),
+        a sender can choose to not save the CC parameters, because the additional actions associated with
+	performing Careful Resume for a small CWND would not justify the use of the method.</t>
+	 <t>Observe Phase(saved_rtt): The preserved minimum RTT is saved with each saved_cwnd.
+	For example, this could be the minimum
+            of a set RTT of measurements measured over the previous 5 minutes.</t>
+		
+          <!-- The requirement below really applies to BDP Frame if adopted, otherwise needs explained 
           <t>Observe Phase (Sending CC Parameters): When sending the CC parameters to a receiver,
 	    these ought to be updated
             if there are significant changes in the saved CC parameters;
             The frequency of update SHOULD be less than
-            one update for several RTTs <xref target="I-D.kuhn-quic-bdpframe-extension"></xref>.</t>
+            one update for several RTTs <xref target="I-D.kuhn-quic-bdpframe-extension"></xref>.</t> 0-->
     </list></t>
 
             <t>Implementation notes are provided in <xref target="req-observe"></xref>.</t>
@@ -423,26 +416,25 @@ Examples of the transitions between phases are provided in <xref target="Example
 	There are a set of conditions that need to be confirmed before the sender is
         permitted to enter the Unvalidated Phase:
 
-        <list style="symbols"> <!-- list of phase -->
+        <list style="symbols"> 
 
             <t>Reconnaissance Phase (Endpoint change):
-            If the current remote endpoint is not the same as a saved endpoint,
-            the sender MUST enter the Normal Phase. If the Endpoint Token differs
-            (i.e., the saved_endpoint_token is different from the
-            current_endpoint_token), it is assumed to represent a different network path.
-            The sender also enters the Normal Phase when there are no corresponding saved CC parameters.</t>
-
+            If the current_endpoint_token is not the same as a saved_endpoint_token,
+            the sender MUST enter the Normal Phase. A difference in the Endpoint Token
+            indicates a difference from network path that was observed.
+            When  there are no corresponding saved CC parameters,
+	    the sender enters the Normal Phase.</t>
+	
 	    <t>Reconnaissance Phase (Lifetime of saved CC parameters): The CC parameters are temporal.
-	    If the LifeTime of the observed CC parameters is exceeded <xref target="req-lifetime"></xref>,
-	    the CC parameters are no longer used
-	    and sender enters the Normal Phase.</t>
+	    If the LifeTime of the observed CC parameters is exceeded,
+	    the CC parameters are not used and the sender enters the Normal Phase.</t>
 
              <t>Reconnaissance Phase (Confirming the RTT): During this phase,
              a sender MUST record the minimum RTT for the current connection.</t>  
 		
-             <t>Reconnaissance Phase (Avoiding using Careful Resume): A receiver can use a method (e.g.,
+             <!-- Reconnaissance Phase (Avoiding using Careful Resume): A receiver can use a method (e.g.,
              <xref target="I-D.kuhn-quic-bdpframe-extension"></xref>) to request
-             that the sender instead enters the Normal Phase.</t>
+             that the sender instead enters the Normal Phase -->
 
 	     <!--{XXX-Editor note: Reconnaissance Phase (Is there a need for a minimum
 	     required number of RTT samples to confirm a path ???? }-->
@@ -451,31 +443,34 @@ Examples of the transitions between phases are provided in <xref target="Example
             congestion (e.g., packet loss or ECN-CE marking), the sender does not use the Careful
 	    Resume method and MUST enter the Normal Phase to respond to the detected congestion.
 	    </t>
-
-            <t>Reconnaissance Phase (Using saved_cwnd):
+		
+	    <t>Reconnaissance Phase (Using saved_cwnd):
             Only one connection can use a specific set of saved CC parameters.
             If another connection has already started to use the saved_cwnd, the sender
             MUST enter the Normal Phase.</t>
 
+        </list></t>
+
+        <t>When a sender has confirmed the path and
+        receives an acknowledgement for the initial data without reported congestion,
+        it MAY then enter the Unvalidated Phase.
+        This transition occurs when a sender has more data than permitted
+        by the current CWND. </t>
+
+	<t><list>
             <t>Reconnaissance Phase (Rate-limited sender):
             If the sender is rate-limited <xref target="RFC7661"></xref>, 
 	    it might send insufficient data
             to be able to validate transmission at the higher rate.
-            Careful Resume is allowed to remain in the Reconnaissance Phase and to not
-            transition to the Unvalidated Phase until the sender
-            has more data ready to send in the transmission buffer
-            than is permitted by the current CWND.
+            A sender is allowed to remain in the Reconnaissance Phase and to not
+            transition to the Unvalidated Phase until there is
+            more data in the transmission buffer
+            than can be sent using the current CWND.
             In some implementations, the decision to enter the
             Unvalidated Phase could require coordination with the management
-            of buffers in the interface to the higher layers.</t>
+            of buffers in the interface to the upper layers.</t>
 
-        </list></t>
-
-        <t>When a sender confirms the path and it
-        receives an acknowledgement for the initial data without reported congestion,
-        it MAY then enter the Unvalidated Phase.
-        This transition occurs when a sender has more data than permitted
-        by the current CWND.</t>
+	</list></t> 
         
         <t>When a path is not confirmed, Careful Resume is not used
         and the sender enters the Normal Phase.</t>
@@ -492,82 +487,90 @@ Examples of the transitions between phases are provided in <xref target="Example
        <t>The sender only enters this phase when the saved CC parameters are
 	confirmed:</t>
 
-	<t><list> <t>Unvalidated Phase (Confirming the path on entry): The calculation
-	     of a sending rate from a saved_cwnd
-             is directly impacted by the RTT, therefore a significant change in the RTT
-             is a strong indication that the previously observed CC
-             parameters may not be valid for the current path.
-             If the RTT measurement is
-	     not confirmed, i.e., 
+	<t><list> <t>Unvalidated Phase (Confirming the path on entry): 
+	     The sender confirms the current RTT: If
 	     the current_rtt is greater than or equal to
              (saved_rtt / 2) or the current_rtt is less than or equal to (saved_rtt x 10)
 	     (see <xref target="sec-confirm-rtt"></xref>),
-	     the sender MUST enter the Normal Phase (see trigger rtt_not_validated in <xref target="sec-QLOG"></xref>).</t>
+	     the sender MUST enter the Normal Phase
+	     (see trigger rtt_not_validated in <xref target="sec-QLOG"></xref>).
+	     The calculation
+	     of a sending rate from a saved_cwnd
+             is directly impacted by the RTT, therefore a significant change in the RTT
+             is a strong indication that the previously observed CC
+             parameters are not be valid for the current path.
 	</list></t>
 	    
-        <t>When the RTT is confirmed:</t>
+        <t>When the RTT has been confirmed:</t>
         <t><list style="symbols">
-            <t>Unvalidated Phase (Initialising PipeSize): The variable PipeSize if initialised to CWND on
+            <t>Unvalidated Phase (Initialising PipeSize): 
+		The variable PipeSize if initialised to CWND on
                 entry to the Unvalidated Phase. This records the
-                value before the jump is applied.</t>
+                CWND before the jump is applied.</t>
             
              <t>Unvalidated Phase (Setting the jump_cwnd):
              To avoid starving other flows that could have either started
-             or increased their used capacity after the Observation Phase,
+             or increased their use of capacity after the Observation Phase,
              the jump_cwnd MUST be no more than half of the saved_cwnd.
-             Hence, jump_cwnd is less than  or equal to the (saved_cwnd/2). CWND = jump_cwnd. </t>
+             Hence, jump_cwnd is less than  or equal to Max(max_jump,(saved_cwnd/2)). CWND = jump_cwnd. </t>
              
              <t>Unvalidated Phase (Pacing tranmission): Transmission using an unvalidated
              CWND MUST use pacing.</t>
              
-             <t>Unvalidated Phase (Confirming the path during tranmssion)
+             <t>Unvalidated Phase (Confirming the path during tranmssion):
              If a sender determines that the previous CC parameters
              are not valid (due to a detected path change),
              the Safe Retreat Phase is entered.
-	     (The sender has not yet received feedback for the jump in CWND, because
-	     less than an RTT has passed before the Unvalidated Phase was entered.
+	     (In the Unvalidated Phase, insufficient time has passed for 
+	     a sender to receive feedback validating the the jump in CWND.
 	     Therefore, any detected congestion must have resulted from packets sent
              before the Unvalidated Phase.)</t>
              
              <t>Unvalidated Phase (Receiving acknowledgements for reconnaisance packets):
-                 The variable PipeSize if increased by the amount of data that is acknowledged
-                 by each acknowledgment (in bytes). This indicated a previously unvalidated packet has been
+                 The variable PipeSize is increased by the volume of data acknowledged
+                 by each acknowledgment (in bytes). This indicates a previously unvalidated packet has been
                  succesfuly sent over the path.</t>
 
              <t>Unvalidated Phase (Receiving acknowledgements for an unvalidated packet):
 	     The sender enters the Validating Phase when an acknowledgement is
              received for the first packet number (or higher) that was sent in the Unvalidated Phase
-	     (see first_unvalidated_packet_acknowledged  in <xref target="sec-QLOG"></xref>).</t>
+	     (see first_unvalidated_packet_acknowledged in <xref target="sec-QLOG"></xref>).</t>
         </list></t> <!-- End of list of actions -->
 
         <t>Implementation notes are provided in <xref target="req-unvalid"></xref>. </t>
     </section> <!-- End of define Unvalidated Phase -->
 
     <section anchor="val-phase" title="Validating Phase">
-        <t>The Validating Phase checks that packets
+        <t>The Validating Phase checks that all packets
         sent in the Unvalidated Phase were received without inducing congestion.
         The CWND remains unvalidated and the sender typically remains in this phase for one RTT.
-        </t>
+        The sender enters this phase and performs the following actions:</t>
+
         <t><list style="symbols">
             <t>Validating Phase (Check flight_size on entry):
             On entry to the Validating Phase, if the flight_size is less
-	    equal to the PipeSize, the Normal phase is entered and CWND
-	    is reset to the PipeSize.</t>
+	    equal to the PipeSize, the Normal phase is entered and the CWND
+	    is reset to the PipeSize. (The unvalidated part of the jump_cwnd was not utilised).</t>
 
 	    <t>Validating Phase (Limiting CWND on entry):
             On entry to the Validating Phase, the CWND is set to the flight_size.</t>
-		
-            <t>Validating Phase (Updating CWND): The CWND is updated using the
+
+        </list></t> <!-- End of list of actions -->
+
+	<t> In the Validating phase, the sender:</t>
+
+        <t><list style="symbols">
+
+		<t>Validating Phase (Receiving acknowledgements for unvalidated packets):
+                The variable PipeSize is increased by the volume of acknowledhed data for each
+                acknowledgment that indicates a packet has been
+                successfuly sent over the path.</t>
+
+		<t>Validating Phase (Updating CWND): The CWND is updated using the
             normal rules for the current congestion controller, this typically
             allows CWND to be increased for each ACK recieved that
             indicates
             a packet has been successfully sent across the path.</t>
-            
-            <t>Validating Phase (Receiving acknowledgements for unvalidated packets):
-                The variable PipeSize if increased upon each
-                acknowledgment that indicates a packet has been
-                successfuly sent over the path. This records
-                the validated PipeSize in bytes.</t>
 
             <t>Validating Phase (Congestion indication):
             If a sender determines that congestion was experienced
@@ -752,7 +755,7 @@ Examples of the transitions between phases are provided in <xref target="Example
 
         <t>The method does not permit multiple concurrent reuse of
         the saved CC parameters. When multiple new concurrent connections
-        are made to a server, each can have a valid endpoint_token,
+        are made to a server, each can have a valid saved_endpoint_token,
         but the saved_cwnd can only be used for one new connection.
         This is designed to prevent a sender from performing multiple jumps in the cwnd,
         each individually based on the same saved_cwnd, and hence creating an
