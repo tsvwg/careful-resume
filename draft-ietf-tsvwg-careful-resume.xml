@@ -493,7 +493,7 @@ Examples of the transitions between phases are provided in <xref target="Example
 	     of a sending rate from a saved_cwnd
              is directly impacted by the RTT, therefore a significant change in the RTT
              is a strong indication that the previously observed CC
-             parameters are not be valid for the current path.
+             parameters are not be valid for the current path.</t>
 	</list></t>
 	    
         <t>Once the RTT has been confirmed, the folowing actions
@@ -671,7 +671,7 @@ Examples of the transitions between phases are provided in <xref target="Example
 	<t><list>
        <t>RTO Expiry: A sender that experiences a Retransmission Time Out (RTO) expiry
         ceases to use Careful Resume.
-        The sender continues enters the Normal Phase.
+        The sender continues enters the Normal Phase.</t>
         </list></t>
 	    
         <t> As in loss recovery, data sent in the
@@ -843,7 +843,7 @@ Examples of the transitions between phases are provided in <xref target="Example
             the current_rtt, rather than the saved_RTT provides an additional safety during the
             Unvalidated Phase, because it avoids a smaller saved_RTT inflating the sending rate.
 	    Pacing also places a limitation on the minimum acceptable current_RTT
-            to avoid sending at a rate higher than was previously observed.    
+            to avoid sending at a rate higher than was previously observed. </t>
 
             <t>The following example provides a relevant pacing rhythm using the RTT and the
             saved_cwnd. The Inter-packet Transmission Time (ITT) is determined
@@ -1277,7 +1277,7 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
 ]]></artwork>
 </t>
 <t>The following abbreviations are used
-SS = slow start FS= flight_size; PS = PipeSize. The PipeSize is set to the cwnd
+SS = slow start FS = flight_size; PS = PipeSize. The PipeSize is set to the cwnd
 on entry to the Unvalidated Phase. This tracks the validated part of the cwnd and
 is updated as each additional packet is acknowledged.</t>
 <t>Note:
@@ -1286,8 +1286,8 @@ In the Unvalidated Phase, the first unvalidated packet corresponds to the highes
 In the Valadating and Safe Retreat Phases, corresponds to the last unvalidated packet is also the highest sent packet recorded on entry to this phase.
 </t>
 
-<t>The remaining subsections provide informative examples of use.
-Although the QLOG variables are expressed in bytes,
+<t>The remaining subsections provide informative examples of use.</t>
+<t>Note: Although the QLOG variables are expressed in bytes,
 to simplify the description, these examples 
 are described in term of packet numbers.
 </t>
@@ -1301,13 +1301,13 @@ are described in term of packet numbers.
 	<t>The sender then
 	confirms the RTT and other conditions for using Careful Resume.
 	In this example, this is confirmed when the sender has 29 packets in flight.
-	The sender enters the Unvalidated Phase.
-	This confirmation could have happened earlier if data was available to send. The
-	sender initialises the PipeSize to to the CWND (the same as the flight_size, i.e., 29 packets)
-	and sets the CWND to 150 packets (based upon a previously
+	The sender then enters the Unvalidated Phase.
+	(This confirmation could have happened earlier if data was available to send.) The
+	sender initialises the PipeSize to the CWND (the same as the flight_size, i.e., 29 packets)
+	and then sets the CWND to 150 packets (based upon a previously
 	observed saved_cwnd of 300 packets).</t>
 	    
-	<t>It now sends 121 unvalidated packets. This is the unused portion of the CWND.
+	<t>The sender now sends 121 unvalidated packets (the unused portion of the current CWND).
 	Each time a packet is sent, the sender checks whether 1 RTT has passed since entering the
 	Unvalidated Phase (otherwise, the Validating Phase is entered). This check triggers only
 	for cases where the sender is rate-limited, see the following example.</t>
@@ -1315,8 +1315,8 @@ are described in term of packet numbers.
 	<t>The PipeSize will increase after each ACK is received.</t>
 	
 	<t>When the first unvalidated packet is acknowledged (packet number 30) the sender
-	enters the Validating Phase. This transition would also occur if the flight_size increases to equal CWND.
-	During this phase, the CWND can be increased for each ACK for an unvalidated packet, because
+	enters the Validating Phase. (This transition would also occur if the flight_size increased to equal CWND.)
+	During this phase, the CWND can be increased for each ACK acknowledging an unvalidated packet, because
 	this indicates that the packet was indeed validated.</t>
 
 	<t>When an ACK is received for the last packet sent in the Unvalidated Phase,
@@ -1329,45 +1329,45 @@ are described in term of packet numbers.
     	<t>A rate-limited sender will not fully utilize the available CWND when using Careful Resume,
 	and CWND is therefore reset on entry to the Validating Phase, as described below.</t>
 
-	<t>The sender in this example starts by sending IW packets (10) in the Reconnaissance Phase,
-	and sends as described in the first example, transitioning to the Unvalidated Phase.
-	This sets the CWND to 150 packets, and the PipeSize is set to the flight_size (i.e., 29 packets).</t>
+	<t>The sender starts by sending IW packets (10) in the Reconnaissance Phase.
+	It commences as described in the first example, transitioning to the Unvalidated Phase.
+	This sets the CWND to 150 packets, and the PipeSize to the flight_size (i.e., 29 packets).</t>
 		
 	<t>The sender then becomes rate-limited because it only sends 50 unvalidated packets.</t>
 	
-	<t> After ~1 RTT (detected by using local timestamps or by receiving an ACK for the first
+	<t> After about one RTT (detected by using local timestamps or by receiving an ACK for the first
 	unvalidated packet), the sender will still not have fully used the CWND. It then enters 
 	the Validating Phase and resets the CWND to the current flight_size, (i.e., 50 packets).
-	During this phase, the CWND can be increased for each ACK that validates reception of a packet.
+	During this phase, the CWND can be increased for each received ACK that validates reception of an unvalidated packet.
 	The PipeSize also increases with each ACK received, to reflect the discovered capacity.</t>
 
 	<t>When an ACK is received for the last packet sent in the Unvalidated Phase,
-	the sender has completed using Careful Resume. It enters the Normal Phase. If CWND is less than ssthresh,
+	the sender has completed using Careful Resume. It then enters the Normal Phase. If the CWND is less than ssthresh,
 	a Reno or Cubic sender in the Normal Phase is permitted to use slow start to grow the CWND towards
 	the ssthresh, and will then enter congestion avoidance.</t>
     </section>
 	    
     <section anchor="Examples-loss-recon" title="Example with Loss detected in the Reconnaissance Phase">
-	<t>When a packet is lost in the Reconnaissance Phase, the sender enters the Normal Phase
+	<t>When a packet is lost in the Reconnaissance Phase, the sender will enter the Normal Phase
 	and recovers this using the normal method. (There is no change to the CC method, because
 	the sender has discovered a potential capacity limit and is not
 	allowed to continue to use Careful Resume.)</t>
      </section>
 	
      <section anchor="Examples-loss-unval" title="Example with Loss detected in the Validating Phase">
-	<t>As in the first Example the sender enters the Unvalidated Phase it sets the CWND to 150 packets
+	<t>As in the first example, the sender enters the Unvalidated Phase and sets the CWND to 150 packets
 	with the PipeSize initialized to the flight_size (i.e., 29 packets).</t>
 
 	<t>The sender now sends 121 unvalidated packets (the remaining unused CWND).
 	This example considers the case when one of the unvalidated packet is lost, which
 	we choose to be packet 64 (the 35th packet in the Unvalidated Phase).</t>
 
-	<t>Acknowledgements confirm the first 34 unvalidated packets are received without loss.
-	The PipeSize at this point is equal to 29 + 34 = 63 packets.</t>
+	<t>ACKs confirm the first 34 unvalidated packets are received without loss.
+	The PipeSize at this point is equal to 63 (29 + 34) packets.</t>
 		
-	<t>The loss is then detected (by receiving three ACKs that do not cover packet number 35),
+	<t>The loss is then detected (by a timer or by receiving three ACKs that do not cover packet number 35),
 	the sender then enters the Safe Retreat Phase because the window was not validated.
-	The PipeSize at this point is equal to 29 + 34 = 66 packets. Assuming IW=10.
+	The PipeSize at this point is equal to 66 (29 + 34) packets. Assuming IW=10.
 	The CWND is reset to Max(10,ps/2) = Max(10,66/2) = 33 packets.
 	This CWND is used during the Safe Retreat Phase, because congestion was detected and the
 	sender still does not know if the remaining unvalidated packets will be
@@ -1375,17 +1375,18 @@ are described in term of packet numbers.
 	the path after this potentially severe congestion event.
 	There is no further increase in CWND in this phase.</t>
 
-	<t>The sender continues to receives ACKs for the remaining  86 (121-35) unvalidated packets
-	(recall that the 35th unvalidated packet was lost and had packet number 29+35=64).
-	The PipeSize continues to further increase as each ACK acknowledges new data, because this tracks the
-	size of the pipe discovered by the unvalidated packets.
-	Although this cannot be used to safety initialise CWND (because was measured when the sender
+	<t>The sender continues to receives ACKs for the remaining  86 (121-35) unvalidated packets.
+	Recall that the 35th unvalidated packet was lost and had packet number 64 (29+35).
+	The PipeSize tracks the
+	size of the pipe discovered by the unvalidated packets and
+	continues to be further increased as each ACK acknowledges new data.
+	Although the PipeSize cannot be used to safety initialise CWND (because it was measured when the sender
 	aggressively created overload), the estimated PipeSize
 	(which, in this case, is 121-1 = 120 packets) can be used to set the ssthresh on exit
-	from Safe Retreat, since it indicates an upper limit to the current capacity.</t>
+	from Safe Retreat, since it does indicate an upper limit to the current capacity.</t>
 
 	<t>At the point where all packets sent in the Unvalidated Phase have been either acknowledged
-	or declared lost, the sender enters the Normal Phase, but first updates ssthresh.
+	or have been declared lost, the sender updates ssthresh and enters the Normal Phase.
 	Because CWND will now now be less than ssthresh, a sender in the Normal Phase is permitted to use 
 	slow start to grow the CWND towards the ssthresh, after which it will enter congestion avoidance.</t>
      </section>
@@ -1405,36 +1406,33 @@ are described in term of packet numbers.
     <section title="Creating an Endpoint Token">
             <t>
             When computing the Endpoint Token, the sender includes information to identify
-            the path on which it sends, for example, this:
+            the path on which it sends, for example, this needs to include:
             <list style="symbols">
             <t>
-            needs to include a unique identifier for itself (e.g., a globally
+            a unique identifier for its own sending interface (e.g., a globally
             assigned address/prefix; or randomly chosen value such as a nonce);
             </t>
             <t>
-            needs to include an identifier for the destination (e.g., a
+            an identifier for the destination (e.g., a
             destination IP address or name);
             </t>
             <t>
-            needs to include an interface identifier (e.g., an index value or a MAC address to associate the
+            an interface identifier (e.g., an index value or a MAC address to associate the
             endpoint with the interface on which the path starts);
             </t>
+	</list></t>
             <t>
-            could include other information such as the DSCP, ports, flow
-            label, etc (recognising that this additional information might improve the path
-            differentiation, but that this can reduce the re-usability of the
-            token);
-            </t>
-            <t>
-            this could include any other information the sender chooses to
+            It could include other information such as the DSCP, ports, flow
+            label, etc and could include any other information the sender chooses to
             include, and potentially including PvD information <xref target="RFC8801"></xref> or
-            information relating to its public-facing IP address;
-            </t>
-            
-       </list></t>
-
-        <t>
-        When creating an Endpoint Token, the sender has to ensure the following:
+            information relating to its public-facing IP address.
+	
+	    However, although such additional information might improve the path
+            differentiation, it could also reduce the re-usability of the
+            token.
+            </t>            
+	<!---
+        When communicating an Endpoint Token, the sender has to ensure the following:
         <list style="numbers">
             <t>To reduce the likelihood of misuse of the Endpoint Token, the value
             ought to be encoded in a way that hides the component information
@@ -1445,12 +1443,14 @@ are described in term of packet numbers.
             previously issued token; and can be
             included in the computed integrity check for any path
             information it provides.</t>
+		
             <t> The Endpoint Token is designed so that if shared, it prevents another party from deriving
             private data from the token, or to use the token to perform
             unwanted likability with other information. Therefore,
             the Endpoint Token MUST necessarily be different when used to identify
             paths using different interfaces.</t>
        </list> </t>
+-->
     </section>
 
  </section> <!-- End of An Endpoint Token -->
@@ -1480,6 +1480,8 @@ are described in term of packet numbers.
 	    <t>WG-08, Updated CDDL, and made constraints in the Observe Phase into guidance, they say what 
 	makes sense - but do not need to be followed for conformance. Updated table in annexe to align
 	with text.</t>
+	 <t>WG-09, Cleaning text to separate guidelines and specification and adjust wording for clarity based on questions received during implementation.
+	 </t>
 
     </list></t>
 </section> <!-- End of Revisions -->
