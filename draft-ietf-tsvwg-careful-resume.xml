@@ -352,6 +352,7 @@ specify just the year. -->
             beyond the size normally permitted by the congestion control algorithm;
             if such a packet is acknowledged, it contributes to the PipeSize, but
             if congestion is detected, it triggers entry to the Safe Retreat Phase.</t>
+
         </list>
         </t>
 
