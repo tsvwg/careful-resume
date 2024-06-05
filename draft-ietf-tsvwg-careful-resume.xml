@@ -382,10 +382,8 @@ Observing ...> Connect -> Reconnaissance --------------------> Normal
     <!-- These subsections to match next section format -->
     
     <section title="Observing">
-        <t>In an established connection in the Normal Phase, a set of CC parameters for the specific path
-        to an endpoint can be saved.</t>
-             
-        <t>Each set of CC parameters include a saved_endpoint_token and the
+        <t>An established connection in the Normal Phase, can save a set of CC parameters for the specific path
+        to the current endpoint. Each set of CC parameters includes the saved_endpoint_token and the
         LifeTime (e.g., as a timestamp after which the parameters must not be used).</t>
         
         <t><list style="symbols">
