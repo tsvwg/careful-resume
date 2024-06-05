@@ -141,7 +141,7 @@ specify just the year. -->
     called the "slow-start phase", informally known as the time to "Get up
     to speed". This defines a time in which a sender
     intentionally uses less capacity than might be available, with the
-    intention to avoid or limit overshooting the available capacity for the path.
+    intention to avoid or limit overshoot of the available capacity for the path.
     The design can increase queuing (latency or jitter) and/or
     congestion packet loss for the flow. Any overshoot can have a
     detrimental effect on other flows sharing a common bottleneck. 
