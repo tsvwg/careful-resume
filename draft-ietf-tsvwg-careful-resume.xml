@@ -329,7 +329,7 @@ specify just the year. -->
 
             <t>Endpoint Token: A token identifying the path to a receiver;</t>
 
-            <t>flight_size: The currently volume of unacknowledged sent data;</t>
+            <t>flight_size: The current volume of unacknowledged data;</t>
 
             <t>jump_cwnd: The CWND used in the Unvalidated Phase based on the saved_cwnd;</t>
 
