@@ -313,21 +313,21 @@ specify just the year. -->
             <!-- it could potentially be in the BDP Frame ID, but is not needed here -->
             <!--    <t>IW: Initial Window <xref target="RFC9002"></xref>;</t> -->
 
-            <t>CC parameters: A set of saved CC parameters from
-            a previously observed connection (see <xref target="sec-CC-params"></xref>);</t>
-
-            <t>Careful Resume (CR): The mechanism specified in this document to select
+	    <t>Careful Resume (CR): The method specified in this document to select
             initial CC parameters, that seeks to more rapidly and safely
-            increase the initial sending rate;</t>
+            increase the initial sending rate.</t>
 
-            <t>CWND: The congestion window, or equivalent CC variable limiting 
-            the maximum sending rate;</t>
+	    <t>CC parameters: A set of saved congestion control parameters from
+	    a previously observed connection (see <xref target="CC-params"/>).</t>
 
-            <t>current_endpoint_token: The Endpoint Token of the current receiver;</t>
+	    <t>CWND: The congestion winodw, or equivalent CC variable limiting
+	    the maximum sending rate;
+        		
+	    <t>current_endpoint_token: The Endpoint Token of the current receiver;</t>
+	     
+	    <t>current_rtt: A sample measurement of the current RTT;</t>
 
-            <t>current_rtt: A sample measurement of the current RTT;</t>
-
-            <t>Endpoint Token: A token identifying the path to a receiver;</t>
+	    <t>Endpoint Token: A token identifying a path to a receiver;</t>
 
             <t>flight_size: The current volume of unacknowledged data;</t>
 
