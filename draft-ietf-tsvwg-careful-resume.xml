@@ -338,15 +338,15 @@ specify just the year. -->
             previous connection, which reflects capacity
             that was utilised by the observed connection (see <xref target="req-observe"></xref>);</t>
 
-	    <t>saved_endpoint_token: The Endpoint Token associated with a saved_cwnd;</t>
+            <t>saved_endpoint_token: The Endpoint Token associated with a saved_cwnd;</t>
 
             <t>saved_rtt: The preserved minimum RTT, e.g., corresponding to the minimum
             of a set RTT of measurements over the last 5 minutes of a connection.</t>
 
-	    <t>Unvalidated Packet: A packet sent when the CWND has been increased
-	    beyond the size normally permitted by the congestion control algorithm;
-	    if such a packet is acknowledged, it contributes to the PipeSize, but
-	    if congestion is detected, it triggers entry to the Safe Retreat Phase.</t>
+            <t>Unvalidated Packet: A packet sent when the CWND has been increased
+            beyond the size normally permitted by the congestion control algorithm;
+            if such a packet is acknowledged, it contributes to the PipeSize, but
+            if congestion is detected, it triggers entry to the Safe Retreat Phase.</t>
  
         </list>
         </t>
@@ -362,7 +362,7 @@ specify just the year. -->
     CC algorithm moves through as a connection
     uses Careful Resume, as shown in Figure 1.</t>
 
-   <t>
+<t>
 <figure title="Key transistions between Phases in Careful Resume">
 <artwork align="left" name="" type="" alt=""><![CDATA[
      
