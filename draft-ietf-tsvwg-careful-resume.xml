@@ -162,7 +162,7 @@ specify just the year. -->
     more than the IW.
     It introduces an alternative mechanism to select initial CC parameters,
     that seek to more rapidly and safely grow the sending rate controlled by
-    then congestion window (CWND). CC algorithms that are rate-based can make
+    the congestion window (CWND). CC algorithms that are rate-based can make
     similar adjustments to their target sending rate.</t>
      
     <t>Careful Resume is based on temporal sharing (sometimes known as
