@@ -145,7 +145,7 @@ specify just the year. -->
     The design can increase queuing (latency or jitter) and/or
     congestion packet loss for the flow. Any overshoot can have a
     detrimental effect on other flows sharing a common bottleneck. 
-    A sender can use a mechanism that observes the rated of acknowledged data,
+    A sender can use a method that observes the rated of acknowledged data,
     and seek to avoid an overshoot of the bottleneck capacity (e.g., Hystart++
     <xref target="RFC9406"></xref>).
     In the extreme case, an overshoot can result in persistent congestion
