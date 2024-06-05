@@ -385,7 +385,7 @@ Observing ...> Connect -> Reconnaissance --------------------> Normal
         <t>In an established connection in the Normal Phase, a set of CC parameters for the specific path
         to an endpoint can be saved.</t>
              
-        <t>Each set of CC parameters include a saved_endpoint_token and the 
+        <t>Each set of CC parameters include a saved_endpoint_token and the
         LifeTime (e.g., as a timestamp after which the parameters must not be used).</t>
         
         <t><list style="symbols">
@@ -427,7 +427,7 @@ Observing ...> Connect -> Reconnaissance --------------------> Normal
             <t>Reconnaissance Phase (Endpoint change):
             If the current_endpoint_token is not the same as one of the saved_endpoint_tokens,
             the sender MUST enter the Normal Phase. (A difference in the Endpoint Token
-            indicates a the network path was different to one that was <list style="symbols">d.)</t>
+            indicates a the network path was different to one that was observed.)</t>
     
         <t>Reconnaissance Phase (Lifetime of saved CC parameters): The CC parameters are temporal.
         If the LifeTime of the observed CC parameters is exceeded,
@@ -500,7 +500,7 @@ Observing ...> Connect -> Reconnaissance --------------------> Normal
              parameters are not be valid for the current path.</t>
      </list></t>
      <t>On entry to the Unvalidated Phase, the sender:</t>
-     <t><list style="symbols"> 
+     <t><list style="symbols">
           <t>Unvalidated Phase (Initialising PipeSize):
           The variable PipeSize if initialised to CWND on
           entry to the Unvalidated Phase. This records the
@@ -510,7 +510,7 @@ Observing ...> Connect -> Reconnaissance --------------------> Normal
              To avoid starving other flows that could have either started
              or increased their use of capacity after the Observation Phase,
              the jump_cwnd MUST be no more than half of the saved_cwnd.
-             Hence, jump_cwnd is less than  or equal to Min(max_jump,(saved_cwnd/2)). CWND = jump_cwnd. </t>   
+             Hence, jump_cwnd is less than  or equal to Min(max_jump,(saved_cwnd/2)). CWND = jump_cwnd. </t>
 
      </list></t>
         <t>The following actions are performed during the Unvalidated Phase:</t>
@@ -660,16 +660,6 @@ Observing ...> Connect -> Reconnaissance --------------------> Normal
         </section>     <!-- End of subsection Safe Retreat Phase: loss recovery -->
     </section> <!-- End of Safe Retreat Phase -->
 
-    <section anchor="Normal_Phase" title="Normal Phase">
-
-        <t>In the Normal Phase, the sender transitions to using
-            the normal CC algorithm (e.g., in congestion avoidance if CWND is more than ssthresh).
-            (Note that when the sender did not use the entire jump_cwnd the CWND was reduced
-         on entering the Validating Phase.)</t>
-        <t>Implementation notes are provided in <xref target="req-normal"></xref>.</t>
-
-    </section> <!-- End of define "Normal Phase:" -->
-        
     <section title="RTO Expiry while using Careful Resume">
 
 
@@ -681,6 +671,18 @@ Observing ...> Connect -> Reconnaissance --------------------> Normal
         Unvalidated Phase could be later acknowledged after an RTO event
         (see <xref target="loss"></xref>).</t>
     </section> <!-- End of section: RTO Expiry -->
+    
+    <section anchor="Normal_Phase" title="Normal Phase">
+
+        <t>In the Normal Phase, the sender transitions to using
+            the normal CC algorithm (e.g., in congestion avoidance if CWND is more than ssthresh).
+            (Note that when the sender did not use the entire jump_cwnd the CWND was reduced
+         on entering the Validating Phase.)</t>
+        <t>Implementation notes are provided in <xref target="req-normal"></xref>.</t>
+
+    </section> <!-- End of define "Normal Phase:" -->
+        
+
 </section>
 
 <section anchor="endpoint_token" title="The Endpoint Token">
@@ -804,7 +806,7 @@ Observing ...> Connect -> Reconnaissance --------------------> Normal
         <t>Careful Resume does not permit multiple concurrent reuse of
         the saved CC parameters. When multiple new concurrent connections
         are made to a server, each can have a valid saved_endpoint_token,
-        but the saved_cwnd can once (i.e., if two connections start 
+        but the saved_cwnd can once (i.e., if two connections start
         simulateously they cannot both use the saved_cwnd to perform a jump).
         This is to prevent a sender from performing multiple jumps in the CWND,
         each individually based on the same saved_cwnd, and hence creating an
@@ -849,7 +851,7 @@ Observing ...> Connect -> Reconnaissance --------------------> Normal
             <t>A current_rtt more than ten times the
             saved_RTT is indicative of a path change.
             (The value of ten was chosen to accommodate both increases in latency from buffering
-            on a path, and any variation between RTT samples). 
+            on a path, and any variation between RTT samples).
             A sender also verifies that the initial data was acknowledged.
             (i.e., both coukd otherwise could be indicative of persistent congestion).</t>
              
@@ -958,7 +960,7 @@ Observing ...> Connect -> Reconnaissance --------------------> Normal
         or after one RTT, it ceases to use the unvalidated CWND. That is, CWND is reset
         to the flight_size, and the sender awaits reception of ACKs to validate the
         use of this capacity. New packets are sent when previously
-        sent data is newly acknowledged. 
+        sent data is newly acknowledged.
         The CWND is increased during the Validating Phase,
         based on received ACKs. This allows new data to be sent,
         but this does not have any final impact on the CWND
@@ -987,7 +989,7 @@ Observing ...> Connect -> Reconnaissance --------------------> Normal
         reducing CWND significantly
         below the saved_cwnd.</t>
             
-        <list>
+        <t><list>
            
             <t>During loss recovery, a receiver can cumulatively acknowledge
             data that was previously sent in the Unvalidated Phase in addition
