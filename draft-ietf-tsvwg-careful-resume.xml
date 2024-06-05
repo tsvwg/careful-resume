@@ -338,7 +338,7 @@ specify just the year. -->
             <t>max_jump: The configured maximum jump_cwnd;</t>
 
             <t>PipeSize: A measure of the validated available capacity,
-            based on the acknowledged data and measured in bytes;</t>
+            based on the acknowledged data;</t>
 
             <t>saved_cwnd: The CWND derived from observation of a
             previous connection, which reflects the (validated) capacity
