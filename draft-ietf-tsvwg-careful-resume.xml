@@ -361,7 +361,7 @@ specify just the year. -->
     CC algorithm moves through as a connection
     uses Careful Resume, as shown in Figure 1.</t>
 
-<t>
+    <t>
 <figure title="Key transistions between Phases in Careful Resume">
 <artwork align="left" name="" type="" alt=""><![CDATA[
      
@@ -432,7 +432,7 @@ Examples of the transitions between phases are provided in <xref target="Example
 	There are a set of conditions that need to be confirmed before the sender is
         permitted to enter the Unvalidated Phase:
 
-        <list style="symbols"> <!-- list of phases -->
+        <list style="symbols">
 
             <t>Reconnaissance Phase (Endpoint change):
             If the current remote endpoint is not the same as a saved endpoint,
@@ -516,7 +516,8 @@ Examples of the transitions between phases are provided in <xref target="Example
 	    
         <t>When the RTT is confirmed:</t>
         <t><list style="symbols">
-            <t>Unvalidated Phase (Initialising PipeSize): The variable PipeSize is initialised to CWND on
+            <t>Unvalidated Phase (Initialising PipeSize):
+		The variable PipeSize is initialised to CWND on
                 entry to the Unvalidated Phase. This records the
                 value before the jump is applied.</t>
             
@@ -527,7 +528,7 @@ Examples of the transitions between phases are provided in <xref target="Example
              Hence, jump_cwnd is less than  or equal to the (saved_cwnd/2). CWND = jump_cwnd. </t>
              
              <t>Unvalidated Phase (Pacing trandmission): Transmission using an unvalidated
-             CWND MUST use pacing.</t>
+             CWND MUST use pacing based on the current_rtt.</t>
              
              <t>Unvalidated Phase (Confirming the path during transmission):
              If a sender determines that the previous CC parameters
@@ -538,7 +539,7 @@ Examples of the transitions between phases are provided in <xref target="Example
 	     Therefore, any detected congestion must have resulted from packets sent
              before the Unvalidated Phase.)</t>
              
-             <t>Unvalidated Phase (Receiving acknowledgements for reconnaissance packets):
+             <t>Unvalidated Phase (Tracking PipeSize):
                  The variable PipeSize is increased by the amount of data that is acknowledged
                  by each acknowledgment (in bytes). This indicates a previously unacknowledged packet has been
                  succesfully sent over the path.</t>
@@ -553,7 +554,7 @@ Examples of the transitions between phases are provided in <xref target="Example
     </section> <!-- End of define Unvalidated Phase -->
 
     <section anchor="val-phase" title="Validating Phase">
-        <t>The Validating Phase checks that the packets
+        <t>The Validating Phase checks that all packets
         sent in the Unvalidated Phase were received without inducing congestion.
         The CWND remains unvalidated and the sender typically remains in this phase for one RTT.
         </t>
@@ -595,7 +596,7 @@ Examples of the transitions between phases are provided in <xref target="Example
         </list></t> <!-- End of list of actions -->
     </section> <!-- End of define Validating Phase -->
     
-    <section anchor="ret-phase" title="Safe Retreat Phase">
+    <section anchor="sec-ret-phase" title="Safe Retreat Phase">
         
         <t>This phase is entered when the first loss/ECN-CE marking is 
 	detected for unvalidated packets. On entry to the Safe Retreat Phase, the sender MUST
@@ -613,7 +614,7 @@ Examples of the transitions between phases are provided in <xref target="Example
 	    deduced from packets sent in the Unvalidated Phase.
 	    </t>
 		
-            <t>Safe Retreat Phase (Re-initializing CC): On entry,
+            <t>Safe Retreat Phase (Re-initializing CWND): On entry,
             the CWND MUST be reduced to
             no more than the (PipeSize/2).
             This avoids persistent starvation by allowing capacity for other flows to regain
