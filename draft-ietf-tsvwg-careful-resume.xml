@@ -319,9 +319,9 @@ specify just the year. -->
 	     
 	    <t>current_rtt: A sample measurement of the current RTT;</t>
 
-	    <t>endpoint_token: An Endpoint Token identifying a path to a receiver;</t>
+	    <t>Endpoint Token: An token identifying a path to a receiver;</t>
 
-	    <t>flight_size: The currently unacknowledged volume of data sent by the CC method;</t>
+	    <t>flight_size: The current volume of unackowledged data;</t>
 
 	    <t>jump_cwnd: The resumed CWND, used in the Unvalidated Phase.</t>
 
