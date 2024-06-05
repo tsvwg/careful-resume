@@ -359,7 +359,8 @@ specify just the year. -->
     uses Careful Resume, as shown in Figure 1.</t>
 
     <t>
- <artwork align="left" name="" type="" alt=""><![CDATA[
+<figure title="Key transistions between Phases in Careful Resume">
+<artwork align="left" name="" type="" alt=""><![CDATA[
      
 Observe ...> Connect -> Reconnaissance --------------------> Normal
 (Normal)                 |                                    ^
@@ -374,7 +375,7 @@ Observe ...> Connect -> Reconnaissance --------------------> Normal
  ]]></artwork>
 </t>
 	
-<t> Figure 1: Phases when a connection uses the Careful Resume. The Observe Phase
+<t>The Observe Phase
 is performed by an established connection as an action within the Normal Phase. 
 Examples of the transitions between phases are provided in <xref target="Examples"></xref>.</t>
      
@@ -1230,6 +1231,7 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
     CC that uses Reno or Cubic. The PipeSize tracks the validated CWND.</t>
 
 <t>
+<figure title="Illustration of the operation of Careful Resume">	
 <artwork align="left" name="table" type="" alt=""><![CDATA[
 +------+---------+---------+------------+-----------+------------+
 |Phase |Normal   |Recon.   |Unvalidated |Validating |Safe Retreat|
@@ -1273,8 +1275,6 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
 |      |         |enter    |Validating  |           |            |
 |      |         |Normal   |            |           |            |
 +------+---------+---------+------------+-----------+------------+
-
-Simplified State Table Illustrating Operation of Careful Resume
 ]]></artwork>
 </t>
     <t>The following abbreviations are used
