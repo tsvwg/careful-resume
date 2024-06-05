@@ -430,9 +430,9 @@ Examples of the transitions between phases are provided in <xref target="Example
         <t>The phase seeks to determine if the path is consistent with
         a previously observed path (saved in the CC parameters).
 	There are a set of conditions that need to be confirmed before the sender is
-        permitted to enter the Unvalidated Phase:
+        permitted to enter the Reconnaissance Phase:</t>
 
-        <list style="symbols">
+        <t><list style="symbols">
 
             <t>Reconnaissance Phase (Endpoint change):
             If the current remote endpoint is not the same as a saved endpoint,
