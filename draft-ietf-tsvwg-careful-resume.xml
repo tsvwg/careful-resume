@@ -1358,17 +1358,18 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
 
     <section anchor="Examples-no loss" title="Example with No Loss">
         <t>In the first example of using Careful Resume,
-        the sender starts by sending IW (10) packets in the Reconnaissance Phase,
+        the sender starts by sending IW packets, assumed to be 10 packets, in the Reconnaissance Phase,
         and then continues in a subsequent RTT to send more packets until the sender
         becomes CWND-limited (i.e., flight_size = CWND).</t>
             
-        <t>The sender then
+        <t>The sender in the Reconaissance Phase then
         confirms the RTT and other conditions for using Careful Resume.
-        In this example, this is confirmed when the sender has 29 packets in flight.
-        The sender then enters the Unvalidated Phase.
-        (This confirmation could have happened earlier if data was available to send.) The
-        sender initialises the PipeSize to the CWND (the same as the flight_size, i.e., 29 packets)
-        and then sets the CWND to 150 packets (based upon a previously
+        In this example, this is confirmed when the sender has 29 packets in flight.</t>
+        <t>The sender then enters the Unvalidated Phase.
+        (This path confirmation could have happened earlier if data had been available to send.) The
+        sender initialises the PipeSize to the CWND
+        (at this time this is the same as the flight_size, i.e., 29 packets)
+        and then sets the CWND to 150 packets (based upon half of the previously
         observed saved_cwnd of 300 packets).</t>
             
         <t>The sender now sends 121 unvalidated packets (the unused portion of the current CWND).
@@ -1380,11 +1381,11 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
 
         <t>When the first unvalidated packet is acknowledged (packet number 30) the sender
         enters the Validating Phase. (This transition would also occur if the flight_size increased to equal CWND.)
-        During this phase, the CWND can be increased for each ACK acknowledging an unvalidated packet, because
+        During this phase, the CWND can be increased for each ACK that acknowledges an unvalidated packet, because
         this indicates that the packet was indeed validated.</t>
 
-        <t>When an ACK is received for the last packet sent in the Unvalidated Phase,
-        the sender completes using Careful Resume. It enters the Normal Phase. If CWND is less than ssthresh,
+        <t>When an ACK is received for the last packet that was sent in the Unvalidated Phase,
+        the sender completes using Careful Resume. It then enters the Normal Phase. If CWND is less than ssthresh,
         a Reno or Cubic sender in the Normal Phase is permitted to use Slow-Start to grow the CWND towards
         the ssthresh, and will then enter congestion avoidance.</t>
     </section>
@@ -1407,10 +1408,8 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
         The PipeSize also increases with each ACK received, to reflect the discovered capacity.</t>
 
         <t>When an ACK is received for the last packet sent in the Unvalidated Phase,
-        the sender has completed using Careful Resume. It then enters the Normal Phase.
-        If the CWND is less than ssthresh,
-        a Reno or Cubic sender in the Normal Phase is permitted to use Slow-Start to grow the CWND towards
-        the ssthresh, and will then enter congestion avoidance.</t>
+        the sender has completed using Careful Resume. It then enters the Normal Phase,
+        as in the example with no loss.</t>
     </section>
 
     <section anchor="Examples-loss-recon" title="Example with Loss detected in the Reconnaissance Phase">
@@ -1426,28 +1425,28 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
 
         <t>The sender now sends 121 unvalidated packets (the remaining unused CWND).
         This example considers the case when one of the unvalidated packet is lost, which
-        we choose to be packet 64 (the 35th packet in the Unvalidated Phase).</t>
+        we choose to be packet 64 (the 35th packet sent in the Unvalidated Phase).</t>
 
         <t>ACKs confirm the first 34 unvalidated packets are received without loss.
         The PipeSize at this point is equal to 63 (29 + 34) packets.</t>
             
         <t>The loss is then detected (by a timer or by receiving three ACKs that do not cover packet number 35),
         the sender then enters the Safe Retreat Phase because the window was not validated.
-        The PipeSize at this point is equal to 66 (29 + 34) packets. Assuming IW=10.
-        The CWND is reset to Max(10,PS/2) = Max(10,66/2) = 33 packets.
+        The PipeSize at this point is equal to 66 (29 + 34) packets. Assuming that the IW was 10 packets,
+        the CWND is reset to Max(10,PS/2) = Max(10,66/2) = 33 packets.
         This CWND is used during the Safe Retreat Phase, because congestion was detected and the
-        sender still does not know if the remaining unvalidated packets will be
+        sender still does not yet know if the remaining unvalidated packets will be
         successfully acknowledged. A conservative CWND calculation ensures the sender drains
         the path after this potentially severe congestion event.
         There is no further increase in CWND in this phase.</t>
 
-        <t>The sender continues to receives ACKs for the remaining  86 (121-35) unvalidated packets.
+        <t>The sender continues to receive ACKs for the remaining  86 (121-35) unvalidated packets.
         Recall that the 35th unvalidated packet was lost and had packet number 64 (29+35).
         The PipeSize tracks the
-        size of the pipe discovered by the unvalidated packets and
-        continues to be further increased as each ACK acknowledges new data.
-        Although the PipeSize cannot be used to safety initialise CWND (because it was measured when the sender
-        aggressively created overload), the estimated PipeSize
+        capacity discovered by acknowledgments for the unvalidated packets and
+        continues to be further increased for each received ACK acknowledges new data.
+        Although the PipeSize cannot be used to safety initialise the CWND (because it was measured when the sender
+        had aggressively created overload), the estimated PipeSize
         (which, in this case, is 121-1 = 120 packets) can be used to set the ssthresh on exit
         from Safe Retreat, since it does indicate an upper limit to the current capacity.</t>
 
