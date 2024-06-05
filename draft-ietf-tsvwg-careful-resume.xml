@@ -141,12 +141,12 @@ specify just the year. -->
     called the "slow-start phase", informally known as the time to "Get up
     to speed". This slow-start phase defines a time in which a sender
     intentionally uses less capacity than might be available, with the
-    intention to avoid or limit overshooting the available capacity for the path.
+    intention to avoid or limit overshoot of the available capacity for the path.
     The slow-start design can increase queuing (latency or jitter) and/or
     congestion packet loss for the flow. Any overshoot can have a
     detrimental effect on other flows sharing a common bottleneck. 
     A sender can use a method that observes the rate of acknowledged data,
-    and seek to avoid overshooting the bottleneck capacity (e.g., Hystart++
+    and seek to avoid an overshoot of the bottleneck capacity (e.g., Hystart++
     <xref target="RFC9406"></xref>).
     In the extreme case, an overshoot can result in persistent congestion
     with unwanted starvation of
@@ -327,16 +327,15 @@ specify just the year. -->
 
 	    <t>LifeTime: The time for which the saved CC parameters can be safely re-used.</t>
 
-	    <t>max_jump : The maximum configured jump_cwnd;</t>
+	    <t>max_jump: The maximum configured jump_cwnd;</t>
 
 	    <t>PipeSize: A measure of the validated available capacity based on the acknowledged data;</t>
 
             <t>saved_cwnd: A value of CWND derived from observation of a
             previous connection, which reflects capacity
-            that was utilised by the observed connection;</t>
+            that was utilised by the observed connection (see <xref target="req-observe"></xref>);</t>
 
-	    <t>saved_endpoint_token: The Endpoint Token of a previous connection to a
-            receiver;</t>
+	    <t>saved_endpoint_token: The Endpoint Token associated with a saved_cwnd;</t>
 
             <t>saved_rtt: The preserved minimum RTT, e.g., corresponding to the minimum
             of a set RTT of measurements over the last 5 minutes of a connection.</t>
