@@ -307,7 +307,7 @@ specify just the year. -->
         <t> The document uses language drawn
         from a range of IETF RFCs. The Endpoint Token is described in <xref target="endpoint_token"></xref>.
         The following terms are defined:
-        <list>
+   <list>
 
             <!-- GF (Feb 2023): Removed the IW from this information block??? -->
             <!-- it could potentially be in the BDP Frame ID, but is not needed here -->
@@ -331,16 +331,15 @@ specify just the year. -->
 
             <t>flight_size: The current volume of unacknowledged data;</t>
 
-            <t>jump_cwnd: The CWND used in the Unvalidated Phase based on the saved_cwnd;</t>
+	    <t>jump_cwnd: The resumed CWND, used in the Unvalidated Phase.</t>
 
-            <t>LifeTime: The time for which the saved CC parameters can be safely re-used;</t>
+	    <t>LifeTime: The time for which the saved CC parameters can be safely re-used.</t>
 
             <t>max_jump: The configured maximum jump_cwnd;</t>
 
-            <t>PipeSize: A measure of the validated available capacity,
-            based on the acknowledged data;</t>
+	    <t>PipeSize: A measure of the validated available capacity based on the acknowledged data;</t>
 
-          <t>saved_cwnd: A value of CWND derived from observation of a
+            <t>saved_cwnd: A value of CWND derived from observation of a
             previous connection, which reflects capacity
             that was utilised by the observed connection (see <xref target="req-observe"></xref>);</t>
 
@@ -353,7 +352,7 @@ specify just the year. -->
             if such a packet is acknowledged, it contributes to the PipeSize, but
             if congestion is detected, it triggers entry to the Safe Retreat Phase.</t>
 
-        </list>
+		</list>
         </t>
 
     </section> <!-- End of Notation: End of terms -->
