@@ -330,7 +330,7 @@ specify just the year. -->
 
 	    <t>LifeTime: The time for which the saved CC parameters can be safely re-used.</t>
 
-	    <t>max_jump: The configured maximum jump_cwnd;</t>
+            <t>max_jump: The configured maximum jump_cwnd;</t>
 
 	    <t>PipeSize: A measure of the validated available capacity based on the acknowledged data;</t>
 
