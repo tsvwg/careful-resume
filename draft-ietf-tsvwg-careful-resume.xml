@@ -142,7 +142,7 @@ specify just the year. -->
     to speed". This slow-start phase defines a time in which a sender
     intentionally uses less capacity than might be available, with the
     intention to avoid or limit overshoot of the available capacity for the path.
-    The slow-start design can increase queuing (latency or jitter) and/or
+    This can increase queuing (latency or jitter) and/or
     congestion packet loss for the flow. Any overshoot can have a
     detrimental effect on other flows sharing a common bottleneck. 
     A sender can use a method that observes the rate of acknowledged data,
@@ -327,7 +327,7 @@ specify just the year. -->
 
 	    <t>LifeTime: The time for which the saved CC parameters can be safely re-used.</t>
 
-	    <t>max_jump: The maximum configured jump_cwnd;</t>
+	    <t>max_jump: The configured maximum jump_cwnd;</t>
 
 	    <t>PipeSize: A measure of the validated available capacity based on the acknowledged data;</t>
 
@@ -378,7 +378,7 @@ Observe ...> Connect -> Reconnaissance --------------------> Normal
 
 </t>
 	
-<t> Figure 1: Phases when a connection uses the Careful Resume. The Observe Phase
+<t>The Observe Phase
 is performed by an established connection as an action within the Normal Phase. 
 Examples of the transitions between phases are provided in <xref target="Examples"></xref>.</t>
      
