@@ -171,7 +171,11 @@ specify just the year. -->
     the saved_cwnd for the path and the minimum Round Trip Time (RTT). These
     parameters are saved and used to modify the CC
     behavior of a subsequent connection between the
-    same endpoints.</t>
+    same endpoints. Some congestion control algorithms may use other parameters.
+    For example, implementations using BBR will want to also retain the
+    value of the sending rate required to reach the full bandwidth available to
+    the flow (BBR.max_bw, see <xref target="I-D.cardwell-iccrg-bbr-congestion-control"></xref>).
+    </t>
 
     <t>When used with the QUIC transport, this provides transport services that resemble
     those that could be implemented in TCP, using methods such as TCP Control Block (TCB)
@@ -536,6 +540,20 @@ Observing ...> Connect -> Reconnaissance --------------------> Normal
          (see first_unvalidated_packet_acknowledged in <xref target="sec-QLOG"></xref>).</t>
         </list></t> <!-- End of list of actions -->
 
+        <t>When the flow is controlled using BBR, the careful resume is implemented
+           by setting the pacing rate from the remembered values, with the following
+           precautions:</t>
+           <t><list style="symbols">
+              <t>Careful resume is only activated if the flow is in the Startup state</t>
+              <t>The value of the BBR.bw parameter at the beginning of the next round
+                 is only updated if the current value is lower than the remembered value
+                 of BBR.bw_max.</t>
+              <t>In order to avoid disrupting existing connections, the value of BBR.bw
+                 is only incremented by half the remembered value of BBR.bw_max.</t>
+              <t>The increment is only valid for one round. For the next round, the BBR.bw
+                 parameter will based as specified in the BBR specification, based on
+                 observed values of RTT and delivery rate.</t>
+           </list></t>
         <t>Implementation notes are provided in <xref target="req-unvalid"></xref>. </t>
     </section> <!-- End of define Unvalidated Phase -->
 
@@ -580,8 +598,13 @@ Observing ...> Connect -> Reconnaissance --------------------> Normal
             received for the last packet number (or higher)
             that was sent in the Unvalidated Phase
             (see last_unvalidated_packet_acknowledged in <xref target="sec-QLOG"></xref>).</t>
-
         </list></t> <!-- End of list of actions -->
+        <t>When using BBR, validation is performed using the regular BBR rules
+           for exiting Startup. The measured delivery rate will reflect the
+           actual capacity of the network. If congestion was experienced and
+           packet losses were observed, BBR will exit the Startup state and enter the
+           Drain state.</t>
+
     </section> <!-- End of define Validating Phase -->
     
     <section anchor="sec-phase-ret-phase" title="Safe Retreat Phase">
@@ -636,6 +659,10 @@ Observing ...> Connect -> Reconnaissance --------------------> Normal
             The value of ssthresh on leaving the Safe Retreat Phase
             MUST NOT be more than the PipeSize.</t>
         </list></t>
+
+        <t>The safe retreat process is not used when the connection uses BBR. Instead,
+           if the remembered values were excessive, BBR will naturally enter its Drain
+           state. </t>
      
         <t>Implementation notes are provided in <xref target="req-retreat"></xref>.</t>
 
@@ -660,10 +687,9 @@ Observing ...> Connect -> Reconnaissance --------------------> Normal
 
     <section title="RTO Expiry while using Careful Resume">
 
-
         <t> A sender that experiences a Retransmission Time Out (RTO) expiry
         ceases to use Careful Resume.
-        The sender enters the Normal Phase.</t>
+        The sender enters the Normal Phase. If using BBR, it will enter the Drain state.</t>
 
         <t> As in loss recovery, data sent in the
         Unvalidated Phase could be later acknowledged after an RTO event
@@ -1282,6 +1308,8 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
 
         <seriesInfo name="ACM CoNEXT" value="" />
       </reference>
+
+      
     </references>
 
 <section anchor="Examples" title="Notes on the Careful Resume Phases">
