@@ -1329,7 +1329,7 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
 |Phase:|(as      |FS=CWND, |or >1 RTT   |>= last    |>= last     |
 |      |needed)  |Lifetime,|has passed  |unvalidated|unvalidated |
 |      |         |and RTT  |or ACK for  |packet),   |packet),    |
-|      |         |confirmed|>= last     |enter      |{ssthresh=PS|
+|      |         |confirmed|>= first    |enter      |{ssthresh=PS|
 |      |         |), enter |unvalidated |Normal     |and enter   |
 |      |         |Unvalidat|packet),    |           |Normal}     |
 |      |         |ing else |enter       |           |            |
