@@ -172,8 +172,8 @@ specify just the year. -->
     parameters are saved and used to modify the CC
     behavior of a subsequent connection between the
     same endpoints. Some congestion control algorithms may use other parameters.
-    For example, implementations using BBR will want to also retain the
-    value of the sending rate required to reach the full bandwidth available to
+    For example, implementations using BBR also retain the
+    value of the bottleneck bandwidth required to reach the capacity available to
     the flow (BBR.max_bw, see <xref target="I-D.cardwell-iccrg-bbr-congestion-control"></xref>).
     </t>
 
@@ -540,19 +540,28 @@ Observing ...> Connect -> Reconnaissance --------------------> Normal
          (see first_unvalidated_packet_acknowledged in <xref target="sec-QLOG"></xref>).</t>
         </list></t> <!-- End of list of actions -->
 
-        <t>When the flow is controlled using BBR, the careful resume is implemented
-           by setting the pacing rate from the remembered values, with the following
-           precautions:</t>
+        <t>When the flow is controlled using BBR, the Careful Resume is implemented
+           by setting the pacing rate from the saved congestion control parameters,
+           with the following precautions:</t>
            <t><list style="symbols">
-              <t>Careful resume is only activated if the flow is in the Startup state</t>
-              <t>The value of the BBR.bw parameter at the beginning of the next round
-                 is only updated if the current value is lower than the remembered value
-                 of BBR.bw_max.</t>
-              <t>In order to avoid disrupting existing connections, the value of BBR.bw
-                 is only incremented by half the remembered value of BBR.bw_max.</t>
-              <t>The increment is only valid for one round. For the next round, the BBR.bw
-                 parameter will based as specified in the BBR specification, based on
-                 observed values of RTT and delivery rate.</t>
+              <t>The flags "carefully-resuming" and "carefully-evaluating" are
+                 added to the BBR state, and initialized
+                 to "False" when the BBR flow starts.</t>
+              <t>Careful Resume is only activated if a BBR flow is in the Startup state</t>
+              <t>The sender starts the "evaluation" phase at the beginning of a round,
+                 and sets the "carefully-resuming" and "carefully-evaluating" flags to "True".
+              <t>When the "carefully-resuming" is set, the sender sets the pacing rate
+                 to the larger of the nominal pacing rate (BBR.bw times BBRStartupPacingGain)
+                 and the remembered value of BBR.bw_max. If the nominal pacing rate
+                 is higher, the "carefully-resuming" flag is reset to False.
+              <t>The "carefully-resuming" flag is in any case reset to False at the
+                 beginning of the next round.
+              <t>The "carefully-evaluating" flag is reset to False two rounds after
+                 it is set, i.e., after all the packets sent when "carefully resuming"
+                 have been received and acknowledged by the peer. At that stage,
+                 the measured delivery rate is expected to reflect the capacity of
+                 the path.
+              </t>
            </list></t>
         <t>Implementation notes are provided in <xref target="req-unvalid"></xref>. </t>
     </section> <!-- End of define Unvalidated Phase -->
@@ -602,8 +611,9 @@ Observing ...> Connect -> Reconnaissance --------------------> Normal
         <t>When using BBR, validation is performed using the regular BBR rules
            for exiting Startup. The measured delivery rate will reflect the
            actual capacity of the network. If congestion was experienced and
-           packet losses were observed, BBR will exit the Startup state and enter the
-           Drain state.</t>
+           packet losses were observed, BBR will exit the Startup state
+           and enter the Drain state while the "carefully-evaluating" flag is still
+           True, which will trigger the "safe retreat" option of the Drain state.</t>
 
     </section> <!-- End of define Validating Phase -->
     
@@ -660,9 +670,15 @@ Observing ...> Connect -> Reconnaissance --------------------> Normal
             MUST NOT be more than the PipeSize.</t>
         </list></t>
 
-        <t>The safe retreat process is not used when the connection uses BBR. Instead,
-           if the remembered values were excessive, BBR will naturally enter its Drain
-           state. </t>
+        <t>When using BBR, the "safe retreat" mode is applied if the Drain
+           state is entered while the "carefully-evaluating" flag is still
+           True, i.e., if less than 2 full rounds have elapsed before
+           the Careful Resume attempt. The delivery rate measured in this
+           conditions are tainted, because packets sent during the attempt
+           are still queued at the bottleneck and may have "pushed out"
+           competing traffic. The delivery rates measured in Drain state
+           MUST be discarded if the "carefully-evaluating" flag is True.
+           This flag is only cleared upon exiting the Drain state.</t>
      
         <t>Implementation notes are provided in <xref target="req-retreat"></xref>.</t>
 
