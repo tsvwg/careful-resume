@@ -361,7 +361,7 @@ specify just the year. -->
     uses Careful Resume.</t>
 
     <t>
-<figure title="Key transitions between Phases in Careful Resume">
+<figure title="Key transistions between Phases in Careful Resume">
 <artwork align="left" name="" type="" alt=""><![CDATA[
      
 Observing ...> Connect -> Reconnaissance --------------------> Normal
@@ -517,10 +517,10 @@ Observing ...> Connect -> Reconnaissance --------------------> Normal
      </list></t>
         <t>The following actions are performed during the Unvalidated Phase:</t>
         <t><list style="symbols">
-             <t>Unvalidated Phase (Pacing transmission): All packet sent in the
+             <t>Unvalidated Phase (Pacing tranmission): All packet sent in the
            Unvalidated Phase MUST use based on the current_rtt.</t>
              
-             <t>Unvalidated Phase (Confirming the path during transmission):
+             <t>Unvalidated Phase (Confirming the path during tranmssion):
              If a sender determines that the previous CC parameters
              are not valid (due to a detected path change),
              the Safe Retreat Phase is entered.
@@ -672,13 +672,13 @@ Observing ...> Connect -> Reconnaissance --------------------> Normal
 
         <t>When using BBR, the "safe retreat" mode is applied if the Drain
            state is entered while the "carefully-evaluating" flag is still
-           True, i.e., if less than 2 full rounds have elapsed before
-           the Careful Resume attempt. The delivery rate measured in this
+           True, i.e., if less than 2 full rounds have elapsed after
+           the Careful Resume attempt. The delivery rates measured in this
            conditions are tainted, because packets sent during the attempt
            are still queued at the bottleneck and may have "pushed out"
            competing traffic. The delivery rates measured in Drain state
            MUST be discarded if the "carefully-evaluating" flag is True.
-           This flag is only cleared upon exiting the Drain state.</t>
+           This flag is cleared upon exiting the Drain state.</t>
      
         <t>Implementation notes are provided in <xref target="req-retreat"></xref>.</t>
 
@@ -705,7 +705,10 @@ Observing ...> Connect -> Reconnaissance --------------------> Normal
 
         <t> A sender that experiences a Retransmission Time Out (RTO) expiry
         ceases to use Careful Resume.
-        The sender enters the Normal Phase. If using BBR, it will enter the Drain state.</t>
+        The sender enters the Normal Phase. If using BBR, the normal
+        processing of packet losses will cause it to enter the
+        Drain state while the "carefully-evaluating" flag is set to True,
+        which will force the Safe Retreat mode.</t>
 
         <t> As in loss recovery, data sent in the
         Unvalidated Phase could be later acknowledged after an RTO event
@@ -847,7 +850,7 @@ Observing ...> Connect -> Reconnaissance --------------------> Normal
         the saved CC parameters. When multiple new concurrent connections
         are made to a server, each can have a valid saved_endpoint_token,
         but the saved_cwnd can once (i.e., if two connections start
-        simultaneously they cannot both use the saved_cwnd to perform a jump).
+        simulateously they cannot both use the saved_cwnd to perform a jump).
         This is to prevent a sender from performing multiple jumps in the CWND,
         each individually based on the same saved_cwnd, and hence creating an
         excessive aggregate load at the bottleneck.</t>
@@ -1373,7 +1376,7 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
 |Phase:|(as      |FS=CWND, |or >1 RTT   |>= last    |>= last     |
 |      |needed)  |Lifetime,|has passed  |unvalidated|unvalidated |
 |      |         |and RTT  |or ACK for  |packet),   |packet),    |
-|      |         |confirmed|>= first    |enter      |{ssthresh=PS|
+|      |         |confirmed|>= last     |enter      |{ssthresh=PS|
 |      |         |), enter |unvalidated |Normal     |and enter   |
 |      |         |Unvalidat|packet),    |           |Normal}     |
 |      |         |ing else |enter       |           |            |
@@ -1406,7 +1409,7 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
         and then continues in a subsequent RTT to send more packets until the sender
         becomes CWND-limited (i.e., flight_size = CWND).</t>
             
-        <t>The sender in the Reconnaissance Phase then
+        <t>The sender in the Reconaissance Phase then
         confirms the RTT and other conditions for using Careful Resume.
         In this example, this is confirmed when the sender has 29 packets in flight.</t>
         <t>The sender then enters the Unvalidated Phase.
