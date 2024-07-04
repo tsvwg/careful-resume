@@ -850,7 +850,7 @@ Observing ...> Connect -> Reconnaissance --------------------> Normal
         the saved CC parameters. When multiple new concurrent connections
         are made to a server, each can have a valid saved_endpoint_token,
         but the saved_cwnd can once (i.e., if two connections start
-        simulateously they cannot both use the saved_cwnd to perform a jump).
+        simultaneously they cannot both use the saved_cwnd to perform a jump).
         This is to prevent a sender from performing multiple jumps in the CWND,
         each individually based on the same saved_cwnd, and hence creating an
         excessive aggregate load at the bottleneck.</t>
