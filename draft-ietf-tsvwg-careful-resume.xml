@@ -544,24 +544,24 @@ Observing ...> Connect -> Reconnaissance --------------------> Normal
            by setting the pacing rate from the saved congestion control parameters,
            with the following precautions:</t>
            <t><list style="symbols">
-              <t>The flags "carefully-resuming" and "carefully-evaluating" are
+              <t>The flag "carefully-resuming" is
                  added to the BBR state, and initialized
                  to "False" when the BBR flow starts.</t>
               <t>Careful Resume is only activated if a BBR flow is in the Startup state</t>
+              <t>The probing rate is set 1/2 of the bottleneck bandwidth remembered in
+                 the saved congestion control parameters,
               <t>The sender starts the "evaluation" phase at the beginning of a round,
-                 and sets the "carefully-resuming" and "carefully-evaluating" flags to "True".
+                 and sets the "carefully-resuming" flags to "True".
               <t>When the "carefully-resuming" is set, the sender sets the pacing rate
                  to the larger of the nominal pacing rate (BBR.bw times BBRStartupPacingGain)
-                 and the remembered value of BBR.bw_max. If the nominal pacing rate
-                 is higher, the "carefully-resuming" flag is reset to False.
-              <t>The "carefully-resuming" flag is in any case reset to False at the
-                 beginning of the next round.
-              <t>The "carefully-evaluating" flag is reset to False two rounds after
-                 it is set, i.e., after all the packets sent when "carefully resuming"
+                 and the probing rate. The CWND is set to the largest of BBR.bw
+                 and the probing rate, multiplied by BBR.rtt_min times
+                 BBRStartupCwndGain.
+              <t>The "carefully-resuming" flag is reset to False two rounds after
+                 it is set, i.e., after all the packets sent in the first round
+                 of "carefully resuming"
                  have been received and acknowledged by the peer. At that stage,
-                 the measured delivery rate is expected to reflect the capacity of
-                 the path.
-              </t>
+                 the measured delivery rate is expected to reflect the probing rate.</t>
            </list></t>
         <t>Implementation notes are provided in <xref target="req-unvalid"></xref>. </t>
     </section> <!-- End of define Unvalidated Phase -->
@@ -612,7 +612,7 @@ Observing ...> Connect -> Reconnaissance --------------------> Normal
            for exiting Startup. The measured delivery rate will reflect the
            actual capacity of the network. If congestion was experienced and
            packet losses were observed, BBR will exit the Startup state
-           and enter the Drain state while the "carefully-evaluating" flag is still
+           and enter the Drain state while the "carefully-resuming" flag is still
            True, which will trigger the "safe retreat" option of the Drain state.</t>
 
     </section> <!-- End of define Validating Phase -->
@@ -671,13 +671,13 @@ Observing ...> Connect -> Reconnaissance --------------------> Normal
         </list></t>
 
         <t>When using BBR, the "safe retreat" mode is applied if the Drain
-           state is entered while the "carefully-evaluating" flag is still
+           state is entered while the "carefully-resuming" flag is still
            True, i.e., if less than 2 full rounds have elapsed after
            the Careful Resume attempt. The delivery rates measured in this
            conditions are tainted, because packets sent during the attempt
            are still queued at the bottleneck and may have "pushed out"
            competing traffic. The delivery rates measured in Drain state
-           MUST be discarded if the "carefully-evaluating" flag is True.
+           MUST be discarded if the "carefully-resuming" flag is set to True.
            This flag is cleared upon exiting the Drain state.</t>
      
         <t>Implementation notes are provided in <xref target="req-retreat"></xref>.</t>
@@ -707,7 +707,7 @@ Observing ...> Connect -> Reconnaissance --------------------> Normal
         ceases to use Careful Resume.
         The sender enters the Normal Phase. If using BBR, the normal
         processing of packet losses will cause it to enter the
-        Drain state while the "carefully-evaluating" flag is set to True,
+        Drain state while the "carefully-resuming" flag is set to True,
         which will force the Safe Retreat mode.</t>
 
         <t> As in loss recovery, data sent in the
@@ -1079,7 +1079,7 @@ Observing ...> Connect -> Reconnaissance --------------------> Normal
             <t>For NewReno and CUBIC, it is recommended to exit Slow-Start
             and enter the congestion avoidance phase of the CC algorithm.</t>
 
-            <t>For BBR CC, it is recommended to enter the "probe bandwidth"
+            <t>For BBR CC, it is recommended to enter the "Drain"
             state.</t>
         </list></t>-->
 
