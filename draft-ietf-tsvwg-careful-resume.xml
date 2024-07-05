@@ -361,7 +361,7 @@ specify just the year. -->
     uses Careful Resume.</t>
 
     <t>
-<figure title="Key transistions between Phases in Careful Resume">
+<figure title="Key transitions between Phases in Careful Resume">
 <artwork align="left" name="" type="" alt=""><![CDATA[
      
 Observing ...> Connect -> Reconnaissance --------------------> Normal
@@ -517,10 +517,10 @@ Observing ...> Connect -> Reconnaissance --------------------> Normal
      </list></t>
         <t>The following actions are performed during the Unvalidated Phase:</t>
         <t><list style="symbols">
-             <t>Unvalidated Phase (Pacing tranmission): All packet sent in the
+             <t>Unvalidated Phase (Pacing transmission): All packet sent in the
            Unvalidated Phase MUST use based on the current_rtt.</t>
              
-             <t>Unvalidated Phase (Confirming the path during tranmssion):
+             <t>Unvalidated Phase (Confirming the path during transmission):
              If a sender determines that the previous CC parameters
              are not valid (due to a detected path change),
              the Safe Retreat Phase is entered.
@@ -550,7 +550,7 @@ Observing ...> Connect -> Reconnaissance --------------------> Normal
               <t>Careful Resume is only activated if a BBR flow is in the Startup state</t>
               <t>The probing rate is set 1/2 of the bottleneck bandwidth remembered in
                  the saved congestion control parameters,
-              <t>The sender starts the "evaluation" phase at the beginning of a round,
+              <t>The sender starts the Unvalidated Phase at the beginning of a round,
                  and sets the "carefully-resuming" flags to "True".
               <t>When the "carefully-resuming" is set, the sender sets the pacing rate
                  to the larger of the nominal pacing rate (BBR.bw times BBRStartupPacingGain)
@@ -673,8 +673,8 @@ Observing ...> Connect -> Reconnaissance --------------------> Normal
         <t>When using BBR, the "safe retreat" mode is applied if the Drain
            state is entered while the "carefully-resuming" flag is still
            True, i.e., if less than 2 full rounds have elapsed after
-           the Careful Resume attempt. The delivery rates measured in this
-           conditions are tainted, because packets sent during the attempt
+           the sender entered the Unvalidated Phase. The delivery rates measured in
+           these conditions are tainted, because packets sent during the attempt
            are still queued at the bottleneck and may have "pushed out"
            competing traffic. The delivery rates measured in Drain state
            MUST be discarded if the "carefully-resuming" flag is set to True.
