@@ -540,7 +540,7 @@ Observing ...> Connect -> Reconnaissance --------------------> Normal
          (see first_unvalidated_packet_acknowledged in <xref target="sec-QLOG"></xref>).</t>
         </list></t> <!-- End of list of actions -->
 
-        <t>When the flow is controlled using BBR, the Careful Resume is implemented
+        <t>When the flow is controlled using BBR, Careful Resume is implemented
            by setting the pacing rate from the saved congestion control parameters,
            with the following precautions:</t>
            <t><list style="symbols">
