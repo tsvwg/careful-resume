@@ -670,7 +670,7 @@ Observing ...> Connect -> Reconnaissance --------------------> Normal
             MUST NOT be more than the PipeSize.</t>
         </list></t>
 
-        <t>When using BBR, the "safe retreat" mode is applied if the Drain
+        <t>When using BBR, the Safe Retreat Phase is entered if the Drain
            state is entered while the "carefully-resuming" flag is still
            True, i.e., if less than 2 full rounds have elapsed after
            the sender entered the Unvalidated Phase. The delivery rates measured in
