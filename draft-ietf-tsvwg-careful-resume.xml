@@ -1536,7 +1536,7 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
         <t>WG-09, Cleaning text to separate guidelines and specification
         and adjust wording to improve clarity based on questions received during implementation.
         </t>
-
+        <t>WG-10, CH developed text to explain expected operation with BBR. This also fixed some typos introduced in previous edits.</t>
     </list></t>
 </section> <!-- End of Revisions -->
 
