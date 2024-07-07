@@ -548,11 +548,11 @@ Observing ...> Connect -> Reconnaissance --------------------> Normal
                  added to the BBR state, and initialized
                  to "False" when the BBR flow starts.</t>
               <t>Careful Resume is only activated if a BBR flow is in the Startup state</t>
-              <t>The probing rate is set 1/2 of the bottleneck bandwidth remembered in
+              <t>The probing rate is set to 1/2 of the bottleneck bandwidth in
                  the saved congestion control parameters,
               <t>The sender starts the Unvalidated Phase at the beginning of a round,
                  and sets the "carefully-resuming" flags to "True".
-              <t>When the "carefully-resuming" is set, the sender sets the pacing rate
+              <t>When the "carefully-resuming" flag is set, the sender sets the BBR pacing rate
                  to the larger of the nominal pacing rate (BBR.bw times BBRStartupPacingGain)
                  and the probing rate. The CWND is set to the largest of BBR.bw
                  and the probing rate, multiplied by BBR.rtt_min times
@@ -560,7 +560,7 @@ Observing ...> Connect -> Reconnaissance --------------------> Normal
               <t>The "carefully-resuming" flag is reset to False two rounds after
                  it is set, i.e., after all the packets sent in the first round
                  of "carefully resuming"
-                 have been received and acknowledged by the peer. At that stage,
+                 have been received and acknowledged by the peer. At that stage (after the capacity has been validated),
                  the measured delivery rate is expected to reflect the probing rate.</t>
            </list></t>
         <t>Implementation notes are provided in <xref target="req-unvalid"></xref>. </t>
