@@ -546,17 +546,17 @@ Observing ...> Connect -> Reconnaissance --------------------> Normal
            <t><list style="symbols">
               <t>The flag "carefully-resuming" is
                  added to the BBR state, and initialized
-                 to "False" when the BBR flow starts.</t>
-              <t>Careful Resume is only activated if a BBR flow is in the Startup state</t>
+                 to "False" when the BBR flow starts;</t>
+              <t>Careful Resume is only activated if a BBR flow is in the Startup state;</t>
               <t>The probing rate is set to 1/2 of the bottleneck bandwidth in
-                 the saved congestion control parameters,
+                 the saved congestion control parameters.</t>
               <t>The sender starts the Unvalidated Phase at the beginning of a round,
-                 and sets the "carefully-resuming" flags to "True".
+                 and sets the "carefully-resuming" flags to "True";</t>
               <t>When the "carefully-resuming" flag is set, the sender sets the BBR pacing rate
                  to the larger of the nominal pacing rate (BBR.bw times BBRStartupPacingGain)
                  and the probing rate. The CWND is set to the largest of BBR.bw
                  and the probing rate, multiplied by BBR.rtt_min times
-                 BBRStartupCwndGain.
+                 BBRStartupCwndGain;</t>
               <t>The "carefully-resuming" flag is reset to False two rounds after
                  it is set, i.e., after all the packets sent in the first round
                  of "carefully resuming"
@@ -1146,15 +1146,18 @@ state_data: CarefulResumeStateParameters,
         "congestion_window_limited" /
         ; for the Validating phase
         "first_unvalidated_packet_acknowledged" /
-    ; for the Normal phase, and no remaining unvalidated packets to be acknowledged
+    ; for the Normal phase
+    ; and no remaining unvalidated packets to be acknowledged
         "last_unvalidated_packet_acknowledged" /
         ; for the Normal phase, when CR not allowed
         "rtt_not_validated" /
-        ; for the Normal phase, when the application sends fewer unvalidated packets than permitted by CWND
+        ; for the Normal phase,
+        ; when sending fewer unvalidated packets than CWND permits
         "rate_limited" /
     ; for the Safe Retreat phase, when loss detected
         "packet_loss" /
-    ; for the Safe Retreat phase, when ECN congestion experienced reported
+    ; for the Safe Retreat phase, 
+    ; when ECN congestion experienced reported
         "ECN_CE" /
         ; for the Normal phase 1 RTT after a congestion event
         "exit_recovery"
@@ -1536,7 +1539,8 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
         <t>WG-09, Cleaning text to separate guidelines and specification
         and adjust wording to improve clarity based on questions received during implementation.
         </t>
-        <t>WG-10, CH developed text to explain expected operation with BBR. This also fixed some typos introduced in previous edits.</t>
+        <t>WG-10, CH developed text to explain expected operation with BBR. 
+        This also fixed some typos introduced in previous edits. Fix XML and fix CDDL bugs for submission.</t>
     </list></t>
 </section> <!-- End of Revisions -->
 
