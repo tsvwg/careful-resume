@@ -310,13 +310,7 @@ specify just the year. -->
     by Careful Resume
     to match the current path with a set of CC parameters associated with a previously observed path.</t>
 
-    <!-- In <xref target="I-D.kuhn-quic-bdpframe-extension"></xref>
-    this Remote Endpoint could be shared and used as an
-    opaque path identifier to other parties and the sender can verify if
-    this is one of its current paths.-->
-
-        <t>When computing the Remote Endpoint, the sender includes information to identify
-        the path on which it sends, this needs to include:
+        <t>When computed Remote Endpoint needs to include:
         
         <list style="symbols">
             <t>a unique identifier representing its own sending interface (e.g., a globally
