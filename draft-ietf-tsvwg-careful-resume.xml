@@ -303,7 +303,37 @@ specify just the year. -->
          when, and only when, they appear in all
          capitals, as shown here.</t>
     </section>
+<section anchor="endpoint" title="The Remote Endpoint">
 
+    <t> The Remote Endpoint is an implementation-dependent value that allows a sender to identify its own
+    view of the network path being used to connect to a specific remote endpoint. This internal identifier is used
+    by Careful Resume
+    to match the current path with a set of CC parameters associated with a previously observed path.</t>
+
+    <!-- In <xref target="I-D.kuhn-quic-bdpframe-extension"></xref>
+    this Remote Endpoint could be shared and used as an
+    opaque path identifier to other parties and the sender can verify if
+    this is one of its current paths.-->
+
+        <t>When computing the Remote Endpoint, the sender includes information to identify
+        the path on which it sends, this needs to include:
+        
+        <list style="symbols">
+            <t>a unique identifier representing its own sending interface (e.g., a globally
+            assigned address/prefix or other local identifier);</t>
+            <t> an identifier representing the destination (e.g., a name or a
+            destination IP address used to connect to the receiver);</t>
+        </list></t>
+        
+        <t>The Remote Endpoint could include other information such as the sender DSCP, the transport ports, a flow
+        label, etc and other information (e.g., including PvD information <xref target="RFC8801"></xref> or
+        information relating to its public-facing IP address).
+        However, such additional information needs to be set consistently for a resumed connection
+        to the same remote endpoint.
+        Although additional information could improve the path
+        differentiation, it could  reduce the re-usability of saved parameters for resumed connections.</t>
+</section> <!-- End of An Remote Endpoint -->
+     
     <section anchor="sec-terms_def" title="Notation and Terms">
         <t> The document uses language drawn
         from a range of IETF RFCs.
@@ -324,11 +354,11 @@ specify just the year. -->
         <t>CWND: The congestion window, or equivalent CC variable limiting
         the maximum sending rate;</t>
                 
-        <t>current_endpoint_token: The Endpoint Token of the current receiver;</t>
+        <t>current_remote_endpoint: The Remote Endpoint of the current receiver;</t>
          
         <t>current_rtt: A sample measurement of the current RTT;</t>
 
-        <t>Endpoint Token: A token identifying a path to a receiver <xref target="endpoint_token"></xref>;</t>
+        <t>Remote Endpoint: A value identifying a path to a receiver <xref target="endpoint"></xref>;</t>
 
             <t>flight_size: The current volume of unacknowledged data;</t>
 
@@ -343,7 +373,7 @@ specify just the year. -->
             <t>saved_cwnd: The preserved capacity derived from observation of a
             previous connection (see <xref target="req-observe"></xref>);</t>
 
-            <t>saved_endpoint_token: The Endpoint Token associated with a set of CC parameters;</t>
+            <t>saved_remote_endpoint: The Remote Endpoint associated with a set of CC parameters;</t>
 
             <t>saved_rtt: The preserved minimum RTT (see <xref target="req-observe"></xref>).</t>
 
@@ -387,7 +417,7 @@ Observing ...> Connect -> Reconnaissance --------------------> Normal
     
     <section title="Observing">
         <t>An established connection in the Normal Phase, can save a set of CC parameters for the specific path
-        to the current endpoint. Each set of CC parameters includes the saved_endpoint_token and the
+        to the current endpoint. Each set of CC parameters includes the saved_remote_endpoint and the
         LifeTime (e.g., as a timestamp after which the parameters must not be used).</t>
         
         <t><list style="symbols">
@@ -427,8 +457,8 @@ Observing ...> Connect -> Reconnaissance --------------------> Normal
         <t><list style="symbols">
 
             <t>Reconnaissance Phase (Endpoint change):
-            If the current_endpoint_token is not the same as one of the saved_endpoint_tokens,
-            the sender MUST enter the Normal Phase. (A difference in the Endpoint Token
+            If the current_remote_endpoint is not the same as one of the saved_remote_endpoints,
+            the sender MUST enter the Normal Phase. (A difference in the Remote Endpoint
             indicates a the network path was different to one that was observed.)</t>
     
         <t>Reconnaissance Phase (Lifetime of saved CC parameters): The CC parameters are temporal.
@@ -725,67 +755,8 @@ Observing ...> Connect -> Reconnaissance --------------------> Normal
 
     </section> <!-- End of define "Normal Phase:" -->
         
-
 </section>
 
-<section anchor="endpoint_token" title="The Endpoint Token">
-
-    <t> The Endpoint Token is an implementation-dependent token that allows a sender to identify its own
-    view of the network path being used to connect to a specific remote endpoint. This internal identifier is used
-    by Careful Resume
-    to match the current path with a set of CC parameters associated with a previously observed path.</t>
-
-    <!-- In <xref target="I-D.kuhn-quic-bdpframe-extension"></xref>
-    this Endpoint Token could be shared and used as an
-    opaque path identifier to other parties and the sender can verify if
-    this is one of its current paths.-->
-
-    <section title="Creating an Endpoint Token">
-        <t>When computing the Endpoint Token, the sender includes information to identify
-        the path on which it sends, this needs to include:
-        
-        <list style="symbols">
-            <t>a unique identifier for its own sending interface (e.g., a globally
-            assigned address/prefix or other local identifier);</t>
-            <t>when multiple interfaces are in use,
-            this unique identifier should include an interface identifier
-            (e.g., an index value or a MAC address to associate the
-            endpoint with the interface used for sending);</t>
-            <t> an identifier for the destination (e.g., a name or a
-            destination IP address used to connect to the receiver);</t>
-        </list></t>
-        
-        <t>The Endpoint Token could include other information such as the sender DSCP, the transport ports, a flow
-        label, etc and other information (e.g., including PvD information <xref target="RFC8801"></xref> or
-        information relating to its public-facing IP address).
-        However, such additional information needs to be set consistently for a resumed connection
-        to the same remote endpoint.
-        Although additional information could improve the path
-        differentiation, it could also reduce the re-usability of the token for resumed connections.</t>
-    
-    <!--
-        When communicating an Endpoint Token, the sender has to ensure the following:
-        <list style="numbers">
-            <t>To reduce the likelihood of misuse of the Endpoint Token, the value
-            ought to be encoded in a way that hides the component information
-            from the recipient and any eavesdropper on the path (this could already protected by methods
-            such as TLS).</t>
-            
-            <t>The sender can recalculate the Endpoint Token to validate a
-            previously issued token; and can be
-            included in the computed integrity check for any path
-            information it provides.</t>
-        
-            <t> The Endpoint Token is designed so that if shared, it prevents another party from deriving
-            private data from the token, or to use the token to perform
-            unwanted likability with other information. Therefore,
-            the Endpoint Token MUST necessarily be different when used to identify
-            paths using different interfaces.</t>
-       </list> </t>
--->
-    </section>
-
-</section> <!-- End of An Endpoint Token -->
 <!-- ****************************************************************************************** -->
 <!--- Here we provide guidance on implementation     -->
     
@@ -848,7 +819,7 @@ Observing ...> Connect -> Reconnaissance --------------------> Normal
 
         <t>Careful Resume does not permit multiple concurrent reuse of
         the saved CC parameters. When multiple new concurrent connections
-        are made to a server, each can have a valid saved_endpoint_token,
+        are made to a server, each can have a valid saved_remote_endpoint,
         but the saved_cwnd can once (i.e., if two connections start
         simultaneously they cannot both use the saved_cwnd to perform a jump).
         This is to prevent a sender from performing multiple jumps in the CWND,
