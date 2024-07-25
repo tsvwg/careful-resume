@@ -10,7 +10,7 @@
 <?rfc sortrefs="yes" ?>
 <?rfc compact="yes" ?>
 <?rfc subcompact="no" ?>
-<rfc category="std" docName="draft-ietf-tsvwg-careful-resume-11"
+<rfc category="std" docName="draft-ietf-tsvwg-careCoful-resume-11"
      ipr="trust200902">
     <!-- category values: std, bcp, info, exp, and historic
     ipr values: full3667, noModification3667, noDerivatives3667
@@ -274,7 +274,7 @@ specify just the year. -->
         <xref target="IJSCN"></xref>
         could take 9 seconds to complete a 5.3 MB transfer
         using standard CC, whereas a sender using Careful Resume
-        could be reduce this transfer time to 4 seconds. The time to complete a 1 MB transfer could
+        could reduce this transfer time to 4 seconds. The time to complete a 1 MB transfer could
         similarly be reduced by 62 % <xref target="MAPRG111"></xref>. This benefit is also
         expected for other sizes of transfer and for different path
         characteristics when a path has a large BDP.</t>
@@ -331,7 +331,7 @@ specify just the year. -->
         However, such additional information needs to be set consistently for a resumed connection
         to the same remote endpoint.
         Although additional information could improve the path
-        differentiation, it could  reduce the re-usability of saved parameters for resumed connections.</t>
+        differentiation, it could reduce the re-usability of saved parameters for resumed connections.</t>
 </section> <!-- End of An Remote Endpoint -->
      
     <section anchor="sec-terms_def" title="Notation and Terms">
@@ -354,11 +354,11 @@ specify just the year. -->
         <t>CWND: The congestion window, or equivalent CC variable limiting
         the maximum sending rate;</t>
                 
-        <t>current_remote_endpoint: The Remote Endpoint of the current receiver;</t>
+        <t>current_remote_endpoint: The Remote Endpoint;</t>
          
         <t>current_rtt: A sample measurement of the current RTT;</t>
 
-        <t>Remote Endpoint: A value identifying a path to a receiver <xref target="endpoint"></xref>;</t>
+        <t>Remote Endpoint: See <xref target="endpoint"></xref>;</t>
 
             <t>flight_size: The current volume of unacknowledged data;</t>
 
