@@ -305,7 +305,7 @@ specify just the year. -->
     </section>
 <section anchor="endpoint" title="The Remote Endpoint">
 
-    <t> The Remote Endpoint is an implementation-dependent value that allows a sender to identify its own
+    <t> The Remote Endpoint is an implementation-dependent value that allows a sender to identify its
     view of the network path being used to connect to a specific remote endpoint. This internal identifier is used
     by Careful Resume
     to match the current path with a set of CC parameters associated with a previously observed path.</t>
@@ -313,7 +313,7 @@ specify just the year. -->
         <t>When computed Remote Endpoint needs to include:
         
         <list style="symbols">
-            <t>a unique identifier representing its own sending interface (e.g., a globally
+            <t>a unique identifier representing the sending interface (e.g., a globally
             assigned address/prefix or other local identifier);</t>
             <t> an identifier representing the destination (e.g., a name or a
             destination IP address used to connect to the receiver);</t>
