@@ -281,6 +281,35 @@ specify just the year. -->
 
         <!-- XXX-Editor note: A future revision would helpfully provide further Path Examples here.} -->
     </section> <!-- Introduction: End of examples -->
+
+    <section>
+         <t>The safety guidelines are designed to mitigate the risk that a server adds excessive 
+          congestion to an already congested path.  
+          The following principles can fulfil objective:</>
+          <t><list>
+
+<t>The initial transmission cannot be congestion-controlled since
+no information is yet available about the current path.
+The sender must not send more than the recommended maximum IW
+in the first RTT of transmitting data [RFC9000].</t>
+
+<t>This startup method must not be used if previous packets in a connection experience congestion.
+ This provides some protection against aggravating severe congestion and to establish the minimum RTT.</t>
+
+<t>The jump in the size of cwnd/rate is restricted to a fraction (1/2) of the saved cwnd,
+to avoid starving other flows that may have started or increased their capacity after the
+last measurement. This notes that validation increases the cwnd, resulting in a cwnd after
+validation that is similar to the saved cwnd.</t>
+
+<t>The sender needs to pace pace all unvalidated packets,
+to ensure the rate does not exceed the previously used rate.</t>
+
+<t>The sender needs to implement a retreat method when it detects congestion during startup.
+This method must not assume that the measured capacity (flight size, or acknowledged data)
+is an indication of the safe rate, since such a measurement is made under overload
+where the high rate of the measurement itself could have obtained an unacceptable share.</t>
+          </list></t>
+    </section>     
    
 </section> <!-- End of introduction and motivation -->
 
