@@ -282,8 +282,8 @@ specify just the year. -->
         <!-- XXX-Editor note: A future revision would helpfully provide further Path Examples here.} -->
     </section> <!-- Introduction: End of examples -->
 
-    <section>
-         <t>The safety guidelines are designed to mitigate the risk that a server adds excessive 
+    <section anchor="sec-principle" title="Design Principles">
+         <t>The design principles seek to mitigate the risk that a server adds excessive 
           congestion to an already congested path.  
           The following principles can fulfil objective:</>
           <t><list>
