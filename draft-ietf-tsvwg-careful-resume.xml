@@ -326,7 +326,7 @@ specify just the year. -->
      This is intended to avoid a sudden influx of a large number of
      packets that could result in building bottleneck queues and disrupt existing flows.
      Successful validation can further increase the cwnd,
-     resulting in a cwnd after validation that is similar to the saved cwnd.</t>        
+     resulting in a cwnd after validating that the used rate did not result in congestion.</t>        
 
      <t>The third precaution is to perform a "careful retreat" if the validation fails,
      for example if congestion is detected during validation. The risk here is that the
@@ -342,8 +342,8 @@ specify just the year. -->
      congestion window to a value no greater than what a standard process would have
      discovered. For other congestion control algorithm like Cubic or BBR the implementation
      details may differ, but the principle remains: trying and failing should not confer
-     an undue advantage over (e.g., starving) existing connections using the same bottleneck.
-</t>
+     an undue advantage over (e.g., starving) existing connections that share a common bottleneck.
+</t></list>
    
 </section> <!-- End of introduction and motivation -->
 
