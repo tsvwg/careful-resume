@@ -283,59 +283,66 @@ specify just the year. -->
     </section> <!-- Introduction: End of examples -->
 
     <section anchor="sec-principle" title="Design Principles">
-         <t>The design principles seek to mitigate the risk that a server adds excessive 
-          congestion to an already congested path.  
-          The following principles can fulfil objective:</>
+         <t>The following design principles seek to mitigate the risk that a server adds excessive 
+          congestion to an already congested path.</t>
+
+          <t>Resuming a connection with parameters that were observed
+          during a previous connection
+          is inherently a tradeoff between the potential performance
+          gains for the new connection and the risks of degraded performance
+          for other connections that share
+          a common bottleneck. We describe a careful process that
+          is designed to obtain good performance when resuming is appropriate,
+          while seeking to minimise the impact on other connections when it is
+          not appropriate.</t>
+         
           <t><list>
 
-<t>Resuming a connection with parameters gathered during a previous connection
-is inherently a tradeoff between potential performance gains for this
-connection and risks of degraded performance for other connections sharing
-a common bottleneck. We describe here a careful process that is design to
-obtain good performance when resuming is appropriate, while trying to
-minimize impact on other connections when it is not.</t>
+          <t>The first precaution is to recognize whether the conditions have
+          changed so much that the saved values are no longer valid. We
+          describe that as the "reconnaissance" phase. During that phase,
+          the sender will not send more data than allowed for any new 
+          connection, e.g., using the recommended maximum IW
+          for the first RTT of transmitting data [RFC9000]. The sender will only
+          proceed with the resume process if the reconnaissance succeeds.
+          If it fails, for example if previous packets in a connection
+          experience congestion or the RTT is significantly different,
+          the sender will follow the standard process for new connections.
+          This provides some protection against aggravating severe congestion
+          and to establish the minimum RTT.</t>
 
-<t>The first precaution is to recognize whether the conditions have
-changed so much that the remembered values are no longer valid. We
-describe that as the "reconnaissance" phase. During that phase, the sender
-will not send more data than allowed for any new connection, e.g., 
-heeding the recommended maximum IW
-in the first RTT of transmitting data [RFC9000]. The sender will only
-proceed with the resume process if reconnaissance succeeds. If it fails,
-for example if previous packets in a connection experience congestion,
-the sender will follow the standard process for new connections.
-This provides some protection against aggravating severe congestion and to establish the minimum RTT.</t>
+     <t>The second precaution is to cautiously use the saved parameters 
+     when resuming, in what we will call the "unvalidated" phase.
+     For example,
+     the jump in the size of cwnd/rate is restricted to a fraction (1/2) of the saved cwnd,
+     to avoid starving other flows that may have started or increased their capacity after the
+     last measurement 
+     For algorithms that use different parameters to classic TCP congestion control,
+     the same principle applies: do not push more than a fraction
+     of the remembered values. For example, a connection using BBR will set the
+     pacing rate to half the remembered value of the "bottleneck bandwidth".
+     The sender also needs to pace pace all unvalidated packets,
+     to ensure the rate does not exceed the previously used rate.
+     This is intended to avoid a sudden influx of a large number of
+     packets that could result in building bottleneck queues and disrupt existing flows.
+     Successful validation can further increase the cwnd,
+     resulting in a cwnd after validation that is similar to the saved cwnd.</t>        
 
-<t>The second precaution is to use the remembered parameters cautiously
-when resuming, in what we will call the validation phase.
-For example, for a connection using the classic TCP congestion control,
-the jump in the size of cwnd/rate is restricted to a fraction (1/2) of the saved cwnd,
-to avoid starving other flows that may have started or increased their capacity after the
-last measurement. This notes that validation increases the cwnd, resulting in a cwnd after
-validation that is similar to the saved cwnd. For algorithms that use different
-controls parameters, the same principle applies: do not push more than a fraction
-of the remembered values. For example, a connection using BBR will set the
-pacing rate to half the remembered value of the "bottleneck bandwidth".
-</t>
-
-<t>The sender needs to pace pace all unvalidated packets,
-to ensure the rate does not exceed the previously used rate.
-This is meant to avoid a sudden influx of a large number of
-packets that could create instant queues and disrupt existing flows.
-</t>
-
-<t>The third precaution is to perform a "careful retreat" if the validation fails,
-for example if congested is detected before validation. The risk here is that the
-trial of the remembered parameters would have disrupted existing connections.
-Suppose for example a connection using the classic TCP congestion control. In "slow
-start" mode, it normally converges on a "slow start threshold" set to half the amount of
-data in flight, but during this validation this value is set to the remembered parameters,
-and could be much larger that the value discovered by a "standard" slow start process.
-Instead of continuing with that "too large" value, the retreat process resets the
-congestion window to a value no greater than what a standard process would have
-discovered. For other congestion control algorithm like Cubic or BBR the implementation
-details may differ, but the principle remains: trying and failing should not confer
-an undue advantage over existing connections.
+     <t>The third precaution is to perform a "careful retreat" if the validation fails,
+     for example if congestion is detected during validation. The risk here is that the
+     trial use of the saved parameters could have disrupted existing connections.
+     Suppose, for example a connection using the classic TCP congestion control. In "slow
+     start" mode, the connection would normally converge on a "slow start threshold" set
+     to half the volume of data in flight, but during this validation
+     the value is restored from the saved parameters. The resultant sending rate
+     could be much larger that the value that would have been reached by a
+     "standard" slow start process, and overload the path potentially causing significant
+     congestion to other flows.
+     Instead of continuing with that "too large" value, the retreat process resets the
+     congestion window to a value no greater than what a standard process would have
+     discovered. For other congestion control algorithm like Cubic or BBR the implementation
+     details may differ, but the principle remains: trying and failing should not confer
+     an undue advantage over (e.g., starving) existing connections using the same bottleneck.
 </t>
    
 </section> <!-- End of introduction and motivation -->
