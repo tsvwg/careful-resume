@@ -283,8 +283,6 @@ specify just the year. -->
     </section> <!-- Introduction: End of examples -->
 
     <section anchor="sec-principle" title="Design Principles">
-         <t>The following design principles seek to mitigate the risk that a server adds excessive 
-          congestion to an already congested path.</t>
 
           <t>Resuming a connection with parameters that were observed
           during a previous connection
@@ -295,12 +293,15 @@ specify just the year. -->
           is designed to obtain good performance when resuming is appropriate,
           while seeking to minimise the impact on other connections when it is
           not appropriate.</t>
-         
+          
+           <t>The following design principles seek to mitigate the risk that a sender adds excessive 
+          congestion to an already congested path:</t>
+
           <t><list>
 
           <t>The first precaution is to recognize whether the conditions have
           changed so much that the saved values are no longer valid. We
-          describe that as the "reconnaissance" phase. During that phase,
+          describe that as the "reconnaissance phase". During that phase,
           the sender will not send more data than allowed for any new 
           connection, e.g., using the recommended maximum IW
           for the first RTT of transmitting data [RFC9000]. The sender will only
@@ -312,13 +313,13 @@ specify just the year. -->
           and to establish the minimum RTT.</t>
 
      <t>The second precaution is to cautiously use the saved parameters 
-     when resuming, in what we will call the "unvalidated" phase.
+     when resuming, in what we will call the "unvalidated phase".
      For example,
      the jump in the size of cwnd/rate is restricted to a fraction (1/2) of the saved cwnd,
      to avoid starving other flows that may have started or increased their capacity after the
      last measurement 
-     For algorithms that use different parameters to classic TCP congestion control,
-     the same principle applies: do not push more than a fraction
+     The same principle applies for algorithms that use different parameters to classic 
+     TCP congestion control: do not push more than a fraction
      of the remembered values. For example, a connection using BBR will set the
      pacing rate to half the remembered value of the "bottleneck bandwidth".
      The sender also needs to pace pace all unvalidated packets,
@@ -336,11 +337,11 @@ specify just the year. -->
      to half the volume of data in flight, but during this validation
      the value is restored from the saved parameters. The resultant sending rate
      could be much larger that the value that would have been reached by a
-     "standard" slow start process, and overload the path potentially causing significant
+     "standard" slow start process, and the overload of the path potentially causing significant
      congestion to other flows.
      Instead of continuing with that "too large" value, the retreat process resets the
      congestion window to a value no greater than what a standard process would have
-     discovered. For other congestion control algorithm like Cubic or BBR the implementation
+     discovered. For other congestion control algorithms, like Cubic or BBR, the implementation
      details may differ, but the principle remains: trying and failing should not confer
      an undue advantage over (e.g., starving) existing connections that share a common bottleneck.
 </t></list>
