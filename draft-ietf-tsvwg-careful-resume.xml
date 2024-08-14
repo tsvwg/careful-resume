@@ -312,13 +312,13 @@ specify just the year. -->
           This provides some protection against aggravating severe congestion
           and to establish the minimum RTT.</t>
 
-     <t>The second precaution is to cautiously use the saved parameters 
+     <t>The second precaution is to cautiously use the saved parameters
      when resuming, in what we will call the "unvalidated phase".
      For example,
      the jump in the size of cwnd/rate is restricted to a fraction (1/2) of the saved cwnd,
      to avoid starving other flows that may have started or increased their capacity after the
-     last measurement 
-     The same principle applies for algorithms that use different parameters to classic 
+     last measurement.
+     The same principle applies for algorithms that use different parameters to classic
      TCP congestion control: do not push more than a fraction
      of the remembered values. For example, a connection using BBR will set the
      pacing rate to half the remembered value of the "bottleneck bandwidth".
@@ -327,7 +327,7 @@ specify just the year. -->
      This is intended to avoid a sudden influx of a large number of
      packets that could result in building bottleneck queues and disrupt existing flows.
      Successful validation can further increase the cwnd,
-     resulting in a cwnd after validating that the used rate did not result in congestion.</t>        
+     resulting in a cwnd after validating that the used rate did not result in congestion.</t>     
 
      <t>The third precaution is to perform a "careful retreat" if the validation fails,
      for example if congestion is detected during validation. The risk here is that the
@@ -337,8 +337,8 @@ specify just the year. -->
      to half the volume of data in flight, but during this validation
      the value is restored from the saved parameters. The resultant sending rate
      could be much larger that the value that would have been reached by a
-     "standard" slow start process, and the overload of the path potentially causing significant
-     congestion to other flows.
+     "standard" slow start process, and the overload of the path potentially
+     causing significant congestion to other flows.
      Instead of continuing with that "too large" value, the retreat process resets the
      congestion window to a value no greater than what a standard process would have
      discovered. For other congestion control algorithms, like Cubic or BBR, the implementation
