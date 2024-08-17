@@ -307,18 +307,17 @@ specify just the year. -->
 
     <t> The Remote Endpoint is an implementation-dependent value that allows a sender to identify its
     view of the network path being used. This is used
-    to match the current path with a set of CC parameters associated with a previously observed path.</t>
-
-        <t>This needs to include:
+    to match the current path with a set of CC parameters associated with a previously observed path.
+    It includes:
         
         <list style="symbols">
             <t>an identifier representing the sending interface (e.g., a globally
             assigned address/prefix or other local identifier);</t>
             <t> an identifier representing the destination (e.g., a name or a
-            destination IP address used to connect to the receiver);</t>
+            destination IP address used to connect to the receiver).</t>
         </list></t>
         
-        <t>The Remote Endpoint could include information such as the sender DSCP, the transport ports, a flow
+        <t>The Remote Endpoint could include information such as the DSCP, the transport ports, a flow
         label, etc and other information (e.g., including PvD information <xref target="RFC8801"></xref> or
         information relating to its public-facing IP address).
         However, such additional information needs to be set consistently for a resumed connection
