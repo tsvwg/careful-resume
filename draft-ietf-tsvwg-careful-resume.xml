@@ -306,24 +306,23 @@ specify just the year. -->
 <section anchor="endpoint" title="The Remote Endpoint">
 
     <t> The Remote Endpoint is an implementation-dependent value that allows a sender to identify its
-    view of the network path being used to connect to a specific remote endpoint. This internal identifier is used
-    by Careful Resume
+    view of the network path being used. This internal identifier is used
     to match the current path with a set of CC parameters associated with a previously observed path.</t>
 
-        <t>When computed Remote Endpoint needs to include:
+        <t>This needs to include:
         
         <list style="symbols">
-            <t>a unique identifier representing the sending interface (e.g., a globally
+            <t>an identifier representing the sending interface (e.g., a globally
             assigned address/prefix or other local identifier);</t>
             <t> an identifier representing the destination (e.g., a name or a
             destination IP address used to connect to the receiver);</t>
         </list></t>
         
-        <t>The Remote Endpoint could include other information such as the sender DSCP, the transport ports, a flow
+        <t>The Remote Endpoint could include information such as the sender DSCP, the transport ports, a flow
         label, etc and other information (e.g., including PvD information <xref target="RFC8801"></xref> or
         information relating to its public-facing IP address).
         However, such additional information needs to be set consistently for a resumed connection
-        to the same remote endpoint.
+        to the same endpoint.
         Although additional information could improve the path
         differentiation, it could reduce the re-usability of saved parameters for resumed connections.</t>
 </section> <!-- End of An Remote Endpoint -->
