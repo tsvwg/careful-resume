@@ -306,7 +306,7 @@ specify just the year. -->
 <section anchor="endpoint" title="The Remote Endpoint">
 
     <t> The Remote Endpoint is an implementation-dependent value that allows a sender to identify its
-    view of the network path being used. This internal identifier is used
+    view of the network path being used. This is used
     to match the current path with a set of CC parameters associated with a previously observed path.</t>
 
         <t>This needs to include:
