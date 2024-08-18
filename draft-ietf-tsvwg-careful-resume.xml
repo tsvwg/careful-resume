@@ -318,8 +318,7 @@ specify just the year. -->
         </list></t>
         
         <t>The Remote Endpoint could include information such as the DSCP, the transport ports, a flow
-        label, etc and other information (e.g., including PvD information <xref target="RFC8801"></xref>).
-        This information needs to be set consistently for a resumed connection
+        label, etc. This information needs to be set consistently for a resumed connection
         to the same endpoint.
         Although additional information could improve the path
         differentiation, it could reduce the re-usability of saved parameters for resumed connections.</t>
@@ -1194,7 +1193,6 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
         <!-- <?rfc include="reference.RFC.6349.xml"?> -->
         <?rfc include="reference.RFC.8085.xml"?>
         <?rfc include="reference.RFC.8174.xml"?>
-        <?rfc include="reference.RFC.8801.xml"?>
         <?rfc include="reference.RFC.9000.xml"?>
         <!-- <?rfc include="reference.RFC.9001.xml"?> -->
         <?rfc include="reference.RFC.8610.xml"?>
