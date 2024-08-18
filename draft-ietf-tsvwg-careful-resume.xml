@@ -305,7 +305,7 @@ specify just the year. -->
     </section>
 <section anchor="endpoint" title="The Remote Endpoint">
 
-    <t> The Remote Endpoint is an implementation-dependent value that allows a sender to identify its
+    <t> The Remote Endpoint is an implementation-dependent value that identifies the sender's
     view of the network path being used. This is used
     to match the current path with a set of CC parameters associated with a previously observed path.
     It includes:
@@ -313,15 +313,15 @@ specify just the year. -->
         <list style="symbols">
             <t>an identifier representing the sending interface (e.g., a globally
             assigned address/prefix or other local identifier);</t>
-            <t> an identifier representing the destination (e.g., a name or a
-            destination IP address used to connect to the receiver).</t>
+            <t> an identifier representing the destination (e.g., a name or 
+            IP address).</t>
         </list></t>
         
         <t>The Remote Endpoint could include information such as the DSCP, the transport ports, a flow
         label, etc. This information needs to be set consistently for a resumed connection
         to the same endpoint.
         Although additional information could improve the path
-        differentiation, it could reduce the re-usability of saved parameters for resumed connections.</t>
+        differentiation, it could reduce the re-usability of saved parameters.</t>
 </section> <!-- End of An Remote Endpoint -->
      
     <section anchor="sec-terms_def" title="Notation and Terms">
