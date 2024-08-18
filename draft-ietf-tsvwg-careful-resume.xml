@@ -318,9 +318,8 @@ specify just the year. -->
         </list></t>
         
         <t>The Remote Endpoint could include information such as the DSCP, the transport ports, a flow
-        label, etc and other information (e.g., including PvD information <xref target="RFC8801"></xref> or
-        information relating to its public-facing IP address).
-        However, such additional information needs to be set consistently for a resumed connection
+        label, etc and other information (e.g., including PvD information <xref target="RFC8801"></xref>).
+        This information needs to be set consistently for a resumed connection
         to the same endpoint.
         Although additional information could improve the path
         differentiation, it could reduce the re-usability of saved parameters for resumed connections.</t>
