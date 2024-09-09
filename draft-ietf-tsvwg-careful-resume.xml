@@ -603,8 +603,8 @@ Observing ...> Connect -> Reconnaissance --------------------> Normal
      </list></t>
         <t>The following actions are performed during the Unvalidated Phase:</t>
         <t><list style="symbols">
-             <t>Unvalidated Phase (Pacing transmission): All packet sent in the
-           Unvalidated Phase MUST use based on the current_rtt.</t>
+             <t>Unvalidated Phase (Pacing transmission): All packets sent in the
+           Unvalidated Phase MUST use pacing based on the current_rtt.</t>
              
              <t>Unvalidated Phase (Confirming the path during transmission):
              If a sender determines that the previous CC parameters
@@ -653,7 +653,7 @@ Observing ...> Connect -> Reconnaissance --------------------> Normal
     </section> <!-- End of define Unvalidated Phase -->
 
     <section anchor="sec-phase-val-phase" title="Validating Phase">
-        <t>The Validating Phase checks that all packets
+        <t>The Validating Phase checks if all the packets
         sent in the Unvalidated Phase were received without inducing congestion.
         The CWND remains unvalidated and the sender typically remains in this phase for one RTT.
         On entry to the Validating Phase, the sender:</t>
@@ -747,11 +747,13 @@ Observing ...> Connect -> Reconnaissance --------------------> Normal
             <t>Safe Retreat Phase (Maintaining CWND):
             The CWND MUST NOT be increased in the Safe Retreat Phase.</t>
 
-            <t>Safe Retreat Phase (Acknowledgement of all unvalidated packets):
+            <t>Safe Retreat Phase (Acknowledgement of unvalidated packets):
             The sender enters Normal Phase
-            when the last packet (or a later packet) sent during the
-            Unvalidated Phase has been acknowledged, and if required
+            when it receives an acknowledgement for the last packet (or a later packet) sent during the
+            Unvalidated Phase and, if required,
             adjusts the ssthresh (see exit_recovery in <xref target="sec-QLOG"></xref>).
+            Note: this does not imply that all packets need to be culmulatively acknowledged, only
+            that the last packet (or later) was received.
             The value of ssthresh on leaving the Safe Retreat Phase
             MUST NOT be more than the PipeSize.</t>
         </list></t>
@@ -1404,7 +1406,7 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
 |Next  |Observing|If (     |If (FS=CWND |If (ACK    |If (ACK     |
 |Phase:|(as      |FS=CWND, |or >1 RTT   |>= last    |>= last     |
 |      |needed)  |Lifetime,|has passed  |unvalidated|unvalidated |
-|      |         |and RTT  |or ACK for  |packet),   |packet),    |
+|      |         |and RTT  |or ACK      |packet),   |packet),    |
 |      |         |confirmed|>= last     |enter      |{ssthresh=PS|
 |      |         |), enter |unvalidated |Normal     |and enter   |
 |      |         |Unvalidat|packet),    |           |Normal}     |
@@ -1416,7 +1418,7 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
 </figure>
     </t>
     <t>The following abbreviations are used
-    SS = Slow-Start FS = flight_size; PS = PipeSize; ACK = acknowledgement.
+    SS = Slow-Start FS = flight_size; PS = PipeSize; ACK = highest acknowledged packet.
     The PipeSize tracks the validated part of the cwnd. It is set to the CWND
     on entry to the Unvalidated Phase and
     is updated as each additional packet is acknowledged.</t>
