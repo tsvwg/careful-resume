@@ -644,9 +644,10 @@ Observing ...> Connect -> Reconnaissance --------------------> Normal
                  and the probing rate, multiplied by BBR.rtt_min times
                  BBRStartupCwndGain;</t>
               <t>The "carefully-resuming" flag is reset to False two rounds after
-                 it is set, i.e., after an acknowledgment indicating that the packets sent in the first round
+                 it is set, i.e., after all the packets sent in the first round
                  of "carefully resuming"
-                 have been received. At that stage (after the capacity has been validated),
+                 have been received and acknowledged by the peer.
+                At that stage (after the capacity has been validated),
                  the measured delivery rate is expected to reflect the probing rate.</t>
            </list></t>
         <t>Implementation notes are provided in <xref target="req-unvalid"></xref>. </t>
