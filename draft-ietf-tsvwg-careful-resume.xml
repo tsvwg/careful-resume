@@ -644,16 +644,16 @@ Observing ...> Connect -> Reconnaissance --------------------> Normal
                  and the probing rate, multiplied by BBR.rtt_min times
                  BBRStartupCwndGain;</t>
               <t>The "carefully-resuming" flag is reset to False two rounds after
-                 it is set, i.e., after all the packets sent in the first round
+                 it is set, i.e., after an acknowledgment indicating that the packets sent in the first round
                  of "carefully resuming"
-                 have been received and acknowledged by the peer. At that stage (after the capacity has been validated),
+                 have been received. At that stage (after the capacity has been validated),
                  the measured delivery rate is expected to reflect the probing rate.</t>
            </list></t>
         <t>Implementation notes are provided in <xref target="req-unvalid"></xref>. </t>
     </section> <!-- End of define Unvalidated Phase -->
 
     <section anchor="sec-phase-val-phase" title="Validating Phase">
-        <t>The Validating Phase checks if all the packets
+        <t>The Validating Phase checks if the packets
         sent in the Unvalidated Phase were received without inducing congestion.
         The CWND remains unvalidated and the sender typically remains in this phase for one RTT.
         On entry to the Validating Phase, the sender:</t>
@@ -688,7 +688,7 @@ Observing ...> Connect -> Reconnaissance --------------------> Normal
             enters the Safe Retreat Phase
             (see trigger packet_loss and ECN_CE  in <xref target="sec-QLOG"></xref>).</t>
 
-            <t>Validating Phase (Receiving acknowledgement for all unvalidated packets):
+            <t>Validating Phase (Receiving acknowledgement for the unvalidated packets):
             The sender enters the Normal Phase when an acknowledgement is
             received for the last packet number (or higher)
             that was sent in the Unvalidated Phase
@@ -753,7 +753,8 @@ Observing ...> Connect -> Reconnaissance --------------------> Normal
             Unvalidated Phase and, if required,
             adjusts the ssthresh (see exit_recovery in <xref target="sec-QLOG"></xref>).
             Note: this does not imply that all packets need to be culmulatively acknowledged, only
-            that the last packet (or later) was received.
+            that all packets sent in the Unvalidated Phase have been either acknowledged
+             or have now been declared lost.
             The value of ssthresh on leaving the Safe Retreat Phase
             MUST NOT be more than the PipeSize.</t>
         </list></t>
@@ -778,7 +779,7 @@ Observing ...> Connect -> Reconnaissance --------------------> Normal
            that was set on entry to the Safe Retreat Phase.</t>
         
             <t><list style="symbols">
-                <t>Loss Recovery (Receiving acknowledgement for all unvalidated packets):
+                <t>Loss Recovery (Receiving acknowledgement for unvalidated packets):
                 The sender leaves the Safe Retreat Phase when
                 the last packet number (or a later packet) sent in the
                 Unvalidated Phase is acknowledged.
@@ -1094,7 +1095,7 @@ Observing ...> Connect -> Reconnaissance --------------------> Normal
             depends on the sender policy for retransmission.
             On entry to the Safe Retreat Phase, the CWND can be
             significantly reduced, when there was multiple loss,
-            a sender recovering all lost data could take multiple RTTs to complete.</t>
+            a sender recovering all lost data could then take multiple RTTs to complete.</t>
         </list></t>
      
     </section><!-- End of Safety for the Safe Retreat Phase -->
@@ -1529,7 +1530,7 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
         from Safe Retreat, since it does indicate an upper limit to the current capacity.</t>
 
         <t>At the point where all packets sent in the Unvalidated Phase have been either acknowledged
-        or have been declared lost, the sender updates ssthresh and enters the Normal Phase.
+        or have now been declared lost, the sender updates ssthresh and enters the Normal Phase.
         Because CWND will now now be less than ssthresh, a sender in the Normal Phase is permitted to use
         Slow-Start to grow the CWND towards the ssthresh,
         after which it will enter congestion avoidance.</t>
