@@ -654,7 +654,7 @@ Observing ...> Connect -> Reconnaissance --------------------> Normal
     </section> <!-- End of define Unvalidated Phase -->
 
     <section anchor="sec-phase-val-phase" title="Validating Phase">
-        <t>The Validating Phase checks if the packets
+        <t>The Validating Phase checks whether all packets
         sent in the Unvalidated Phase were received without inducing congestion.
         The CWND remains unvalidated and the sender typically remains in this phase for one RTT.
         On entry to the Validating Phase, the sender:</t>
