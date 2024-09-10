@@ -24,7 +24,7 @@
      - it is only necessary if the
 full title is longer than 39 characters -->
 
-    <title abbrev=" Congestion Control Convergence"> Convergence of Congestion
+    <title abbrev="Careful Resume"> Convergence of Congestion
     Control from Retained State</title>
 
     <author fullname="Nicolas Kuhn" initials="N" surname="Kuhn">
