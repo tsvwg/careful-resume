@@ -740,7 +740,7 @@ Observing ...> Connect -> Reconnaissance --------------------> Normal
             <t>Safe Retreat Phase (Tracking PipeSize):
             The sender continues to update
             the PipeSize after processing each acknowledgement.
-            (The PipeSize is used to
+            (This PipeSize is used to
             reset the ssthresh when leaving this phase, it does
             not modify CWND.)</t>
 
@@ -753,7 +753,7 @@ Observing ...> Connect -> Reconnaissance --------------------> Normal
             Unvalidated Phase has been acknowledged, and if required
             adjusts the ssthresh (see exit_recovery in <xref target="sec-QLOG"></xref>).
             The value of ssthresh on leaving the Safe Retreat Phase
-            MUST NOT be more than the PipeSize.</t>
+            MUST NOT be more than the most recently measured (PipeSize/2).</t>
         </list></t>
 
         <t>When using BBR, the Safe Retreat Phase is entered if the Drain
@@ -1424,7 +1424,8 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
     <t>Note:
     For an implementation that keeps track of transmitted data in terms of packets:
     In the Unvalidated Phase, the first unvalidated packet corresponds to the highest sent packet recorded on entry to this phase.
-    In the Validating Phase and Safe Retreat Phase, this corresponds to the last unvalidated packet. It is also the highest sent packet number recorded on entry to this phase.</t>
+    In the Validating Phase and Safe Retreat Phase, this corresponds to the last unvalidated packet.
+    It is also the highest sent packet number recorded on entry to this phase.</t>
 
     <t>The remaining subsections provide informative examples of use.</t>
 
@@ -1567,6 +1568,7 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
         </t>
         <t>WG-10, CH developed text to explain expected operation with BBR. 
         This also fixed some typos introduced in previous edits. Fix XML and fix CDDL bugs for submission.</t>
+        <t>Changed the ssthresh value used after an exit of Safe Retreat to be (PipeSize/2).</t>
     </list></t>
 </section> <!-- End of Revisions -->
 
