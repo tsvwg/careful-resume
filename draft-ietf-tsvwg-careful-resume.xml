@@ -750,10 +750,10 @@ Observing ...> Connect -> Reconnaissance --------------------> Normal
             <t>Safe Retreat Phase (Acknowledgement of all unvalidated packets):
             The sender enters Normal Phase
             when the last packet (or a later packet) sent during the
-            Unvalidated Phase has been acknowledged, and if required
-            adjusts the ssthresh (see exit_recovery in <xref target="sec-QLOG"></xref>).
-            The value of ssthresh on leaving the Safe Retreat Phase
-            MUST NOT be more than the most recently measured (PipeSize/2).</t>
+            Unvalidated Phase has been acknowledged. On leaving
+            the Safe Retreat Phase, the ssthresh MUST NOT be more than half
+            the most recently measured PipeSize.
+            (The log is updated to exit_recovery, see <xref target="sec-QLOG"></xref>.)</t>
         </list></t>
 
         <t>When using BBR, the Safe Retreat Phase is entered if the Drain
