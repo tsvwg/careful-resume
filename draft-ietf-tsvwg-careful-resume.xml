@@ -689,7 +689,7 @@ Observing ...> Connect -> Reconnaissance --------------------> Normal
             enters the Safe Retreat Phase
             (see trigger packet_loss and ECN_CE  in <xref target="sec-QLOG"></xref>).</t>
 
-            <t>Validating Phase (Receiving acknowledgement for the unvalidated packets):
+            <t>Validating Phase (Receiving acknowledgement of the unvalidated packets):
             The sender enters the Normal Phase when an acknowledgement is
             received for the last packet number (or higher)
             that was sent in the Unvalidated Phase
@@ -753,9 +753,9 @@ Observing ...> Connect -> Reconnaissance --------------------> Normal
             when it receives an acknowledgement for the last packet (or a later packet) sent during the
             Unvalidated Phase and, if required,
             adjusts the ssthresh (see exit_recovery in <xref target="sec-QLOG"></xref>).
-            Note: this does not imply that all packets need to be culmulatively acknowledged, only
+            Note: this does not imply that all packets need to be cumulatively acknowledged, only
             that all packets sent in the Unvalidated Phase have been either acknowledged
-             or have now been declared lost.
+             or declared lost.
             The value of ssthresh on leaving the Safe Retreat Phase
             MUST NOT be more than the PipeSize.</t>
         </list></t>
@@ -780,7 +780,7 @@ Observing ...> Connect -> Reconnaissance --------------------> Normal
            that was set on entry to the Safe Retreat Phase.</t>
         
             <t><list style="symbols">
-                <t>Loss Recovery (Receiving acknowledgement for unvalidated packets):
+                <t>Loss Recovery (Receiving acknowledgement of the unvalidated packets):
                 The sender leaves the Safe Retreat Phase when
                 the last packet number (or a later packet) sent in the
                 Unvalidated Phase is acknowledged.
@@ -1095,7 +1095,7 @@ Observing ...> Connect -> Reconnaissance --------------------> Normal
             For QUIC and DCCP, the need for loss recovery
             depends on the sender policy for retransmission.
             On entry to the Safe Retreat Phase, the CWND can be
-            significantly reduced, when there was multiple loss,
+            significantly reduced. When there was multiple loss,
             a sender recovering all lost data could then take multiple RTTs to complete.</t>
         </list></t>
      
@@ -1531,7 +1531,7 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
         from Safe Retreat, since it does indicate an upper limit to the current capacity.</t>
 
         <t>At the point where all packets sent in the Unvalidated Phase have been either acknowledged
-        or have now been declared lost, the sender updates ssthresh and enters the Normal Phase.
+        or have been declared lost, the sender updates ssthresh and enters the Normal Phase.
         Because CWND will now now be less than ssthresh, a sender in the Normal Phase is permitted to use
         Slow-Start to grow the CWND towards the ssthresh,
         after which it will enter congestion avoidance.</t>
