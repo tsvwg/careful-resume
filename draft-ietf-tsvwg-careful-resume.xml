@@ -342,7 +342,7 @@ specify just the year. -->
                 Instead of continuing with that "too large" value, the retreat process resets the
                 congestion window to a value no greater than what a standard process would have
                 discovered. For other congestion control algorithms,
-                such as Cubic or BBR, the implementation
+                such as Cubic <xref target="RFC9438"></xref> or BBR, the implementation
                 details may differ, but the principle remains: trying and failing should not confer
                 an undue advantage over (e.g., starving) existing connections that
                 share a common bottleneck.</t>
@@ -1270,6 +1270,8 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
         <?rfc include="reference.RFC.9000.xml"?>
         <!-- <?rfc include="reference.RFC.9001.xml"?> -->
         <?rfc include="reference.RFC.8610.xml"?>
+        <?rfc include="reference.RFC.9438.xml"?>
+        <?rfc include="reference.RFC.5681.xml"?>
     </references>
 
     <references title="Informative References">
@@ -1280,7 +1282,6 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
         <?rfc include="reference.RFC.3465.xml"?>
         <?rfc include="reference.RFC.4782.xml"?>
         <!-- <?rfc include="reference.RFC.5681.xml"?> -->
-        <?rfc include="reference.RFC.5681.xml"?>
         <?rfc include="reference.RFC.5783.xml"?>
         <?rfc include="reference.RFC.6675.xml"?>
         <?rfc include="reference.RFC.6937.xml"?>
@@ -1373,7 +1374,7 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
     <t> The table below is provided to illustrate the operation of Careful Resume.
     This table is informative, please refer to the body of the document
     for the normative specification. The description is based on a Normal
-    CC that uses Reno or Cubic. The PipeSize tracks the validated CWND.</t>
+    CC that uses Reno. The PipeSize tracks the validated CWND.</t>
 
 <t>
 <figure title="Illustration of the operation of Careful Resume">
@@ -1413,10 +1414,10 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
 |Phase:|(as      |FS=CWND, |or >1 RTT   |>= last    |>= last     |
 |      |needed)  |Lifetime,|has passed  |unvalidated|unvalidated |
 |      |         |and RTT  |or ACK      |packet),   |packet),    |
-|      |         |confirmed|>= last     |enter      |{ssthresh=PS|
-|      |         |), enter |unvalidated |Normal     |and enter   |
-|      |         |Unvalidat|packet),    |           |Normal}     |
-|      |         |ing else |enter       |           |            |
+|      |         |confirmed|>= last     |enter      |{ssthresh=  |
+|      |         |), enter |unvalidated |Normal     |PS*Beta     |
+|      |         |Unvalidat|packet),    |           |and enter   |
+|      |         |ing else |enter       |           |Normal      |
 |      |         |enter    |Validating  |           |            |
 |      |         |Normal   |            |           |            |
 +------+---------+---------+------------+-----------+------------+
@@ -1427,7 +1428,7 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
     SS = Slow-Start FS = flight_size; PS = PipeSize; ACK = highest acknowledged packet.
     The PipeSize tracks the validated part of the cwnd. It is set to the CWND
     on entry to the Unvalidated Phase and
-    is updated as each additional packet is acknowledged.</t>
+    is updated as each additional packet is acknowledged. Beta is 0.5 for Reno.</t>
 
     <t>Note:
     For an implementation that keeps track of transmitted data in terms of packets:
