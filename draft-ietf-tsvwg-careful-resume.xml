@@ -333,7 +333,7 @@ specify just the year. -->
                 for example if congestion is detected during validation. The risk here is that the
                 trial use of the saved parameters could have disrupted existing connections.
                 Suppose, for example a connection using the classic TCP congestion control. In "slow
-                start" mode, the connection would normally converge on a "slow start threshold" set
+                start" mode, a Reno congestion control would normally converge on a "slow start threshold" set
                 to half the volume of data in flight, but during this validation
                 the value is restored from the saved parameters. The resultant sending rate
                 could be much larger that the value that would have been reached by a
@@ -740,7 +740,7 @@ Observing ...> Connect -> Reconnaissance --------------------> Normal
             <t>Safe Retreat Phase (Tracking PipeSize):
             The sender continues to update
             the PipeSize after processing each acknowledgement.
-            (The PipeSize is used to
+            (This PipeSize is used to
             reset the ssthresh when leaving this phase, it does
             not modify CWND.)</t>
 
@@ -750,10 +750,17 @@ Observing ...> Connect -> Reconnaissance --------------------> Normal
             <t>Safe Retreat Phase (Acknowledgement of all unvalidated packets):
             The sender enters Normal Phase
             when the last packet (or a later packet) sent during the
-            Unvalidated Phase has been acknowledged, and if required
-            adjusts the ssthresh (see exit_recovery in <xref target="sec-QLOG"></xref>).
-            The value of ssthresh on leaving the Safe Retreat Phase
-            MUST NOT be more than the PipeSize.</t>
+            Unvalidated Phase has been acknowledged. On leaving
+            the Safe Retreat Phase, the ssthresh MUST be set no larger than
+            the most recently measured PipeSize. In addition, specific
+            congestion control algorithms can further constrain this
+            to reduce the probability of a second round of congestion:
+            For Reno, the resultant ssthresh MUST be no larger than a
+            half of the recently measured PipeSize <xref target="RFC5681"></xref>.
+            Other congestion control
+            algorithms also scale the value used for ssthresh,
+            e.g., for Cubic, ssthresh is Beta__cubic <xref target="RFC9438"></xref> times PipeSize.
+            (The log is updated to exit_recovery, see <xref target="sec-QLOG"></xref>.)</t>
         </list></t>
 
         <t>When using BBR, the Safe Retreat Phase is entered if the Drain
@@ -1424,7 +1431,8 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
     <t>Note:
     For an implementation that keeps track of transmitted data in terms of packets:
     In the Unvalidated Phase, the first unvalidated packet corresponds to the highest sent packet recorded on entry to this phase.
-    In the Validating Phase and Safe Retreat Phase, this corresponds to the last unvalidated packet. It is also the highest sent packet number recorded on entry to this phase.</t>
+    In the Validating Phase and Safe Retreat Phase, this corresponds to the last unvalidated packet.
+    It is also the highest sent packet number recorded on entry to this phase.</t>
 
     <t>The remaining subsections provide informative examples of use.</t>
 
@@ -1567,6 +1575,7 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
         </t>
         <t>WG-10, CH developed text to explain expected operation with BBR. 
         This also fixed some typos introduced in previous edits. Fix XML and fix CDDL bugs for submission.</t>
+        <t>Changed the ssthresh value used after an exit of Safe Retreat to be (PipeSize/2).</t>
     </list></t>
 </section> <!-- End of Revisions -->
 
