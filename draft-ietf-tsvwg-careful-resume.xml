@@ -603,8 +603,8 @@ Observing ...> Connect -> Reconnaissance --------------------> Normal
      </list></t>
         <t>The following actions are performed during the Unvalidated Phase:</t>
         <t><list style="symbols">
-             <t>Unvalidated Phase (Pacing transmission): All packet sent in the
-           Unvalidated Phase MUST use based on the current_rtt.</t>
+             <t>Unvalidated Phase (Pacing transmission): All packets sent in the
+           Unvalidated Phase MUST use pacing based on the current_rtt.</t>
              
              <t>Unvalidated Phase (Confirming the path during transmission):
              If a sender determines that the previous CC parameters
@@ -646,14 +646,15 @@ Observing ...> Connect -> Reconnaissance --------------------> Normal
               <t>The "carefully-resuming" flag is reset to False two rounds after
                  it is set, i.e., after all the packets sent in the first round
                  of "carefully resuming"
-                 have been received and acknowledged by the peer. At that stage (after the capacity has been validated),
+                 have been received and acknowledged by the peer.
+                At that stage (after the capacity has been validated),
                  the measured delivery rate is expected to reflect the probing rate.</t>
            </list></t>
         <t>Implementation notes are provided in <xref target="req-unvalid"></xref>. </t>
     </section> <!-- End of define Unvalidated Phase -->
 
     <section anchor="sec-phase-val-phase" title="Validating Phase">
-        <t>The Validating Phase checks that all packets
+        <t>The Validating Phase checks whether all packets
         sent in the Unvalidated Phase were received without inducing congestion.
         The CWND remains unvalidated and the sender typically remains in this phase for one RTT.
         On entry to the Validating Phase, the sender:</t>
@@ -688,7 +689,7 @@ Observing ...> Connect -> Reconnaissance --------------------> Normal
             enters the Safe Retreat Phase
             (see trigger packet_loss and ECN_CE  in <xref target="sec-QLOG"></xref>).</t>
 
-            <t>Validating Phase (Receiving acknowledgement for all unvalidated packets):
+            <t>Validating Phase (Receiving acknowledgement of the unvalidated packets):
             The sender enters the Normal Phase when an acknowledgement is
             received for the last packet number (or higher)
             that was sent in the Unvalidated Phase
@@ -747,7 +748,7 @@ Observing ...> Connect -> Reconnaissance --------------------> Normal
             <t>Safe Retreat Phase (Maintaining CWND):
             The CWND MUST NOT be increased in the Safe Retreat Phase.</t>
 
-            <t>Safe Retreat Phase (Acknowledgement of all unvalidated packets):
+            <t>Safe Retreat Phase (Acknowledgement of unvalidated packets):
             The sender enters Normal Phase
             when the last packet (or a later packet) sent during the
             Unvalidated Phase has been acknowledged. On leaving
@@ -783,7 +784,7 @@ Observing ...> Connect -> Reconnaissance --------------------> Normal
            that was set on entry to the Safe Retreat Phase.</t>
         
             <t><list style="symbols">
-                <t>Loss Recovery (Receiving acknowledgement for all unvalidated packets):
+                <t>Loss Recovery (Receiving acknowledgement of the unvalidated packets):
                 The sender leaves the Safe Retreat Phase when
                 the last packet number (or a later packet) sent in the
                 Unvalidated Phase is acknowledged.
@@ -1098,8 +1099,8 @@ Observing ...> Connect -> Reconnaissance --------------------> Normal
             For QUIC and DCCP, the need for loss recovery
             depends on the sender policy for retransmission.
             On entry to the Safe Retreat Phase, the CWND can be
-            significantly reduced, when there was multiple loss,
-            a sender recovering all lost data could take multiple RTTs to complete.</t>
+            significantly reduced. When there was multiple loss,
+            a sender recovering all lost data could then take multiple RTTs to complete.</t>
         </list></t>
      
     </section><!-- End of Safety for the Safe Retreat Phase -->
@@ -1411,7 +1412,7 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
 |Next  |Observing|If (     |If (FS=CWND |If (ACK    |If (ACK     |
 |Phase:|(as      |FS=CWND, |or >1 RTT   |>= last    |>= last     |
 |      |needed)  |Lifetime,|has passed  |unvalidated|unvalidated |
-|      |         |and RTT  |or ACK for  |packet),   |packet),    |
+|      |         |and RTT  |or ACK      |packet),   |packet),    |
 |      |         |confirmed|>= last     |enter      |{ssthresh=PS|
 |      |         |), enter |unvalidated |Normal     |and enter   |
 |      |         |Unvalidat|packet),    |           |Normal}     |
@@ -1423,7 +1424,7 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
 </figure>
     </t>
     <t>The following abbreviations are used
-    SS = Slow-Start FS = flight_size; PS = PipeSize; ACK = acknowledgement.
+    SS = Slow-Start FS = flight_size; PS = PipeSize; ACK = highest acknowledged packet.
     The PipeSize tracks the validated part of the cwnd. It is set to the CWND
     on entry to the Unvalidated Phase and
     is updated as each additional packet is acknowledged.</t>
