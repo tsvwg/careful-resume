@@ -752,13 +752,14 @@ Observing ...> Connect -> Reconnaissance --------------------> Normal
             when the last packet (or a later packet) sent during the
             Unvalidated Phase has been acknowledged. On leaving
             the Safe Retreat Phase, the ssthresh MUST be set no larger than
-            the most recently measured PipeSize.
+            the most recently measured PipeSize. In addition, specific
+            congestion control algorithms can further constrain this
+            to reduce the probability of a second round of congestion:
             For Reno, the resultant ssthresh MUST be no larger than a
-            half of the recently measured PipeSize <xref target="RFC5681"></xref>. This is
-            expected to reduce the probability of 
-            suffering a second round of congestion. Other congestion control
+            half of the recently measured PipeSize <xref target="RFC5681"></xref>.
+            Other congestion control
             algorithms also scale the value used for ssthresh,
-            e.g., for Cubic ssthresh is Beta__cubic <xref target="RFC9438"></xref> times PipeSize.
+            e.g., for Cubic, ssthresh is Beta__cubic <xref target="RFC9438"></xref> times PipeSize.
             (The log is updated to exit_recovery, see <xref target="sec-QLOG"></xref>.)</t>
         </list></t>
 
