@@ -1578,6 +1578,7 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
         <t>WG-10, CH developed text to explain expected operation with BBR. 
         This also fixed some typos introduced in previous edits. Fix XML and fix CDDL bugs for submission.</t>
         <t>Changed the ssthresh value used after an exit of Safe Retreat to be (PipeSize/2).</t>
+        <t>WG-11, JD fixed mistakes. GF clarified text. RS added that after SR, ssthresh ought to match the behaviour of Cubic/Reno.</t>
     </list></t>
 </section> <!-- End of Revisions -->
 
