@@ -212,7 +212,7 @@ specify just the year. -->
             could explicitly ask to enable or inhibit Careful Resume
             when an application initiates a new connection.</t>
         
-            <t> Examples where a receiver might request to inhibit use Careful Resume include:
+            <t> Examples where a receiver might request to inhibit using Careful Resume include:
             <list style="numbers">
                 <t>a receiver that can predict the pattern of traffic
                 (e.g., insight into the volume of data to be sent,
@@ -322,7 +322,7 @@ specify just the year. -->
                 TCP congestion control: do not push more than a fraction
                 of the remembered values. For example, a connection using BBR will set the
                 pacing rate to half the remembered value of the "bottleneck bandwidth".
-                The sender also needs to pace pace all unvalidated packets,
+                The sender also needs to pace all unvalidated packets,
                 to ensure the rate does not exceed the previously used rate.
                 This is intended to avoid a sudden influx of a large number of
                 packets that could result in building bottleneck queues and disrupt existing flows.
@@ -336,7 +336,7 @@ specify just the year. -->
                 start" mode, a Reno congestion control would normally converge on a "slow start threshold" set
                 to half the volume of data in flight, but during this validation
                 the value is restored from the saved parameters. The resultant sending rate
-                could be much larger that the value that would have been reached by a
+                could be much larger than the value that would have been reached by a
                 "standard" slow start process, and the overload of the path potentially
                 causing significant congestion to other flows.
                 Instead of continuing with that "too large" value, the retreat process resets the
@@ -344,7 +344,7 @@ specify just the year. -->
                 discovered. For other congestion control algorithms,
                 such as Cubic <xref target="RFC9438"></xref> or BBR, the implementation
                 details may differ, but the principle remains: trying and failing should not confer
-                an undue advantage over (e.g., starving) existing connections that
+                an undue advantage (e.g., starving) over existing connections that
                 share a common bottleneck.</t>
         </list></t>
     </section> <!-- Principles -->
@@ -405,7 +405,7 @@ specify just the year. -->
             increase the initial sending rate.</t>
 
         <t>CC parameters: A set of saved congestion control parameters from
-        a observing the capacity of an established connection (see <xref target="sec-CC-params"/>).</t>
+        observing the capacity of an established connection (see <xref target="sec-CC-params"/>).</t>
 
         <t>CWND: The congestion window, or equivalent CC variable limiting
         the maximum sending rate;</t>
@@ -413,8 +413,6 @@ specify just the year. -->
         <t>current_remote_endpoint: The Remote Endpoint;</t>
          
         <t>current_rtt: A sample measurement of the current RTT;</t>
-
-        <t>Remote Endpoint: See <xref target="endpoint"></xref>;</t>
 
             <t>flight_size: The current volume of unacknowledged data;</t>
 
@@ -425,6 +423,8 @@ specify just the year. -->
             <t>max_jump: The configured maximum jump_cwnd;</t>
 
         <t>PipeSize: A measure of the validated available capacity based on the acknowledged data;</t>
+
+        <t>Remote Endpoint: See <xref target="endpoint"></xref>;</t>
 
             <t>saved_cwnd: The preserved capacity derived from observation of a
             previous connection (see <xref target="req-observe"></xref>);</t>
@@ -465,7 +465,7 @@ Observing ...> Connect -> Reconnaissance --------------------> Normal
     </t>
     
     <t>An established connection in the Normal Phase is permitted to start observing CC parameters.
-    The key phases of Careful are illustrated in Figure 1.
+    The key phases of Careful Resume are illustrated in Figure 1.
     Examples of the transitions between phases
     are provided in <xref target="Examples"></xref>.</t>
      
@@ -590,7 +590,7 @@ Observing ...> Connect -> Reconnaissance --------------------> Normal
      <t>On entry to the Unvalidated Phase, the sender:</t>
      <t><list style="symbols">
           <t>Unvalidated Phase (Initialising PipeSize):
-          The variable PipeSize if initialised to CWND on
+          The variable PipeSize is initialised to CWND on
           entry to the Unvalidated Phase. This records the
           CWND before the jump is applied.</t>
           
@@ -611,14 +611,14 @@ Observing ...> Connect -> Reconnaissance --------------------> Normal
              are not valid (due to a detected path change),
              the Safe Retreat Phase is entered.
          (In the Unvalidated Phase, insufficient time has passed for
-         a sender to receive feedback validating the the jump in CWND.
+         a sender to receive feedback validating the jump in CWND.
          Therefore, any detected congestion must have resulted from packets sent
              before the Unvalidated Phase.)</t>
              
              <t>Unvalidated Phase (Tracking PipeSize):
                  The variable PipeSize is increased by the volume of data acknowledged
                  by each received ACK. (This indicates a previously unvalidated packet has been
-                 succesfuly sent over the path.)</t>
+                 succesfully sent over the path.)</t>
 
              <t>Unvalidated Phase (Receiving acknowledgement for an unvalidated packet):
          The sender enters the Validating Phase when an acknowledgement is
@@ -864,7 +864,7 @@ Observing ...> Connect -> Reconnaissance --------------------> Normal
             <t>When a sender
             is rate-limited, or in the RTT following a burst of
             transmission, a sender typically transmits
-            less data than allowed by the CWND. Such observations could to be discounted when
+            less data than allowed by the CWND. Such observations could be discounted when
             estimating the saved_cwnd (e.g., when a previous
             observation recorded a higher value.)</t>
         </list></t>
@@ -931,7 +931,7 @@ Observing ...> Connect -> Reconnaissance --------------------> Normal
             (The value of ten was chosen to accommodate both increases in latency from buffering
             on a path, and any variation between RTT samples).
             A sender also verifies that the initial data was acknowledged.
-            (i.e., both coukd otherwise could be indicative of persistent congestion).</t>
+            (i.e., both could otherwise could be indicative of persistent congestion).</t>
              
             <t>A sender in Reconnaissance Phase reverts to the Normal Phase if congestion is detected.
             Some transport protocols implement CC mechanisms that infer potential congestion
@@ -1135,7 +1135,7 @@ Observing ...> Connect -> Reconnaissance --------------------> Normal
             Unless configured at a receiver, the rwnd constrains the rate
             of increase for a connection and reduces the benefit of Careful Resume.</t>
 
-            <t>QUIC this includes flow control mechanisms and mechanisms to prevent amplification
+            <t>QUIC includes flow control mechanisms and mechanisms to prevent amplification
             attacks. In particular, a QUIC receiver might need to issue proactive
             MAX_DATA frames to increase the flow control limits of a connection
             that is started when using Careful Resume to gain the expected benefit.</t>
@@ -1395,8 +1395,8 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
 +------+---------+---------+------------+-----------+------------+
 |CWND: |When in  |CWND     |CWND is not |CWND can   |CWND is not |
 |      |observe, |increases|increased   |increase   |increased   |
-|      |measure  |using SS |            |using SS   |            |
-|      |saved    |         |            |           |            |
+|      |measure  |using SS |            |using      |            |
+|      |saved    |         |            |normal CC  |            |
 |      |_cwnd    |         |            |           |            |
 +------+---------+---------+------------+-----------+------------+
 |PS:   |    -    |    -    |              PS+=ACked              |
