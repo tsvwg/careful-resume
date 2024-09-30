@@ -659,13 +659,14 @@ Observing ...> Connect -> Reconnaissance --------------------> Normal
         The CWND remains unvalidated and the sender typically remains in this phase for one RTT.
         On entry to the Validating Phase, the sender:</t>
         <t><list style="symbols">
+            <t>Validating Phase (Limiting CWND on entry):
+            On entry to the Validating Phase, if the flight_size is greater
+            than the PipeSize, the CWND is set to the flight_size.</t>
+        
             <t>Validating Phase (Check flight_size on entry):
             On entry to the Validating Phase, if the flight_size is less
             equal to the PipeSize, the Normal Phase is entered with the CWND
             reset to the PipeSize. (The unvalidated part of the jump_cwnd was not utilised).</t>
-
-            <t>Validating Phase (Limiting CWND on entry):
-            On entry to the Validating Phase, the CWND is set to the flight_size.</t>
 
         </list></t> <!-- End of list of actions -->
 
