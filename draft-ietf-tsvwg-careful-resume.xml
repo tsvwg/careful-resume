@@ -1414,7 +1414,7 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
 |Phase:|(as      |FS=CWND, |or >1 RTT   |>= last    |>= last     |
 |      |needed)  |Lifetime,|has passed  |unvalidated|unvalidated |
 |      |         |and RTT  |or ACK      |packet),   |packet),    |
-|      |         |confirmed|>= last     |enter      |{ssthresh=  |
+|      |         |confirmed|>= first    |enter      |{ssthresh=  |
 |      |         |), enter |unvalidated |Normal     |PS*Beta     |
 |      |         |Unvalidat|packet),    |           |and enter   |
 |      |         |ing else |enter       |           |Normal      |
