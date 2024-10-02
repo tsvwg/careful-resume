@@ -400,7 +400,10 @@ specify just the year. -->
             <!-- it could potentially be in the BDP Frame ID, but is not needed here -->
             <!--    <t>IW: Initial Window <xref target="RFC9002"></xref>;</t> -->
 
-        <t>Careful Resume (CR): The method specified in this document to select
+             <t> Beta: A scaling factor between 0.5 and 1, the default value
+             is 0.5.</t>
+             
+             <t>Careful Resume (CR): The method specified in this document to select
             initial CC parameters and to more rapidly and safely
             increase the initial sending rate.</t>
 
@@ -750,20 +753,18 @@ Observing ...> Connect -> Reconnaissance --------------------> Normal
             The CWND MUST NOT be increased in the Safe Retreat Phase.</t>
 
             <t>Safe Retreat Phase (Acknowledgement of unvalidated packets):
-            The sender enters Normal Phase
+            The sender enters the Normal Phase
             when the last packet (or a later packet) sent during the
             Unvalidated Phase has been acknowledged. On leaving
-            the Safe Retreat Phase, the ssthresh MUST be set no larger than
-            the most recently measured PipeSize. In addition, specific
-            congestion control algorithms can further constrain this
-            to reduce the probability of a second round of congestion:
-            For Reno, the resultant ssthresh MUST be no larger than a
-            half of the recently measured PipeSize <xref target="RFC5681"></xref>.
-            Other congestion control
-            algorithms also scale the value used for ssthresh,
-            e.g., for Cubic, ssthresh is Beta__cubic <xref target="RFC9438"></xref> times PipeSize.
+            the Safe Retreat Phase, the ssthresh MUST be set to no larger than
+            the most recently measured PipeSize x Beta, where Beta
+            is a scaling factor between 0.5 and 1. The default value
+            is 0.5, chosen to reduce the probability of inducing
+            a second round of congestion. Cubic defines a
+	       Beta__cubic of 0.7 <xref target="RFC9438"></xref>.
             (The log is updated to exit_recovery, see <xref target="sec-QLOG"></xref>.)</t>
         </list></t>
+
 
         <t>When using BBR, the Safe Retreat Phase is entered if the Drain
            state is entered while the "carefully-resuming" flag is still
@@ -1271,8 +1272,6 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
         <?rfc include="reference.RFC.9000.xml"?>
         <!-- <?rfc include="reference.RFC.9001.xml"?> -->
         <?rfc include="reference.RFC.8610.xml"?>
-        <?rfc include="reference.RFC.9438.xml"?>
-        <?rfc include="reference.RFC.5681.xml"?>
     </references>
 
     <references title="Informative References">
@@ -1282,7 +1281,8 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
         <?rfc include="reference.I-D.kuhn-quic-bdpframe-extension.xml"?>
         <?rfc include="reference.RFC.3465.xml"?>
         <?rfc include="reference.RFC.4782.xml"?>
-        <!-- <?rfc include="reference.RFC.5681.xml"?> -->
+        <?rfc include="reference.RFC.5681.xml"?>
+        <?rfc include="reference.RFC.9438.xml"?>         <!--  Cubic> -->
         <?rfc include="reference.RFC.5783.xml"?>
         <?rfc include="reference.RFC.6675.xml"?>
         <?rfc include="reference.RFC.6937.xml"?>
@@ -1416,7 +1416,7 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
 |      |needed)  |Lifetime,|has passed  |unvalidated|unvalidated |
 |      |         |and RTT  |or ACK      |packet),   |packet),    |
 |      |         |confirmed|>= first    |enter      |{ssthresh=  |
-|      |         |), enter |unvalidated |Normal     |PS*Beta     |
+|      |         |), enter |unvalidated |Normal     |PS x Beta   |
 |      |         |Unvalidat|packet),    |           |and enter   |
 |      |         |ing else |enter       |           |Normal      |
 |      |         |enter    |Validating  |           |            |
@@ -1424,12 +1424,13 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
 +------+---------+---------+------------+-----------+------------+
 ]]></artwork>
 </figure>
-    </t>
     <t>The following abbreviations are used
     SS = Slow-Start FS = flight_size; PS = PipeSize; ACK = highest acknowledged packet.
     The PipeSize tracks the validated part of the cwnd. It is set to the CWND
     on entry to the Unvalidated Phase and
-    is updated as each additional packet is acknowledged. Beta is 0.5 for Reno.</t>
+    is updated as each additional packet is acknowledged. 
+    The default value of Beta is 0.5.</t>
+
 
     <t>Note:
     For an implementation that keeps track of transmitted data in terms of packets:
