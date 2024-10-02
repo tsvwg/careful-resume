@@ -792,7 +792,7 @@ Observing ...> Connect -> Reconnaissance --------------------> Normal
             until acknowledgment of the last packet number (or a later packet) sent in the
             Unvalidated Phase.
                  
-            If this last packet number is not cumulatively acknowledged, then
+            If the last unvalidated packet is not cumulatively acknowledged, then
             additional packets might need to be retransmitted.</t>
              
         </section>     <!-- End of subsection Safe Retreat Phase: loss recovery -->
