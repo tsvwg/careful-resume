@@ -601,7 +601,8 @@ Observing ...> Connect -> Reconnaissance --------------------> Normal
              To avoid starving other flows that could have either started
              or increased their use of capacity after the Observation Phase,
              the jump_cwnd MUST be no more than half of the saved_cwnd.
-             Hence, jump_cwnd is less than  or equal to Min(max_jump,(saved_cwnd/2)). CWND = jump_cwnd. </t>
+             Hence, jump_cwnd is less than  or equal to Min(max_jump,(saved_cwnd/2)).
+             CWND = jump_cwnd. </t>
 
      </list></t>
         <t>The following actions are performed during the Unvalidated Phase:</t>
@@ -617,15 +618,19 @@ Observing ...> Connect -> Reconnaissance --------------------> Normal
          a sender to receive feedback validating the jump in CWND.
          Therefore, any detected congestion must have resulted from packets sent
              before the Unvalidated Phase.)</t>
+
+            <t>Unvalidated Phase (Completed sending all unvalidated packets):
+             The sender enters the Validating Phase when the flight_size equals the CWND.</t>
              
              <t>Unvalidated Phase (Tracking PipeSize):
-                 The variable PipeSize is increased by the volume of data acknowledged
-                 by each received ACK. (This indicates a previously unvalidated packet has been
-                 succesfully sent over the path.)</t>
-
+             The variable PipeSize is increased by the volume of data acknowledged
+             by each received ACK. (This indicates a previously unvalidated packet has been
+             succesfully sent over the path.)</t>
+             
              <t>Unvalidated Phase (Receiving acknowledgement for an unvalidated packet):
-         The sender enters the Validating Phase when an acknowledgement is
-             received for the first packet number (or higher) that was sent in the Unvalidated Phase
+             The sender enters the Validating Phase when an acknowledgement is
+             received for the first packet number (or higher) that was sent in the Unvalidated Phase 
+             or greater than 1 RTT has passed in the Unvalidated Phase
          (see first_unvalidated_packet_acknowledged in <xref target="sec-QLOG"></xref>).</t>
         </list></t> <!-- End of list of actions -->
 
@@ -697,7 +702,9 @@ Observing ...> Connect -> Reconnaissance --------------------> Normal
             The sender enters the Normal Phase when an acknowledgement is
             received for the last packet number (or higher)
             that was sent in the Unvalidated Phase
-            (see last_unvalidated_packet_acknowledged in <xref target="sec-QLOG"></xref>).</t>
+            (see last_unvalidated_packet_acknowledged in <xref target="sec-QLOG"></xref>).
+            This means that the packets sent in the Unvalidated Phase were acknowledged
+            without congestion.</t>
         </list></t> <!-- End of list of actions -->
         <t>When using BBR, validation is performed using the regular BBR rules
            for exiting Startup. The measured delivery rate will reflect the
@@ -781,19 +788,15 @@ Observing ...> Connect -> Reconnaissance --------------------> Normal
         <section anchor="loss" title="Loss Recovery after entering Safe Retreat">
 
             <t>Unacknowledged packets that were sent in the Unvalidated Phase
-            can be lost when there is congestion.
-           Loss recovery commences using the reduced CWND
-           that was set on entry to the Safe Retreat Phase.</t>
-        
-            <t><list style="symbols">
-                <t>Loss Recovery (Receiving acknowledgement of the unvalidated packets):
-                The sender leaves the Safe Retreat Phase when
-                the last packet number (or a later packet) sent in the
-                Unvalidated Phase is acknowledged.
-                (Note that if the last packet number is not cumulatively acknowledged, then
-                additional packets might need to be retransmitted.)</t>
-            </list></t>
-
+            can be lost.
+            Loss recovery commences using the reduced CWND
+            that was set on entry to the Safe Retreat Phase and continues
+            until acknowledgment of the last packet number (or a later packet) sent in the
+            Unvalidated Phase.
+                 
+            If the last unvalidated packet is not cumulatively acknowledged, then
+            additional packets might need to be retransmitted.</t>
+             
         </section>     <!-- End of subsection Safe Retreat Phase: loss recovery -->
     </section> <!-- End of Safe Retreat Phase -->
 
@@ -1037,10 +1040,17 @@ Observing ...> Connect -> Reconnaissance --------------------> Normal
         entry to the Safe Retreat Phase if the capacity is not validated.</t>
 
         <t>When a sender completes the Unvalidated Phase, either by sending a jump_cwnd of data
-        or after one RTT, it ceases to use the unvalidated CWND. That is, CWND is reset
-        to the flight_size, and the sender awaits reception of ACKs to validate the
-        use of this capacity. New packets are sent when previously
-        sent data is newly acknowledged.
+        or after one RTT or an acknowledgment for an unvalidated packet, 
+        it ceases to use the unvalidated CWND.</t>
+        <t>If the flight_size was less than or equal to the PipeSize, the
+        sender resets the CWND to the PipeSize, and enters the Normal Phase.</t>
+
+        <t>Otherwise, if the CWND is larger than the flight_size, the CWND is reset to the flight_size. 
+               The sender then awaits reception of ACKs to validate the
+        use of this capacity.</t>
+         
+        <t>New packets are sent when previously
+        sent data is newly acknowledged.         
         The CWND is increased during the Validating Phase,
         based on received ACKs. This allows new data to be sent,
         but this does not have any final impact on the CWND
