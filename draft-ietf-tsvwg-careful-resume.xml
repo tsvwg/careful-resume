@@ -1425,15 +1425,16 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
 |Phase:|(as      |FS=CWND, |or >1 RTT   |>= last    |>= last     |
 |      |needed)  |Lifetime,|has passed  |unvalidated|unvalidated |
 |      |         |and RTT  |or ACK      |packet),   |packet),    |
-|      |         |confirmed|>= first    |enter      |{ssthresh=  |
-|      |         |), enter |unvalidated |Normal     |PS x Beta   |
+|      |         |confirmed|>= first    |enter      |ssthresh =  |
+|      |         |), enter |unvalidated |Normal     |PS x Beta;  |
 |      |         |Unvalidat|packet),    |           |and enter   |
 |      |         |ing else |enter       |           |Normal      |
 |      |         |enter    |Validating  |           |            |
 |      |         |Normal   |            |           |            |
 +------+---------+---------+------------+-----------+------------+
 ]]></artwork>
-</figure>
+</figure></t>
+
     <t>The following abbreviations are used
     SS = Slow-Start FS = flight_size; PS = PipeSize; ACK = highest acknowledged packet.
     The PipeSize tracks the validated part of the cwnd. It is set to the CWND
