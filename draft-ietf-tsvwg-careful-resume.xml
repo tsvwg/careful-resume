@@ -548,8 +548,8 @@ Observing ...> Connect -> Reconnaissance --------------------> Normal
         When a sender has confirmed the RTT and also has
             received an acknowledgement for the initial data without reported congestion,
             it MAY then enter the Unvalidated Phase.
-            This transition occurs when a sender has more data than permitted
-            by the current CWND.</t>
+            This transition occurs when a sender sends can send more data
+	    than would have been normally permitted by the congestion control algorithm.</t>
 
     </list></t>
 
@@ -560,13 +560,14 @@ Observing ...> Connect -> Reconnaissance --------------------> Normal
             A sender is allowed to remain in the Reconnaissance Phase and to not
             transition to the Unvalidated Phase until there is
             more data in the transmission buffer
-            than can be sent using the current CWND.
+            than normally permitted by the congestion control algorithm.
             In some implementations, the decision to enter the
             Unvalidated Phase could need coordination with the management
             of buffers in the interface to the upper layers.</t>
         
         <t>When a path is not confirmed, Careful Resume is not used
-        and the sender enters the Normal Phase.</t>
+        and the sender enters the Normal Phase (the CWND is not
+	modified by Careful Resume).</t>
 
         <t>Implementation notes are provided in <xref target="req-recon"></xref>.</t>
 
@@ -593,9 +594,9 @@ Observing ...> Connect -> Reconnaissance --------------------> Normal
      <t>On entry to the Unvalidated Phase, the sender:</t>
      <t><list style="symbols">
           <t>Unvalidated Phase (Initialising PipeSize):
-          The variable PipeSize is initialised to CWND on
+          The variable PipeSize is initialised to the flight_size on
           entry to the Unvalidated Phase. This records the
-          CWND before the jump is applied.</t>
+          window before a jump is applied.</t>
           
              <t>Unvalidated Phase (Setting the jump_cwnd):
              To avoid starving other flows that could have either started
@@ -617,7 +618,7 @@ Observing ...> Connect -> Reconnaissance --------------------> Normal
          (In the Unvalidated Phase, insufficient time has passed for
          a sender to receive feedback validating the jump in CWND.
          Therefore, any detected congestion must have resulted from packets sent
-             before the Unvalidated Phase.)</t>
+         before the Unvalidated Phase.)</t>
 
             <t>Unvalidated Phase (Completed sending all unvalidated packets):
              The sender enters the Validating Phase when the flight_size equals the CWND.</t>
@@ -1397,7 +1398,7 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
 |      |CC params|path     |using saved |new CWND;  |Update PS   |
 |      |         |         |_cwnd       |Update PS  |            |
 +------+---------+---------+------------+-----------+------------+
-|On    |    -    |CWND=IW  |PS=CWND;    |If (FS>PS) |CWND=(PS/2) |
+|On    |    -    |CWND=IW  |PS=FS       |If (FS>PS) |CWND=(PS/2) |
 |entry:|         |         |jump_cwnd   |{CWND=FS}  |            |
 |      |         |         |=saved_cwnd |else       |            |
 |      |         |         |/2;         |{CWND=PS;  |            |
@@ -1466,8 +1467,8 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
         In this example, this is confirmed when the sender has 29 packets in flight.</t>
         <t>The sender then enters the Unvalidated Phase.
         (This path confirmation could have happened earlier if data had been available to send.) The
-        sender initialises the PipeSize to the CWND
-        (at this time this is the same as the flight_size, i.e., 29 packets)
+        sender initialises the PipeSize to the flight_size
+        (in this case, 29 packets)
         and then sets the CWND to 150 packets (based upon half of the previously
         observed saved_cwnd of 300 packets).</t>
             
@@ -1495,7 +1496,7 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
 
         <t>The sender starts by sending IW packets (10) in the Reconnaissance Phase.
         It commences as described in the first example, transitioning to the Unvalidated Phase.
-        This sets the CWND to 150 packets, and the PipeSize to the flight_size (i.e., 29 packets).</t>
+        The CWND is set to 150 packets, and the PipeSize to the flight_size (i.e., 29 packets).</t>
 
         <t>The sender then becomes rate-limited because it only sends 50 unvalidated packets.</t>
 
@@ -1513,14 +1514,15 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
 
     <section anchor="Examples-loss-recon" title="Example with Loss detected in the Reconnaissance Phase">
         <t>When a packet is lost in the Reconnaissance Phase, the sender will enter the Normal Phase
-        and recovers this using the normal method. (There is no change to the CC method, because
+        and recovers this using the normal method with a CWND the same as if Careful Resume had
+	not been attempted. (There is no change to the CC method, because
         the sender has discovered a potential capacity limit and is not
         allowed to continue to use Careful Resume.)</t>
      </section>
 
      <section anchor="Examples-loss-unval" title="Example with Loss detected in the Validating Phase">
-        <t>As in the first example, the sender enters the Unvalidated Phase and sets the CWND to 150 packets
-        with the PipeSize initialized to the flight_size (i.e., 29 packets).</t>
+        <t>As in the first example, the sender enters the Unvalidated Phase with a CWND of 150 packets
+        and with the PipeSize initialized to the flight_size (i.e., 29 packets).</t>
 
         <t>The sender now sends 121 unvalidated packets (the remaining unused CWND).
         This example considers the case when one of the unvalidated packet is lost, which
@@ -1591,7 +1593,11 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
         <t>WG-10, CH developed text to explain expected operation with BBR. 
         This also fixed some typos introduced in previous edits. Fix XML and fix CDDL bugs for submission.</t>
         <t>Changed the ssthresh value used after an exit of Safe Retreat to be (PipeSize/2).</t>
-        <t>WG-11, JD fixed mistakes. GF clarified text. RS added that after SR, ssthresh ought to match the behaviour of Cubic/Reno.</t>
+        <t>WG-11, JD fixed mistakes. GF clarified text. RS added that after SR,
+	 ssthresh ought to match the behaviour of Cubic/Reno.
+	 updated the text to be allow for an implementation to update CWND ahead of entering
+         the Unvalidated Phase, and to clarify that the Unvalidated Phase starts when the first
+	 unvalidated packet is actually sent.</t>
     </list></t>
 </section> <!-- End of Revisions -->
 
