@@ -548,8 +548,8 @@ Observing ...> Connect -> Reconnaissance --------------------> Normal
         When a sender has confirmed the RTT and also has
             received an acknowledgement for the initial data without reported congestion,
             it MAY then enter the Unvalidated Phase.
-            This transition occurs when a sender sends can send more data
-	    than would have been normally permitted by the congestion control algorithm.</t>
+            This transition occurs when more data is sent
+	    than normally permitted by the congestion control algorithm.</t>
 
     </list></t>
 
@@ -566,8 +566,8 @@ Observing ...> Connect -> Reconnaissance --------------------> Normal
             of buffers in the interface to the upper layers.</t>
         
         <t>When a path is not confirmed, Careful Resume is not used
-        and the sender enters the Normal Phase (the CWND is not
-	modified by Careful Resume).</t>
+        and the sender enters the Normal Phase with a CWND that was not
+	modified by Careful Resume.</t>
 
         <t>Implementation notes are provided in <xref target="req-recon"></xref>.</t>
 
@@ -1514,10 +1514,10 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
 
     <section anchor="Examples-loss-recon" title="Example with Loss detected in the Reconnaissance Phase">
         <t>When a packet is lost in the Reconnaissance Phase, the sender will enter the Normal Phase
-        and recovers this using the normal method with a CWND the same as if Careful Resume had
-	not been attempted. (There is no change to the CC method, because
-        the sender has discovered a potential capacity limit and is not
-        allowed to continue to use Careful Resume.)</t>
+        and recovers this using the normal method. 
+	(This sender has discovered a potential capacity limit and is not
+        allowed to continue to use Careful Resume, therefore there is no change to 
+	the CC method and the CWND is the same as if Careful Resume had not been attempted.)</t>
      </section>
 
      <section anchor="Examples-loss-unval" title="Example with Loss detected in the Validating Phase">
