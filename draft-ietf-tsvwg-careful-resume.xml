@@ -635,30 +635,6 @@ Observing ...> Connect -> Reconnaissance --------------------> Normal
          (see first_unvalidated_packet_acknowledged in <xref target="sec-QLOG"></xref>).</t>
         </list></t> <!-- End of list of actions -->
 
-        <t>When the flow is controlled using BBR, Careful Resume is implemented
-           by setting the pacing rate from the saved congestion control parameters,
-           with the following precautions:</t>
-           <t><list style="symbols">
-              <t>The flag "carefully-resuming" is
-                 added to the BBR state, and initialized
-                 to "False" when the BBR flow starts;</t>
-              <t>Careful Resume is only activated if a BBR flow is in the Startup state;</t>
-              <t>The probing rate is set to 1/2 of the bottleneck bandwidth in
-                 the saved congestion control parameters.</t>
-              <t>The sender starts the Unvalidated Phase at the beginning of a round,
-                 and sets the "carefully-resuming" flags to "True";</t>
-              <t>When the "carefully-resuming" flag is set, the sender sets the BBR pacing rate
-                 to the larger of the nominal pacing rate (BBR.bw times BBRStartupPacingGain)
-                 and the probing rate. The CWND is set to the largest of BBR.bw
-                 and the probing rate, multiplied by BBR.rtt_min times
-                 BBRStartupCwndGain;</t>
-              <t>The "carefully-resuming" flag is reset to False two rounds after
-                 it is set, i.e., after all the packets sent in the first round
-                 of "carefully resuming"
-                 have been received and acknowledged by the peer.
-                At that stage (after the capacity has been validated),
-                 the measured delivery rate is expected to reflect the probing rate.</t>
-           </list></t>
         <t>Implementation notes are provided in <xref target="req-unvalid"></xref>. </t>
     </section> <!-- End of define Unvalidated Phase -->
 
@@ -707,15 +683,16 @@ Observing ...> Connect -> Reconnaissance --------------------> Normal
             This means that the packets sent in the Unvalidated Phase were acknowledged
             without congestion.</t>
         </list></t> <!-- End of list of actions -->
-        <t>When using BBR, validation is performed using the regular BBR rules
+        <t>When using BBR <xref target="bbr"></xref>, validation is performed using the regular BBR rules
            for exiting Startup. The measured delivery rate will reflect the
-           actual capacity of the network. If congestion was experienced and
-           packet losses were observed, BBR will exit the Startup state
-           and enter the Drain state while the "carefully-resuming" flag is still
-           True, which will trigger the "safe retreat" option of the Drain state.</t>
+           actual capacity of the network. If congestion is experienced 
+	   while the "carefully-resuming" flag is True
+           (e.g., packet losses were observed), BBR exits the Startup state
+           and enter the Drain state.</t>
 
     </section> <!-- End of define Validating Phase -->
-    
+
+
     <section anchor="sec-phase-ret-phase" title="Safe Retreat Phase">
 
         <t>This phase is entered when congestion is
@@ -808,7 +785,7 @@ Observing ...> Connect -> Reconnaissance --------------------> Normal
         The sender enters the Normal Phase. If using BBR, the normal
         processing of packet losses will cause it to enter the
         Drain state while the "carefully-resuming" flag is set to True,
-        which will force the Safe Retreat mode.</t>
+        implementing the Safe Retreat Phase <xref target="bbr"></xref>.</t>
 
         <t> As in loss recovery, data sent in the
         Unvalidated Phase could be later acknowledged after an RTO event
@@ -1059,6 +1036,46 @@ Observing ...> Connect -> Reconnaissance --------------------> Normal
         
     </section> <!-- Validating Phase -->
 
+    <section anchor="bbr" title="Implementation Notes for using BBR">
+
+        <t>When the flow is controlled using BBR, Careful Resume is implemented
+           by setting the pacing rate from the saved congestion control parameters,
+           with the following precautions:</t>
+           <t><list style="symbols">
+		   <t>The flag "carefully-resuming" is added to the BBR state
+                   to indicate that the sender is allowed to send unvalidated
+		   packets.  
+		   This is initialized to "False" when the BBR flow starts;</t>
+		   <t>Prequisites for using Careful Resume are described in 
+		   <xref target="sec-phase-rec-phase"></xref>;</t>
+		   <t>Careful Resume is allowed to transmit unvalidated packets
+		   only when the BBR flow is in the Startup state;</t>
+		   <t>The probing rate is configured to 1/2 of the bottleneck
+		   bandwidth, as derived from the CWND calculation specified in the
+		   saved congestion control parameters according to the
+		   requirements in <xref target="sec-phase-unv-phase"></xref>;</t>
+		   <t>The sender starts the Unvalidated Phase at the beginning of a BBR round,
+		   and sets the "carefully-resuming" flags to "True";</t>
+		   <t>When the "carefully-resuming" flag is set, the BBR congestion 
+		   controller sets the BBR pacing rate
+		   to the larger of the nominal pacing rate (BBR.bw multiplied bytes
+		   BBRStartupPacingGain) or the calculated probing rate. 
+		   Then, CWND is set to the larger of BBR.bw
+		   and the probing rate, multiplied by BBR.rtt_min times
+		   BBRStartupCwndGain;</t>
+		   <t>The "carefully-resuming" flag is reset to False two rounds after
+		   it is set, i.e., after all the packets sent in the first round
+		   of "carefully resuming"
+		   have been received and acknowledged by the peer.
+		   At that stage (after the capacity has been validated),
+	           the measured delivery rate is expected to reflect the probing rate.</t>
+		   <t>If congestion is experienced while the "carefully-resuming" flag 
+	           is True, BBR exits the Startup state
+                   and enters the Drain state (implementing the Safe Retreat Phase).</t>
+           </list></t>
+    </section> <!-- End of define Implementation Notes for using BBR -->
+
+
     <section anchor="req-retreat" title="Safety in the Safe Retreat Phase">
 
         <t>This section considers the safety
@@ -1128,7 +1145,7 @@ Observing ...> Connect -> Reconnaissance --------------------> Normal
             and enter the congestion avoidance phase of the CC algorithm.</t>
 
             <t>For BBR CC, it is recommended to enter the "Drain"
-            state.</t>
+            state <xref target="bbr"</xref>.</t>
         </list></t>-->
 
         In the Normal Phase, a sender is permitted to start
