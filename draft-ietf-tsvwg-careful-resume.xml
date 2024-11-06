@@ -1562,7 +1562,7 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
         Recall that the 35th unvalidated packet was lost and had packet number 64 (29+35).
         The PipeSize tracks the
         capacity discovered by acknowledgments for the unvalidated packets and
-        continues to be further increased for each received ACK acknowledges new data.
+        continues to be further increased for each received ACK that acknowledges new data.
         Although the PipeSize cannot be used to safety initialise the CWND (because it was measured when the sender
         had aggressively created overload), the estimated PipeSize
         (which, in this case, is 121-1 = 120 packets) can be used to set the ssthresh on exit
