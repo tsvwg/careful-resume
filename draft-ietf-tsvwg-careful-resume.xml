@@ -1558,19 +1558,19 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
         the path after this potentially severe congestion event.
         There is no further increase in CWND in this phase.</t>
 
-        <t>The sender continues to receive ACKs for the remaining  86 (121-35) unvalidated packets.
+        <t>The sender continues to receive ACKs for the remaining 86 (121-35) unvalidated packets.
         Recall that the 35th unvalidated packet was lost and had packet number 64 (29+35).
         The PipeSize tracks the
-        capacity discovered by acknowledgments for the unvalidated packets and
+        capacity discovered by acknowledgments for the unvalidated packets and PipeSize
         continues to be further increased for each received ACK that acknowledges new data.
         Although the PipeSize cannot be used to safety initialise the CWND (because it was measured when the sender
         had aggressively created overload), the estimated PipeSize
         (which, in this case, is 121-1 = 120 packets) can be used to set the ssthresh on exit
-        from Safe Retreat, since it does indicate an upper limit to the current capacity.</t>
+        from Safe Retreat, since it does indicate a measured upper limit to the current capacity.</t>
 
         <t>At the point where all packets sent in the Unvalidated Phase have been either acknowledged
         or have been declared lost, the sender updates ssthresh and enters the Normal Phase.
-        Because CWND will now now be less than ssthresh, a sender in the Normal Phase is permitted to use
+        Because CWND will now be less than ssthresh, a sender in the Normal Phase is permitted to use
         Slow-Start to grow the CWND towards the ssthresh,
         after which it will enter congestion avoidance.</t>
      </section>
