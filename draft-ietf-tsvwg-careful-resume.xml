@@ -1464,7 +1464,7 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
     <t>Note:
     For an implementation that keeps track of transmitted data in terms of packets:
     In the Unvalidated Phase, the first unvalidated packet corresponds to the highest sent packet recorded on entry to this phase.
-    In the Validating Phase and Safe Retreat Phase, this corresponds to the last unvalidated packet.
+    In the Validating Phase and Safe Retreat Phase, the sender tracks the last unvalidated packet.
     It is also the highest sent packet number recorded on entry to this phase.</t>
 
     <t>The remaining subsections provide informative examples of use.</t>
