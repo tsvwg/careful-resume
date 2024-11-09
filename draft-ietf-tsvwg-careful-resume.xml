@@ -867,8 +867,7 @@ Observing ...> Connect -> Reconnaissance --------------------> Normal
         <t>Careful Resume does not permit multiple concurrent reuse of
         the saved CC parameters. When multiple new concurrent connections
         are made to a server, each can have a valid saved_remote_endpoint,
-        but the saved_cwnd can once (i.e., if two connections start
-        simultaneously they cannot both use the saved_cwnd to perform a jump).
+        but the saved_cwnd can only be used for one connection at a time.
         This is to prevent a sender from performing multiple jumps in the CWND,
         each individually based on the same saved_cwnd, and hence creating an
         excessive aggregate load at the bottleneck.</t>
@@ -881,7 +880,7 @@ Observing ...> Connect -> Reconnaissance --------------------> Normal
         balancing, a distributed system might be needed to ensure this
         invariant when the load balancing hashes
         connections by 4-tuple and hence multiple connections from the same
-        client device are served by different server processes.</t>
+        client device are served by different server processes.)</t>
 
         <section anchor="sec-confirm-rtt" title="Confirming the Path">
             <t>Path characteristics can change over time for many reasons.
@@ -889,45 +888,37 @@ Observing ...> Connect -> Reconnaissance --------------------> Normal
             becoming irrelevant.</t>
              
             <t> To help confirm the path, the sender compares the
-            saved_RTT with each of a
-            series of current_rtt samples.
-            If the current_rtt sample is less than a half of the
-            saved_RTT, this is regarded as too small, and is an indicator of a path change.
-            (This factor of two arises, because the rate should not exceed the observed rate when
-            the saved_cwnd was measured, because the jump_cwnd is calculated as half the
-            measured saved_cwnd.)</t>
-
-            <t>If the current RTT is larger than saved_rtt (when the saved_cwnd was measured),
-            this results
-            in a proportionally lower resumed rate, because the transmission using Careful Resume
-            is paced based on the current_rtt  (i.e., a larger RTT sample in the Unvalidated Phase
-            would reduce the paced sending rate ,and hence is still safe).
+            saved_RTT with each the current_rtt sample.</t>
+            <t>If the current_rtt is less than a half of the
+            saved_RTT, this is regarded as too small, this is an indicator of a path change.
+            (This factor of two arises, because the jump_cwnd is calculated as half the
+            measured saved_cwnd and
+	    sending rate ought not to exceed the observed rate when
+            the saved_cwnd was measured.)</t>
+	    <t> If the current RTT is larger than saved_rtt,
+            this would results
+            in a proportionally lower resumed rate, because the transmission
+            is paced based on the current_rtt ,and hence is still safe.
             If the current_rtt is incorrectly measured as larger
             than the actual path RTT, the sender will receive an ACK for an
-            unvalidated packet before it would have completed the Unvalidated Phase, Careful Resume
-            uses this
-            ACK to reset the CWND to reflect the flight_size, and the sender then enters
-            the Validating Phase.</t>
-
-            <t>A current_rtt more than ten times the
+            unvalidated packet before it completed the Unvalidated Phase, this
+            ACK resets the CWND to reflect the flight_size, and the sender then enters
+            the Validating Phase. A current_rtt more than ten times the
             saved_RTT is indicative of a path change.
-            (The value of ten was chosen to accommodate both increases in latency from buffering
-            on a path, and any variation between RTT samples).
-            A sender also verifies that the initial data was acknowledged.
-            (i.e., both could otherwise could be indicative of persistent congestion).</t>
-             
-            <t>A sender in Reconnaissance Phase reverts to the Normal Phase if congestion is detected.
+            (The value of ten accommodates both increases in latency from buffering
+            on a path and any variation between RTT samples).</t>
+		
+            <t>A sender also verifies that the initial data was acknowledged.
+            (i.e., loss could otherwise could be indicative of persistent congestion).
+	    A sender in Reconnaissance Phase reverts to the Normal Phase if congestion is detected.
             Some transport protocols implement CC mechanisms that infer potential congestion
-            from an increase in the current_rtt.
-            In the Reconnaissance Phase, this indication can occur earlier than congestion
-            that is reported by
-            loss or by ECN marking. Designs need to consider if such an indication is
+            from an increase in the current_rtt. Designs need to consider if such an indication is
             a suitable trigger to revert to the Normal Phase.</t>
         </section> <!-- End of Reconnaissance:Confirming the Path -->
         
     </section> <!-- End of Reconnaissance(req-recon) -->
 
-    <section anchor="req-unvalid" title="Safety for the Unvalidated Phase">
+    <section anchor="req-unvalid" title="Safety in the Unvalidated Phase">
         <t>This section considers the safety
         for using saved CC parameters to tentatively update the CWND.
         This is designed to mitigate the risk of
