@@ -1479,7 +1479,7 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
         and then continues in a subsequent RTT to send more packets until the sender
         becomes CWND-limited (i.e., flight_size = CWND).</t>
             
-        <t>The sender in the Reconaissance Phase then
+        <t>The sender in the Reconnaissance Phase then
         confirms the RTT and other conditions for using Careful Resume.
         In this example, this is confirmed when the sender has 29 packets in flight.</t>
         <t>The sender then enters the Unvalidated Phase.
