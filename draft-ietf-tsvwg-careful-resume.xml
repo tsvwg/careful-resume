@@ -115,12 +115,12 @@ specify just the year. -->
       It reuses a set of computed congestion control parameters that
       are based on previously observed path characteristics between
       the same pair of transport endpoints. These parameters
-      are saved, allowing them to be later used to modify the congestion control behavior
+      are saved, allowing them to be later used to modify the congestion control behaviour
           of a subsequent connection.</t>
       <t>It describes assumptions
       and defines requirements for how a
-      sender utilizes these parameters to provide opportunities for a
-      connection to more rapidly get up to speed and rapidly utilize available
+      sender utilises these parameters to provide opportunities for a
+      connection to more rapidly get up to speed and rapidly utilise available
       capacity. It discusses how use of Careful Resume impacts the capacity at a
       shared network bottleneck and the safe response that is needed after any
       indication that the new rate is inappropriate.</t>
@@ -170,7 +170,7 @@ specify just the year. -->
     of the same path. The parameters include:
     the saved_cwnd for the path and the minimum Round Trip Time (RTT). These
     parameters are saved and used to modify the CC
-    behavior of a subsequent connection between the
+    behaviour of a subsequent connection between the
     same endpoints. Some congestion control algorithms may use other parameters.
     For example, implementations using BBR also retain the
     value of the bottleneck bandwidth required to reach the capacity available to
@@ -194,7 +194,7 @@ specify just the year. -->
             <t>"Generally, implementations are advised
             to be cautious when using saved CC parameters on a new path",
             as stated in <xref target="RFC9000"></xref>.
-            While this statement has been proposed in the context of QUIC standardization, this advice is appropriate for any IETF transport protocol.
+            While this statement has been proposed in the context of QUIC standardisation, this advice is appropriate for any IETF transport protocol.
             Care is therefore needed
             to assure safe use and to be robust to changes
             in traffic patterns, network routing, and link/node conditions.
@@ -203,7 +203,7 @@ specify just the year. -->
     </section>  <!-- End of using with care -->
           
     <section anchor="rec-choice" title="Receiver Preference">
-            <t>Whilst a sender could take optimization decisions without considering
+            <t>Whilst a sender could take optimisation decisions without considering
             the receiver's preference, there are cases where a receiver
             could have information that
             is not available at the sender, or might benefit from
@@ -241,7 +241,7 @@ specify just the year. -->
     <section anchor="sec-transport-design" title="Transport Protocol Interaction">
         <t>The CWND is one factor that limits the
         sending rate of a transport protocol. Other mechanisms also constrain
-        the maxmimum sending rate. These include the sender pacing rate and the
+        the maximum sending rate. These include the sender pacing rate and the
         receiver-advertised window (or flow credit), see <xref target="flow-control"></xref>.</t>
     </section> <!-- End of Other factors -->
     
@@ -299,7 +299,7 @@ specify just the year. -->
         
         <t><list>
             
-            <t>The first precaution is to recognize whether the conditions have
+            <t>The first precaution is to recognise whether the conditions have
                 changed so much that the saved values are no longer valid. We
                 describe that as the "reconnaissance phase". During that phase,
                 the sender will not send more data than allowed for any new
@@ -626,7 +626,7 @@ Observing ...> Connect -> Reconnaissance --------------------> Normal
              <t>Unvalidated Phase (Tracking PipeSize):
              The variable PipeSize is increased by the volume of data acknowledged
              by each received ACK. (This indicates a previously unvalidated packet has been
-             succesfully sent over the path.)</t>
+             succesfuly sent over the path.)</t>
              
              <t>Unvalidated Phase (Receiving acknowledgement for an unvalidated packet):
              The sender enters the Validating Phase when an acknowledgement is
@@ -815,8 +815,8 @@ Observing ...> Connect -> Reconnaissance --------------------> Normal
             
         <t>There are various approaches to measuring the capacity used by a connection.
         Congestion controllers, such as CUBIC or Reno, can estimate the
-        capacity by utilizing the
-        CWND or flight_size. A different approach could
+        capacity based on the
+        CWND, flight_size, acknwoledged rate, etc. A different approach could
         estimate the same parameters for a rate-based congestion
         controller, such as BBR <xref target="I-D.cardwell-iccrg-bbr-congestion-control"></xref>,
         or by observing the rate at which data is acknowledged by the remote endpoint.</t>
@@ -835,7 +835,7 @@ Observing ...> Connect -> Reconnaissance --------------------> Normal
             <t>There are cases where the current CWND
             does not reflect the path capacity. At the end of slow
             start, the CWND can be significantly larger than
-            needed to fully utilize the path (i.e., a CWND
+            needed to fully utilise the path (i.e., a CWND
             overshoot). It is inappropriate to use an
             overshoot in the CWND as a basis for estimating the
             capacity. In most cases, the CWND will converge to a stable
@@ -925,7 +925,7 @@ Observing ...> Connect -> Reconnaissance --------------------> Normal
         adding excessive congestion to an already congested path.</t>
 
         <t>A connection must not directly use the previously
-        saved_cwnd to directly initialize a new flow causing it to resume sending at the same
+        saved_cwnd to directly initialise a new flow causing it to resume sending at the same
         rate. The jump_cwnd must therefore is limited to half the previously saved_cwnd.</t>
 
         <section anchor="req-lifetime" title="Lifetime of CC Parameters">
@@ -1034,8 +1034,8 @@ Observing ...> Connect -> Reconnaissance --------------------> Normal
 		   <t>The flag "carefully-resuming" is added to the BBR state
                    to indicate that the sender is allowed to send unvalidated
 		   packets.  
-		   This is initialized to "False" when the BBR flow starts;</t>
-		   <t>Prequisites for using Careful Resume are described in 
+		   This is initialised to "False" when the BBR flow starts;</t>
+		   <t>Prerequisites for using Careful Resume are described in 
 		   <xref target="sec-phase-rec-phase"></xref>.</t>
 		   
 		   <t>Careful Resume is allowed to transmit unvalidated packets
@@ -1184,7 +1184,7 @@ Observing ...> Connect -> Reconnaissance --------------------> Normal
     For example, "CWND" is expanded as "congestion_window"
     and "saved_cwnd" is expanded as "saved_congestion_window".</t>
     
-    <section title="cr_phase Event">
+    <section title="The cr_phase Event">
         <!--<name>cr_phase</name>-->
         <t>Importance: Extra</t>
 
@@ -1406,8 +1406,8 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
 |Phase |Normal   |Recon.   |Unvalidated |Validating |Safe Retreat|
 +------+---------+---------+------------+-----------+------------+
 |      |Observing|Confirm  |Send faster |Validate   |Drain path; |
-|      |CC params|path     |using saved |new CWND;  |Update PS   |
-|      |         |         |_cwnd       |Update PS  |            |
+|      |CC params|path     |using       |new CWND;  |Update PS   |
+|      |         |         |saved_cwnd  |Update PS  |            |
 +------+---------+---------+------------+-----------+------------+
 |On    |    -    |CWND=IW  |PS=FS       |If (FS>PS) |CWND=(PS/2) |
 |entry:|         |         |jump_cwnd   |{CWND=FS}  |            |
@@ -1497,16 +1497,16 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
 
         <t>When an ACK is received for the last packet that was sent in the Unvalidated Phase,
         the sender has completed using Careful Resume. It then enters the Normal Phase. 
-	For exmaple. if the CWND is less than ssthresh,
+	For example. if the CWND is less than ssthresh,
         a Reno or Cubic sender in the Normal Phase is permitted to use Slow-Start to grow the CWND towards
         the ssthresh, and will then enter congestion avoidance.</t>
     </section>
 
     <section anchor="Examples-dl" title="Example with No Loss, Rate-Limited">
-        <t>A rate-limited sender will not fully utilize the available CWND when using Careful Resume,
+        <t>A rate-limited sender will not fully utilise the available CWND when using Careful Resume,
         and CWND is therefore reset on entry to the Validating Phase, as described below.</t>
 
-        <t>The sender starts by sending upto IW packets (10) in the Reconnaissance Phase.
+        <t>The sender starts by sending up to IW packets (10) in the Reconnaissance Phase.
         It commences as described in the first example, transitioning to the Unvalidated Phase,
 	where the CWND is set to 150 packets, and the PipeSize is set to the flight_size (i.e., 29 packets).</t>
 
@@ -1535,7 +1535,7 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
 
      <section anchor="Examples-loss-unval" title="Example with Loss detected in the Validating Phase">
         <t>As in the first example, the sender enters the Unvalidated Phase with a CWND of 150 packets
-        and with the PipeSize initialized to the flight_size (i.e., 29 packets).</t>
+        and with the PipeSize initialised to the flight_size (i.e., 29 packets).</t>
 
         <t>The sender now sends 121 unvalidated packets (consuming the remaining unused CWND).
         This example considers the case when one of the unvalidated packets is lost. We assume
