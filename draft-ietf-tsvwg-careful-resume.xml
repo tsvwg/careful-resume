@@ -1497,7 +1497,7 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
 
         <t>When an ACK is received for the last packet that was sent in the Unvalidated Phase,
         the sender has completed using Careful Resume. It then enters the Normal Phase. 
-	For example. if the CWND is less than ssthresh,
+	For example, if the CWND is less than ssthresh,
         a Reno or Cubic sender in the Normal Phase is permitted to use Slow-Start to grow the CWND towards
         the ssthresh, and will then enter congestion avoidance.</t>
     </section>
