@@ -1250,9 +1250,9 @@ saved_rtt: float32
 <section anchor="sec-acknowledgments" title="Acknowledgments">
     <t>The authors would like to thank John Border, Gabriel Montenegro, Patrick McManus,
     Ian Swett, Igor Lubashev, Robin Marx, Roland Bless, Franklin Simo, Kazuho Oku, Tong,
-    Ana Custura, Neal Cardwell, Marten Seemann, and Joerg Deutschmann for
-    their fruitful comments on earlier versions of this document.</t>
-    <t>The authors would like to particularly thank Tom Jones for co-authoring
+    Ana Custura, Neal Cardwell, Marten Seemann, Matthias Hofstaetter and Joerg Deutschmann for
+    their fruitful comments in developing this specification.</t>
+    <t>The authors would like to thank Tom Jones for co-authoring
     several previous versions of this document.
     Ana Custura and Robin Marx developed the qlog support.</t>
 </section>
@@ -1611,7 +1611,7 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
 	 updated the text to be allow for an implementation to update CWND ahead of entering
          the Unvalidated Phase, and to clarify that the Unvalidated Phase starts when the first
 	 unvalidated packet is actually sent.</t>
-	 <t>WG-12, JD and GF clarified text, and checked for typos.</t>
+	 <t>WG-12, JD, MH and GF clarified text, and checked for typos.</t>
     </list></t>
 </section> <!-- End of Revisions -->
 
