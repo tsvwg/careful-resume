@@ -690,6 +690,16 @@ Observing ...> Connect -> Reconnaissance --------------------> Normal
 	   while the "carefully-resuming" flag is True
            (e.g., packet losses were observed), BBR exits the Startup state
            and enter the Drain state.</t>
+	    
+	<t>A significant change in the RTT is considered as a signal of a probable 
+	change in the current path conditions (e.g., the route, or bottleneck 
+	radio link conditions, or bottleneck cross-traffic). If the RTT is
+	significantly different from the saved_RTT (at the time the CC parameters
+	were saved), the flow should not reuse the saved CC parameters.</t>
+	    
+	<t>Furthermore, for window-based CCs, the calculation of a sending rate
+	from a saved_cwnd is directly impacted by the RTT, so a large change in
+	RTT could directly result in an unsafe change in the sending rate.</t>
 
     </section> <!-- End of define Validating Phase -->
 
@@ -890,12 +900,17 @@ Observing ...> Connect -> Reconnaissance --------------------> Normal
              
             <t> To help confirm the path, the sender compares the
             saved_RTT with each the current_rtt sample.</t>
+		
             <t>If the current_rtt is less than a half of the
             saved_RTT, this is regarded as too small, this is an indicator of a path change.
             (This factor of two arises, because the jump_cwnd is calculated as half the
             measured saved_cwnd and
 	    sending rate ought not to exceed the observed rate when
-            the saved_cwnd was measured.)</t>
+            the saved_cwnd was measured.)
+	    Furthermore, for window-based CCs, the calculation of a sending rate
+		from a saved_cwnd is directly impacted by the RTT, so a significant reduction in
+		RTT could directly result in an unsafe higher sending rate.</t>
+		
 	    <t> If the current RTT is larger than saved_rtt,
             this would results
             in a proportionally lower resumed rate, because the transmission
@@ -906,6 +921,7 @@ Observing ...> Connect -> Reconnaissance --------------------> Normal
             ACK resets the CWND to reflect the flight_size, and the sender then enters
             the Validating Phase. A current_rtt more than ten times the
             saved_RTT is indicative of a path change.
+
             (The value of ten accommodates both increases in latency from buffering
             on a path and any variation between RTT samples).</t>
 		
@@ -1056,7 +1072,13 @@ Observing ...> Connect -> Reconnaissance --------------------> Normal
 		   Then, CWND is set to the larger of BBR.bw
 		   and the probing rate, multiplied by BBR.rtt_min times
 		   BBRStartupCwndGain.</t>
-		   
+
+		  <t>A significant change in the RTT is considered as a signal of a probable 
+		change in the current path conditions (e.g., the route, or bottleneck 
+		radio link conditions, or bottleneck cross-traffic). If the RTT is
+		significantly different from the conditions at the time the CC parameters
+		were saved, the flow should not reuse the saved CC parameters.</t>
+	    		   
 		   <t>The "carefully-resuming" flag is reset to False two rounds after
 		   it is set, i.e., after all the packets sent in the first round
 		   of "carefully resuming"
