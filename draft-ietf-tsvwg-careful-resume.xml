@@ -683,9 +683,10 @@ Observing ...> Connect -> Reconnaissance --------------------> Normal
             This means that the packets sent in the Unvalidated Phase were acknowledged
             without congestion.</t>
         </list></t> <!-- End of list of actions -->
-        <t>When using BBR <xref target="bbr"></xref>, validation is performed using the regular BBR rules
-           for exiting Startup. The measured delivery rate will reflect the
-           actual capacity of the network. If congestion is experienced 
+        <t>When using BBR <xref target="bbr"></xref>, validation is performed using the
+	   normal BBR rules for exiting Startup. Upon exiting Startup, the connection
+	   estimates that the measured delivery rate will reflect the flow's share of
+	   the actual bottleneck bandwidth. If congestion is experienced 
 	   while the "carefully-resuming" flag is True
            (e.g., packet losses were observed), BBR exits the Startup state
            and enter the Drain state.</t>
