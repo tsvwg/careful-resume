@@ -636,6 +636,9 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
              received for the first packet number (or higher) that was sent in the Unvalidated Phase 
              or greater than 1 RTT has passed in the Unvalidated Phase
          (see first_unvalidated_packet_acknowledged in <xref target="sec-QLOG"></xref>).</t>
+
+	     <t>Unvalidated Phase (Limiting time in the Unvalidated Phase): A sender enters the
+		Validating Phase if more than one RTT has elapsed while in the Unvalidated Phase.</t>
         </list></t> <!-- End of list of actions -->
 
         <t>Implementation notes are provided in <xref target="req-unvalid"></xref>. </t>
@@ -1515,7 +1518,7 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
 
         <t>The sender then becomes rate-limited, because the example only sends 50 unvalidated packets.</t>
 
-        <t> After about one RTT (detected by using local timestamps for each sent packet 
+        <t> After about one RTT (e.g., bycomparing the current time with local timestamps for each sent packet 
 	or by receiving an ACK for the first
         unvalidated packet), the sender will still not have fully-used the CWND. It then enters
         the Validating Phase and resets the CWND to the current flight_size, (i.e., 50 packets).
