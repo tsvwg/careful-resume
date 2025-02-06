@@ -585,9 +585,8 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
          If the current_rtt is less than or equal to (saved_rtt / 2)
 	or the current_rtt is greater than (saved_rtt x 10) (see Section 4.2.1),
 	the sender MUST enter the Normal Phase
-         (see <xref target="sec-confirm-rtt"></xref>),
-         the sender MUST enter the Normal Phase
-         (see trigger rtt_not_validated in <xref target="sec-QLOG"></xref>).
+         (see <xref target="sec-confirm-rtt"></xref>, see also trigger 
+	 rtt_not_validated in <xref target="sec-QLOG"></xref>).
          The calculation
          of a sending rate from a saved_cwnd
              is directly impacted by the RTT, therefore a significant change in the RTT
