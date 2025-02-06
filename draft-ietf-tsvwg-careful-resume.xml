@@ -683,12 +683,14 @@ Observing ...> Connect -> Reconnaissance --------------------> Normal
             This means that the packets sent in the Unvalidated Phase were acknowledged
             without congestion.</t>
         </list></t> <!-- End of list of actions -->
-        <t>When using BBR (see <xref target="bbr"></xref>), validation is performed using the regular BBR rules
-           for exiting Startup. The measured delivery rate will reflect the
-           actual capacity of the network. If congestion is experienced 
-	   while Careful Resume is in progress
-           (e.g., packet losses were observed), BBR exits the Startup state
-           and enters the Drain state.</t>
+
+	<t>When using BBR <xref target="bbr"></xref>, validation is performed using the
+	   BBR rules for exiting Startup. Upon exiting Startup, the connection
+	   estimates that the measured delivery rate will reflect the flow's share of
+	   the actual bottleneck bandwidth. If congestion is experienced (e.g., packet losses were detected)
+	   while using careful resume (i.e, the "carefully-resuming" flag is True, 
+	   see <xref target="bbr"></xref>), BBR exits the Startup state
+           and enter the Drain state.</t>
 
     </section> <!-- End of define Validating Phase -->
 
@@ -752,7 +754,7 @@ Observing ...> Connect -> Reconnaissance --------------------> Normal
 
 
         <t>When using BBR, the Safe Retreat Phase is entered if the Drain
-           state is entered while the "carefully-resuming" flag is still
+           state is entered while the "carefully-resuming" flag (see <xref target="bbr"></xref>) is still
            True, i.e., if less than 2 full rounds have elapsed after
            the sender entered the Unvalidated Phase. The delivery rates measured in
            these conditions are tainted, because packets sent during the attempt
