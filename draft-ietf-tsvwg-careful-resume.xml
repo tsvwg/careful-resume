@@ -583,9 +583,10 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
 
     <t><list style="symbols"> <t>Unvalidated Phase (Confirming the path on entry):
          If the current_rtt is less than or equal to (saved_rtt / 2)
-	or the current_rtt is greater than (saved_rtt x 10) (see Section 4.2.1),
+	or the current_rtt is greater than (saved_rtt x 10)
+	(see <xref target="sec-confirm-rtt"></xref>),
 	the sender MUST enter the Normal Phase
-         (see <xref target="sec-confirm-rtt"></xref>, see also trigger 
+          (see trigger 
 	 rtt_not_validated in <xref target="sec-QLOG"></xref>).
          The calculation
          of a sending rate from a saved_cwnd
