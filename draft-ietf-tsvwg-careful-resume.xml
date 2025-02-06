@@ -160,8 +160,8 @@ specify just the year. -->
     Initial congestion Window (IW), and
     where the BDP of the path is also significantly
     more than the IW.
-    It introduces an alternative mechanism to select initial CC parameters,
-    that seek to more rapidly and safely grow the sending rate controlled by
+    It introduces an alternative mechanism to select initial CC parameters that 
+    seeks to more rapidly and safely grow the sending rate controlled by
     the congestion window (CWND). CC algorithms that are rate-based can make
     similar adjustments to their target sending rate.</t>
      
@@ -326,16 +326,18 @@ specify just the year. -->
                 to ensure the rate does not exceed the previously used rate.
                 This is intended to avoid a sudden influx of a large number of
                 packets that could result in building bottleneck queues and disrupt existing flows.
-                Successful validation can further increase the CWND,
-                resulting in a CWND after validating that the used rate did not result in congestion.</t>
+                Successful validation can allow further increases of the CWND; 
+		after validating that the used rate did not result in congestion,
+		the sender can then increase CWND to saved_cwnd.</t>
             
             <t>The third precaution is to perform a "Safe Retreat" if the validation fails,
                 for example if congestion is detected during validation. The risk here is that the
                 trial use of the saved parameters could have disrupted existing connections.
-                Suppose, for example a connection using the classic TCP congestion control. In "slow
-                start" mode, a Reno congestion control would normally converge on a "slow start threshold" set
-                to half the volume of data in flight, but during this validation
-                the value is restored from the saved parameters. The resultant sending rate
+                Suppose, for example a connection using Reno TCP congestion control.
+		When exiting "slow start" mode due to loss, Reno would normally update the CWND to a 
+		"slow start threshold" set to half the volume of data in flight.
+		However, during this validation
+                the CWND is restored from the saved parameters. The resultant sending rate
                 could be much larger than the value that would have been reached by a
                 "standard" slow start process, and the overload of the path potentially
                 causing significant congestion to other flows.
@@ -453,8 +455,8 @@ specify just the year. -->
 <figure title="Key transitions between Phases in Careful Resume">
 <artwork align="left" name="" type="" alt=""><![CDATA[
      
-Observing ...> Connect -> Reconnaissance --------------------> Normal
-(Normal)                 |                                    ^
+Normal ...> Connect -> Reconnaissance --------------------> Normal
+(Observing)              |                                    ^
                          v                                    |
                         Unvalidated --------------------------+
                          |      |                             |
@@ -531,8 +533,8 @@ Observing ...> Connect -> Reconnaissance --------------------> Normal
         
     <t>The following actions are performed during the Reconnaissance Phase:</t>
     <t><list style="symbols">
-             <t>Reconnaissance Phase (Confirming the RTT): During this phase,
-             a sender MUST record the minimum RTT for the current connection as the current_rtt.</t>
+             <t>Reconnaissance Phase (Recording the current_rtt): During this phase,
+	   a sender MUST record the minimum RTT for the current connection as the current_rtt</t>
 
             <t>Reconnaissance Phase (Detected congestion): If the sender detects
             congestion (e.g., packet loss or ECN-CE marking), the sender MUST enter the Normal Phase
@@ -545,7 +547,7 @@ Observing ...> Connect -> Reconnaissance --------------------> Normal
             MUST enter the Normal Phase.</t>
 
         <t>Reconnaissance Phase (Path confirmed):
-        When a sender has confirmed the RTT and also has
+        When a sender has confirmed the RTT <xref target=""sec-confirm-rtt"></xref> and also has
             received an acknowledgement for the initial data without reported congestion,
             it MAY then enter the Unvalidated Phase.
             This transition occurs when more data is sent
@@ -580,16 +582,17 @@ Observing ...> Connect -> Reconnaissance --------------------> Normal
         need to be confirmed before the sender enters the Unvalidated Phase:</t>
 
     <t><list style="symbols"> <t>Unvalidated Phase (Confirming the path on entry):
-         If the current_rtt is greater than or equal to
-             (saved_rtt / 2) or the current_rtt is less than or equal to (saved_rtt x 10)
-         (see <xref target="sec-confirm-rtt"></xref>),
-         the sender MUST enter the Normal Phase
-         (see trigger rtt_not_validated in <xref target="sec-QLOG"></xref>).
+         If the current_rtt is less than or equal to (saved_rtt / 2)
+	or the current_rtt is greater than (saved_rtt x 10)
+	(see <xref target="sec-confirm-rtt"></xref>),
+	the sender MUST enter the Normal Phase
+          (see trigger 
+	 rtt_not_validated in <xref target="sec-QLOG"></xref>).
          The calculation
          of a sending rate from a saved_cwnd
              is directly impacted by the RTT, therefore a significant change in the RTT
              is a strong indication that the previously observed CC
-             parameters are not be valid for the current path.</t>
+             parameters are not valid for the current path.</t>
      </list></t>
      <t>On entry to the Unvalidated Phase, the sender:</t>
      <t><list style="symbols">
@@ -633,6 +636,9 @@ Observing ...> Connect -> Reconnaissance --------------------> Normal
              received for the first packet number (or higher) that was sent in the Unvalidated Phase 
              or greater than 1 RTT has passed in the Unvalidated Phase
          (see first_unvalidated_packet_acknowledged in <xref target="sec-QLOG"></xref>).</t>
+
+	     <t>Unvalidated Phase (Limiting time in the Unvalidated Phase): A sender enters the
+		Validating Phase if more than one RTT has elapsed while in the Unvalidated Phase.</t>
         </list></t> <!-- End of list of actions -->
 
         <t>Implementation notes are provided in <xref target="req-unvalid"></xref>. </t>
@@ -1514,7 +1520,7 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
 
         <t>The sender then becomes rate-limited, because the example only sends 50 unvalidated packets.</t>
 
-        <t> After about one RTT (detected by using local timestamps for each sent packet 
+        <t> After about one RTT (e.g., bycomparing the current time with local timestamps for each sent packet 
 	or by receiving an ACK for the first
         unvalidated packet), the sender will still not have fully-used the CWND. It then enters
         the Validating Phase and resets the CWND to the current flight_size, (i.e., 50 packets).
