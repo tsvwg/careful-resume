@@ -686,7 +686,7 @@ Observing ...> Connect -> Reconnaissance --------------------> Normal
         <t>When using BBR <xref target="bbr"></xref>, validation is performed using the
 	   BBR rules for exiting Startup. Upon exiting Startup, the connection
 	   estimates that the measured delivery rate will reflect the flow's share of
-	   the actual bottleneck bandwidth. If congestion is experienced (e.g., packet losses were observed)
+	   the actual bottleneck bandwidth. If congestion is experienced (e.g., packet losses were detected)
 	   while using careful resume (i.e, the "carefully-resuming" flag is True, see <xref target="bbr"></xref>), BBR exits the Startup state
            and enter the Drain state.</t>
 
