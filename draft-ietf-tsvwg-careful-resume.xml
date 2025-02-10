@@ -292,7 +292,7 @@ specify just the year. -->
                 describe that as the "Reconnaissance Phase". During that phase,
                 the sender will not send more data than allowed for any new
                 connection, e.g., using the recommended maximum IW
-                for the first RTT of transmitting data <xref target="RFC9000"></xref>. The sender will only
+                for the first RTT of transmitting data <xref target="RFC6928"> </xref> <xref target="RFC9002"></xref>. The sender will only
                 proceed with the resume process if the reconnaissance succeeds.
                 If it fails, for example if previous packets in a connection
                 experience congestion or the RTT is significantly different,
@@ -388,7 +388,7 @@ specify just the year. -->
 
             <!-- GF (Feb 2023): Removed the IW from this information block??? -->
             <!-- it could potentially be in the BDP Frame ID, but is not needed here -->
-            <!--    <t>IW: Initial Window <xref target="RFC9002"></xref>;</t> -->
+            <!--    <t>IW: Initial Window <xref target="RFC9002"></xref>, ;</t> -->
 
              <t> Beta: A scaling factor between 0.5 and 1, the default value
              is 0.5.</t>
@@ -827,7 +827,7 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
         The CC is not modified.
         A sender therefore needs to limit the initial data,
         sent in the first RTT of transmitted data,
-        to not more than the IW <xref target="RFC9000"></xref>.
+        to not more than the IW <xref target="RFC9002"></xref>.
         This transmission using the IW is
         assumed to be a safe starting point for any path to avoid
         adding excessive load to a potentially congested path.</t>
