@@ -637,6 +637,10 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
         </list></t> <!-- End of list of actions -->
 
         <t>Implementation notes are provided in <xref target="req-unvalid"></xref>. </t>
+
+	<t>Notes describing how this phase is implemented for BBR are
+	provided in <xref target="sec-phase-unval-bbr"></xref>.</t>   
+
     </section> <!-- End of define Unvalidated Phase -->
 
     <section anchor="sec-phase-val-phase" title="Validating Phase">
@@ -684,17 +688,10 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
             This means that the packets sent in the Unvalidated Phase were acknowledged
             without congestion.</t>
         </list></t> <!-- End of list of actions -->
-
-	<t>When using BBR (see <xref target="bbr"></xref>), validation is performed using the
-	   BBR rules for exiting Startup. Upon exiting Startup, the connection
-	   estimates that the measured delivery rate will reflect the flow's share of
-	   the actual bottleneck bandwidth. If congestion is experienced (e.g., packet losses were detected)
-	   while using careful resume (i.e, the "carefully-resuming" flag is True, 
-	   see <xref target="bbr"></xref>), BBR exits the Startup state
-           and enters the Drain state.</t>
-
+    
+	<t>Notes describing how this phase is implemented for BBR are
+	provided in <xref target="sec-phase-val-bbr"></xref>.</t>   
     </section> <!-- End of define Validating Phase -->
-
 
     <section anchor="sec-phase-ret-phase" title="Safe Retreat Phase">
 
@@ -1040,7 +1037,10 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
 		   This is initialised to "False" when the BBR flow starts;</t>
 		   <t>Prerequisites for using Careful Resume are described in 
 		   <xref target="sec-phase-rec-phase"></xref>.</t>
-		   
+	   </list></t>
+	    
+	    <section anchor="sec-phase-unval-bbr" title="Sending unvalidated packets using BBR">
+
 		   <t>Careful Resume is allowed to transmit unvalidated packets
 		   only when the BBR flow is in the Startup state.</t>
 		   
@@ -1065,11 +1065,21 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
 		   have been received and acknowledged by the peer.
 		   At that stage (after the capacity has been validated),
 	           the measured delivery rate is expected to reflect the probing rate.</t>
-		   
+
 		   <t>If congestion is experienced while the "carefully-resuming" flag 
 	           is True, BBR exits the Startup state
                    and enters the Drain state (implementing the Safe Retreat Phase).</t>
-           </list></t>
+	</section> <!-- Unvalidated Phase for BBR -->
+	    
+	<section anchor="sec-phase-val-bbr" title="Validation for BBR">
+	   <t>When using BBR, validation is performed using the
+	   BBR rules for exiting Startup. Upon exiting Startup, the connection
+	   estimates that the measured delivery rate will reflect the flow's share of
+	   the actual bottleneck bandwidth. If congestion is experienced (e.g., packet losses were detected)
+	   while using careful resume (i.e, the "carefully-resuming" flag is True), BBR then exits the Startup state
+           and enters the Drain state.</t>
+	</section> <!-- Validating Phase for BBR -->
+
     </section> <!-- End of define Implementation Notes for using BBR -->
 
 
