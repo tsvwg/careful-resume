@@ -153,14 +153,14 @@ specify just the year. -->
     other flows <xref target="RFC8867"></xref> (i.e., preventing other flows
     from successfully sharing the capacity at a common bottleneck).</t>
 
-    <t>The present document specifies a CC mechanism,
+    <t>The present document specifies a mechanism,
     called Careful Resume, which is expected to
     reduce the time to complete a transfer
     when the transfer sends significantly more data than allowed by the
     Initial congestion Window (IW), and
     where the BDP of the path is also significantly
     more than the IW.
-    It introduces an alternative mechanism to select initial CC parameters that 
+    It introduces an alternative mechanism to select initial CC parameters that
     seeks to more rapidly and safely grow the sending rate controlled by
     the congestion window (CWND). CC algorithms that are rate-based can make
     similar adjustments to their target sending rate.</t>
@@ -172,9 +172,9 @@ specify just the year. -->
     parameters are saved and used to modify the CC
     behaviour of a subsequent connection between the
     same endpoints. Some CC algorithms might use other parameters.
-    For example, implementations using BBR also retain the
+    For example, a rate-based CC algorithm also retains the
     value of the bottleneck bandwidth required to reach the capacity available to
-    the flow (BBR.max_bw, see <xref target="I-D.cardwell-iccrg-bbr-congestion-control"></xref>).
+    the flow (e.g., BBR.max_bw, see <xref target="I-D.ietf-ccwg-bbr"></xref>).
     </t>
 
     <t>When used with the QUIC transport, this provides transport services that resemble
@@ -313,29 +313,29 @@ specify just the year. -->
             
             <t>The second precaution is to cautiously use the saved parameters
                 when resuming. This is called the "Unvalidated Phase".
-		    For example,
+            For example,
                 the jump in the size of CWND/rate is restricted to a fraction (1/2) of the saved_cwnd,
                 to avoid starving other flows that may have started or increased
                 their capacity after the last measurement.
                 The same principle applies for algorithms that use different parameters to classic
                 TCP CC: do not push more than a fraction
-                of the remembered values. For example, a connection using BBR will set the
+                of the remembered values. For example, a connection using a rate-based CC algorithm (e.g.,BBR) will set the
                 pacing rate to half the remembered value of the "bottleneck bandwidth".
                 The sender also needs to pace all unvalidated packets,
                 to ensure the rate does not exceed the previously used rate.
                 This is intended to avoid a sudden influx of a large number of
                 packets that could result in building bottleneck queues and disrupt existing flows.
-                Successful validation can allow further increases of the CWND; 
-		after validating that the used rate did not result in congestion,
-		the sender can then increase CWND to saved_cwnd.</t>
+                Successful validation can allow further increases of the CWND;
+        after validating that the used rate did not result in congestion,
+        the sender can then increase CWND to saved_cwnd.</t>
             
             <t>The third precaution is to enter a "Safe Retreat Phase" if the validation fails,
                 for example if congestion is detected during validation. The risk here is that the
                 trial use of the saved parameters could have disrupted existing connections.
                 Suppose, for example a connection using Reno TCP CC.
-		When exiting "slow start" mode due to loss, Reno would normally update the CWND to a
-		"slow start threshold" set to half the volume of data in flight.
-		However, during this validation
+        When exiting "slow start" mode due to loss, Reno would normally update the CWND to a
+        "slow start threshold" set to half the volume of data in flight.
+        However, during this validation
                 the CWND is restored from the saved parameters. The resultant sending rate
                 could be much larger than the value that would have been reached by a
                 "standard" slow start process, and the overload of the path potentially
@@ -380,7 +380,7 @@ specify just the year. -->
         <list style="symbols">
             <t>an identifier representing the sending interface (e.g., a globally
             assigned address/prefix or other local identifier);</t>
-            <t> an identifier representing the destination (e.g., a name or 
+            <t> an identifier representing the destination (e.g., a name or
             IP address).</t>
         </list></t>
         
@@ -533,7 +533,7 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
     <t>The following actions are performed during the Reconnaissance Phase:</t>
     <t><list style="symbols">
              <t>Reconnaissance Phase (Recording the current_rtt): During this phase,
-	   a sender MUST record the minimum RTT for the current connection as the current_rtt</t>
+       a sender MUST record the minimum RTT for the current connection as the current_rtt</t>
 
             <t>Reconnaissance Phase (Detected congestion): If the sender detects
             congestion (e.g., packet loss or ECN-CE marking), the sender MUST enter the Normal Phase
@@ -549,9 +549,9 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
         When a sender has confirmed the RTT (see <xref target="sec-confirm-rtt"></xref>) and also has
             received an acknowledgement for the initial data without reported congestion,
             it MAY then enter the Unvalidated Phase.
-	    Although a sender can immediately transition to the Unvalidated Phase,
-	    this transition MAY be deferred to the time at which more data is sent
-	   than would have normally permitted by the CC algorithm.</t>
+        Although a sender can immediately transition to the Unvalidated Phase,
+        this transition MAY be deferred to the time at which more data is sent
+       than would have normally permitted by the CC algorithm.</t>
     </list></t>
 
           <t>
@@ -578,11 +578,11 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
 
     <t><list style="symbols"> <t>Unvalidated Phase (Confirming the path on entry):
          If the current_rtt is less than or equal to (saved_rtt / 2)
-	or the current_rtt is greater than (saved_rtt x 10)
-	(see <xref target="sec-confirm-rtt"></xref>),
-	the sender MUST enter the Normal Phase
-          (see trigger 
-	 rtt_not_validated in <xref target="sec-QLOG"></xref>).
+    or the current_rtt is greater than (saved_rtt x 10)
+    (see <xref target="sec-confirm-rtt"></xref>),
+    the sender MUST enter the Normal Phase
+          (see trigger
+     rtt_not_validated in <xref target="sec-QLOG"></xref>).
          This is because the calculation
          of a sending rate from a saved_cwnd
              is directly impacted by the RTT, therefore a significant change in the RTT
@@ -628,18 +628,18 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
              
              <t>Unvalidated Phase (Receiving acknowledgement for an unvalidated packet):
              The sender enters the Validating Phase when an acknowledgement is
-             received for the first packet number (or higher) that was sent in the Unvalidated Phase 
+             received for the first packet number (or higher) that was sent in the Unvalidated Phase
              or greater than 1 RTT has passed in the Unvalidated Phase
          (see first_unvalidated_packet_acknowledged in <xref target="sec-QLOG"></xref>).</t>
 
-	     <t>Unvalidated Phase (Limiting time in the Unvalidated Phase): A sender enters the
-		Validating Phase if more than one RTT has elapsed while in the Unvalidated Phase.</t>
+         <t>Unvalidated Phase (Limiting time in the Unvalidated Phase): A sender enters the
+        Validating Phase if more than one RTT has elapsed while in the Unvalidated Phase.</t>
         </list></t> <!-- End of list of actions -->
 
         <t>Implementation notes are provided in <xref target="req-unvalid"></xref>. </t>
 
-	<t>Notes describing how this phase is implemented for BBR are
-	provided in <xref target="sec-phase-unval-bbr"></xref>.</t>   
+        <t>Notes describing how this phase is implemented for BBR are
+        provided in <xref target="sec-phase-unval-bbr"></xref>.</t>
 
     </section> <!-- End of define Unvalidated Phase -->
 
@@ -670,7 +670,7 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
             successfully sent over the path.</t>
 
             <t>Validating Phase (Updating CWND): The CWND is updated using the
-            normal rules for the current congestion controller, this typically
+            normal rules for the current congestion controller, this typically will use "slow start", which
             allows CWND to be increased for each received acknowledgement that
             indicates a packet has been successfully sent across the path.</t>
 
@@ -689,8 +689,8 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
             without congestion.</t>
         </list></t> <!-- End of list of actions -->
     
-	<t>Notes describing how this phase is implemented for BBR are
-	provided in <xref target="sec-phase-val-bbr"></xref>.</t>   
+        <t>Notes describing how this phase is implemented for BBR are
+        provided in <xref target="sec-phase-val-bbr"></xref>.</t>
     </section> <!-- End of define Validating Phase -->
 
     <section anchor="sec-phase-ret-phase" title="Safe Retreat Phase">
@@ -746,22 +746,12 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
             is a scaling factor between 0.5 and 1. The default value
             is 0.5, chosen to reduce the probability of inducing
             a second round of congestion. Cubic defines a
-	       Beta__cubic of 0.7 <xref target="RFC9438"></xref>.
+           Beta__cubic of 0.7 <xref target="RFC9438"></xref>.
             (The log is updated to exit_recovery, see <xref target="sec-QLOG"></xref>.)</t>
         </list></t>
-
-
-        <t>When using BBR, the Safe Retreat Phase is entered if the Drain
-           state is entered while the "carefully-resuming" flag (see <xref target="bbr"></xref>) is still
-           True, i.e., if less than 2 full rounds have elapsed after
-           the sender entered the Unvalidated Phase. The delivery rates measured in
-           these conditions are tainted, because packets sent during the attempt
-           are still queued at the bottleneck and may have "pushed out"
-           competing traffic. The delivery rates measured in Drain state
-           MUST be discarded if the "carefully-resuming" flag is set to True.
-           This flag is cleared upon exiting the Drain state.</t>
      
         <t>Implementation notes are provided in <xref target="req-retreat"></xref>.</t>
+        <t>Notes describing the implementation of the Safe Retreat Phase for BBR are described in <xref target="sec-BBR-SR"></xref>.</t>
 
         <section anchor="loss" title="Loss Recovery after entering Safe Retreat">
 
@@ -784,8 +774,7 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
         ceases to use Careful Resume.
         The sender enters the Normal Phase. If using BBR, the normal
         processing of packet losses will cause it to enter the
-        Drain state while the "carefully-resuming" flag is set to True,
-        implementing the Safe Retreat Phase <xref target="bbr"></xref>.</t>
+        Drain state while the "carefully-resuming" flag is set to True, see <xref target="sec-BBR-SR"></xref>.</t>
 
         <t> As in loss recovery, data sent in the
         Unvalidated Phase could be later acknowledged after an RTO event
@@ -795,7 +784,8 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
     <section anchor="Normal_Phase" title="Normal Phase">
 
         <t>In the Normal Phase, the sender transitions to using
-            the normal CC algorithm (e.g., in congestion avoidance if CWND is more than ssthresh).
+            the normal CC algorithm (e.g., in congestion avoidance when CWND is more than ssthresh, or slow start when
+            less than or equal to ssthresh).
             (Note that when the sender did not use the entire jump_cwnd the CWND was reduced
          on entering the Validating Phase.)</t>
         <t>Implementation notes are provided in <xref target="req-normal"></xref>.</t>
@@ -818,7 +808,7 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
         capacity based on the
         CWND, flight_size, acknowledged rate, etc. A different approach could
         estimate the same parameters for a rate-based congestion
-        controller, such as BBR <xref target="I-D.cardwell-iccrg-bbr-congestion-control"></xref>,
+        controller, such as BBR <xref target="I-D.ietf-ccwg-bbr"></xref>,
         or by observing the rate at which data is acknowledged by the remote endpoint.</t>
 
         <t>Implementations are required to calculate a saved_rtt, measuring
@@ -893,9 +883,9 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
             saved_rrt, this is regarded as too small, this is an indicator of a path change.
             (This factor of two arises, because the jump_cwnd is calculated as half the
             measured saved_cwnd and
-	    sending rate ought not to exceed the observed rate when
+        sending rate ought not to exceed the observed rate when
             the saved_cwnd was measured.)</t>
-	    <t> If the current RTT is larger than saved_rtt,
+        <t> If the current RTT is larger than saved_rtt,
             this would results
             in a proportionally lower resumed rate, because the transmission
             is paced based on the current_rtt ,and hence is still safe.
@@ -907,10 +897,10 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
             saved_rrt is indicative of a path change.
             (The value of ten accommodates both increases in latency from buffering
             on a path and any variation between RTT samples).</t>
-		
-            <t>A sender also verifies that the initial data was acknowledged.
+        
+            <t>A sender also verifies that the initial data was acknowledged
             (i.e., a loss could be indicative of persistent congestion).
-	    A sender in Reconnaissance Phase reverts to the Normal Phase if congestion is detected.
+        A sender in Reconnaissance Phase reverts to the Normal Phase if congestion is detected.
             Some transport protocols implement CC mechanisms that infer potential congestion
             from an increase in the current_rtt. Designs need to consider if such an indication is
             a suitable trigger to revert to the Normal Phase.</t>
@@ -933,10 +923,10 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
             <t>The long-term use of the previously observed parameters is not appropriate,
             a lifetime therefore needs to be specified during
             which the saved CC parameters can be safely re-used.
-	    <xref target="RFC9040"></xref> provides guidance on the implementation of
+        <xref target="RFC9040"></xref> provides guidance on the implementation of
             TCP Control Block Interdependence, but does not specify how long a saved
             parameter can safely be reused.
-	     <xref target="RFC7661"></xref> specifies a method for managing an
+         <xref target="RFC7661"></xref> specifies a method for managing an
             unvalidated CWND. This states:
             "After a fixed period of time (the non-validated period (NVP)), the sender
             adjusts the cwnd (Section 4.4.3). The NVP SHOULD NOT exceed five minutes."
@@ -963,7 +953,7 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
             avoids sending at a rate higher than was previously observed. </t>
 
             <t>The following example provides a relevant pacing rhythm:
-	    An Inter-packet Transmission Time (ITT) is determined
+        An Inter-packet Transmission Time (ITT) is determined
             by using the current Maximum Message Size (MMS),
             the saved_cwnd and the current_RTT. A safety
             margin can be configured to avoid sending more than a maximum
@@ -1007,81 +997,23 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
         entry to the Safe Retreat Phase if the capacity is not validated.</t>
 
         <t>When a sender completes the Unvalidated Phase, either by sending a jump_cwnd of data
-        or after one RTT or an acknowledgment for an unvalidated packet, 
+        or after one RTT or an acknowledgment for an unvalidated packet,
         it ceases to use the unvalidated CWND.</t>
         <t>If the flight_size was less than or equal to the PipeSize, the
         sender resets the CWND to the PipeSize, and enters the Normal Phase.</t>
 
-        <t>Otherwise, if the CWND is larger than the flight_size, the CWND is reset to the flight_size. 
+        <t>Otherwise, if the CWND is larger than the flight_size, the CWND is reset to the flight_size.
                The sender then awaits reception of ACKs to validate the
         use of this capacity.</t>
          
         <t>New packets are sent when previously
-        sent data is newly acknowledged.         
+        sent data is newly acknowledged.
         The CWND is increased during the Validating Phase,
         based on received ACKs. This allows new data to be sent,
         but this does not have any final impact on the CWND
         if congestion is subsequently detected.</t>
         
     </section> <!-- Validating Phase -->
-
-    <section anchor="bbr" title="Implementation Notes for using BBR">
-
-        <t>When the flow is controlled using BBR, Careful Resume is implemented
-           by setting the pacing rate from the saved CC parameters,
-           with the following precautions:</t>
-           <t><list style="symbols">
-		   <t>The flag "carefully-resuming" is added to the BBR state
-                   to indicate that the sender is allowed to send unvalidated
-		   packets.  
-		   This is initialised to "False" when the BBR flow starts;</t>
-		   <t>Prerequisites for using Careful Resume are described in 
-		   <xref target="sec-phase-rec-phase"></xref>.</t>
-	   </list></t>
-	    
-	    <section anchor="sec-phase-unval-bbr" title="Sending unvalidated packets using BBR">
-
-		   <t>Careful Resume is allowed to transmit unvalidated packets
-		   only when the BBR flow is in the Startup state.</t>
-		   
-		   <t>The probing rate is configured to 1/2 of the bottleneck
-		   bandwidth, derived from the CWND calculation specified in the
-		   saved CC parameters according to the
-		   requirements in <xref target="sec-phase-unv-phase"></xref>.</t>
-		   
-		   <t>The sender starts the Unvalidated Phase at the beginning of a BBR round,
-		   and sets the "carefully-resuming" flags to "True".
-		   When this "carefully-resuming" flag is set, the BBR congestion 
-		   controller sets the BBR pacing rate
-		   to the larger of the nominal pacing rate (BBR.bw multiplied bytes
-		   BBRStartupPacingGain) or the calculated probing rate. 
-		   Then, CWND is set to the larger of BBR.bw
-		   and the probing rate, multiplied by BBR.rtt_min times
-		   BBRStartupCwndGain.</t>
-		   
-		   <t>The "carefully-resuming" flag is reset to False two rounds after
-		   it is set, i.e., after all the packets sent in the first round
-		   of "carefully resuming"
-		   have been received and acknowledged by the peer.
-		   At that stage (after the capacity has been validated),
-	           the measured delivery rate is expected to reflect the probing rate.</t>
-
-		   <t>If congestion is experienced while the "carefully-resuming" flag 
-	           is True, BBR exits the Startup state
-                   and enters the Drain state (implementing the Safe Retreat Phase).</t>
-	</section> <!-- Unvalidated Phase for BBR -->
-	    
-	<section anchor="sec-phase-val-bbr" title="Validation for BBR">
-	   <t>When using BBR, validation is performed using the
-	   BBR rules for exiting Startup. Upon exiting Startup, the connection
-	   estimates that the measured delivery rate will reflect the flow's share of
-	   the actual bottleneck bandwidth. If congestion is experienced (e.g., packet losses were detected)
-	   while using careful resume (i.e, the "carefully-resuming" flag is True), BBR then exits the Startup state
-           and enters the Drain state.</t>
-	</section> <!-- Validating Phase for BBR -->
-
-    </section> <!-- End of define Implementation Notes for using BBR -->
-
 
     <section anchor="req-retreat" title="Safety in the Safe Retreat Phase">
 
@@ -1228,7 +1160,7 @@ state_data: CarefulResumeStateParameters,
         "rate_limited" /
     ; for the Safe Retreat phase, when loss detected
         "packet_loss" /
-    ; for the Safe Retreat phase, 
+    ; for the Safe Retreat phase,
     ; when ECN congestion experienced reported
         "ECN_CE" /
         ; for the Normal phase 1 RTT after a congestion event
@@ -1312,7 +1244,7 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
     <references title="Informative References">
         <?rfc include="reference.I-D.ietf-quic-qlog-quic-events.xml"?>
         <?rfc include="reference.I-D.irtf-iccrg-sallantin-initial-spreading.xml"?>
-        <?rfc include="reference.I-D.cardwell-iccrg-bbr-congestion-control.xml"?>
+        <?rfc include="reference.I-D.ietf-ccwg-bbr.xml"?>
         <!-- ?rfc include="reference.I-D.kuhn-quic-bdpframe-extension.xml"? -->
         <?rfc include="reference.RFC.3465.xml"?>
         <?rfc include="reference.RFC.4782.xml"?>
@@ -1464,7 +1396,7 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
     SS = Slow-Start FS = flight_size; PS = PipeSize; ACK = highest acknowledged packet.
     The PipeSize tracks the validated portion of the CWND. It is set to the CWND
     on entry to the Unvalidated Phase and
-    is updated as each additional packet is acknowledged. 
+    is updated as each additional packet is acknowledged.
     The default value of Beta is 0.5.</t>
 
 
@@ -1509,8 +1441,8 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
         this indicates that the packet was validated.</t>
 
         <t>When an ACK is received for the last packet that was sent in the Unvalidated Phase,
-        the sender has completed using Careful Resume. It then enters the Normal Phase. 
-	For example, if the CWND is less than ssthresh,
+        the sender has completed using Careful Resume. It then enters the Normal Phase.
+    For example, if the CWND is less than ssthresh,
         a Reno or Cubic sender in the Normal Phase is permitted to use Slow-Start to grow the CWND towards
         the ssthresh, and will then enter congestion avoidance.</t>
     </section>
@@ -1521,12 +1453,12 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
 
         <t>The sender starts by sending up to IW packets (10) in the Reconnaissance Phase.
         It commences as described in the first example, transitioning to the Unvalidated Phase,
-	where the CWND is set to 150 packets, and the PipeSize is set to the flight_size (i.e., 29 packets).</t>
+    where the CWND is set to 150 packets, and the PipeSize is set to the flight_size (i.e., 29 packets).</t>
 
         <t>The sender then becomes rate-limited, because the example only sends 50 unvalidated packets.</t>
 
-        <t> After about one RTT (e.g., bycomparing the current time with local timestamps for each sent packet 
-	or by receiving an ACK for the first
+        <t> After about one RTT (e.g., bycomparing the current time with local timestamps for each sent packet
+    or by receiving an ACK for the first
         unvalidated packet), the sender will still not have fully-used the CWND. It then enters
         the Validating Phase and resets the CWND to the current flight_size, (i.e., 50 packets).
         During this phase, the CWND can be increased for each received ACK
@@ -1534,16 +1466,16 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
         The PipeSize also increases with each ACK received, to reflect the discovered capacity.</t>
 
         <t>The sender completes using Careful Resume,
-	when an ACK is received for the last packet that was sent in the Unvalidated Phase.
-	It then enters the Normal Phase, as in a previous example with no loss.</t>
+    when an ACK is received for the last packet that was sent in the Unvalidated Phase.
+    It then enters the Normal Phase, as in a previous example with no loss.</t>
     </section>
 
     <section anchor="Examples-loss-recon" title="Example with Loss detected in the Reconnaissance Phase">
         <t>When a packet is lost in the Reconnaissance Phase, the sender will enter the Normal Phase
-        and recovers the loss using the normal method. 
-	(It is considered that the sender has discovered a potential capacity limit and is not
-        allowed to continue to use Careful Resume, therefore there is no change to 
-	the CC method and the CWND is the same as if Careful Resume had not been attempted.)</t>
+        and recovers the loss using the normal method.
+    (It is considered that the sender has discovered a potential capacity limit and is not
+        allowed to continue to use Careful Resume, therefore there is no change to
+    the CC method and the CWND is the same as if Careful Resume had not been attempted.)</t>
      </section>
 
      <section anchor="Examples-loss-unval" title="Example with Loss detected in the Validating Phase">
@@ -1585,7 +1517,77 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
      </section>
 
 </section> <!--- Worked examples-->
-      
+<section anchor="bbr" title="Implementation Notes for using BBR">
+    
+    <t>Bottleneck Bandwidth and Round-trip propagation time (BBR) uses recent measurements of a transport connection's delivery rate, round-trip time, and packet loss rate to build an explicit model of the network path. BBR then uses this model to control both how fast it sends data and the maximum volume of data it allows in flight in the network at any time<xref target="I-D.ietf-ccwg-bbr"></xref>.</t>
+    
+    <t>When the flow is controlled using BBR, Careful Resume is implemented
+       by setting the pacing rate from the saved CC parameters,
+       with the following precautions:</t>
+       <t><list style="symbols">
+       <t>The flag "carefully-resuming" is added to the BBR state
+               to indicate that the sender is allowed to send unvalidated
+       packets.
+       This is initialised to "False" when the BBR flow starts;</t>
+       <t>Prerequisites for using Careful Resume are described in
+       <xref target="sec-phase-rec-phase"></xref>.</t>
+   </list></t>
+    
+    <section anchor="sec-phase-unval-bbr" title="Sending unvalidated packets using BBR">
+
+       <t>Careful Resume is allowed to transmit unvalidated packets
+       only when the BBR flow is in the Startup state.</t>
+       
+       <t>The probing rate is configured to 1/2 of the bottleneck
+       bandwidth, derived from the CWND calculation specified in the
+       saved CC parameters according to the
+       requirements in <xref target="sec-phase-unv-phase"></xref>.</t>
+       
+       <t>The sender starts the Unvalidated Phase at the beginning of a BBR round,
+       and sets the "carefully-resuming" flags to "True".
+       When this "carefully-resuming" flag is set, the BBR congestion
+       controller sets the BBR pacing rate
+       to the larger of the nominal pacing rate (BBR.bw multiplied bytes
+       BBRStartupPacingGain) or the calculated probing rate.
+       Then, CWND is set to the larger of BBR.bw
+       and the probing rate, multiplied by BBR.rtt_min times
+       BBRStartupCwndGain.</t>
+       
+       <t>The "carefully-resuming" flag is reset to False two rounds after
+       it is set, i.e., after all the packets sent in the first round
+       of "carefully resuming"
+       have been received and acknowledged by the peer.
+       At that stage (after the capacity has been validated),
+           the measured delivery rate is expected to reflect the probing rate.</t>
+
+       <t>If congestion is experienced while the "carefully-resuming" flag
+           is True, BBR exits the Startup state
+               and enters the Drain state (implementing the Safe Retreat Phase).</t>
+</section> <!-- Unvalidated Phase for BBR -->
+    
+<section anchor="sec-phase-val-bbr" title="Validation for BBR">
+   <t>When using BBR, the Validation Phase is realised using the
+   BBR rules for exiting Startup. Upon exiting Startup, the connection
+   estimates that the measured delivery rate will reflect the flow's share of
+   the actual bottleneck bandwidth. If congestion is experienced (e.g., packet losses were detected)
+   while using careful resume (i.e, the "carefully-resuming" flag is True), BBR then exits the Startup state
+       and enters the Drain state.</t>
+</section> <!-- Validating Phase for BBR -->
+<section anchor="sec-BBR-SR" title="Safe Retreat for BBR">
+
+<t>When using BBR, the Safe Retreat Phase is entered if the Drain
+   state is entered while the "carefully-resuming" flag (see <xref target="bbr"></xref>) is still
+   True, i.e., if less than 2 full rounds have elapsed after
+   the sender entered the Unvalidated Phase. The delivery rates measured in
+   these conditions are tainted, because packets sent during the attempt
+   are still queued at the bottleneck and may have "pushed out"
+   competing traffic. The delivery rates measured in Drain state
+   MUST be discarded if the "carefully-resuming" flag is set to True.
+   This flag is cleared upon exiting the Drain state.</t>
+</section>
+
+</section> <!-- End of define Implementation Notes for using BBR -->
+
 <section anchor="rev" title="Internet Draft Revision details">
     <t>Previous individual submissions were discussed in TSVWG and QUIC.
     <list>
@@ -1616,18 +1618,19 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
         <t>WG-09, Cleaning text to separate guidelines and specification
         and adjust wording to improve clarity based on questions received during implementation.
         </t>
-        <t>WG-10, CH developed text to explain expected operation with BBR. 
+        <t>WG-10, CH developed text to explain expected operation with BBR.
         This also fixed some typos introduced in previous edits. Fix XML and fix CDDL bugs for submission.</t>
         <t>Changed the ssthresh value used after an exit of Safe Retreat to be (PipeSize/2).</t>
         <t>WG-11, JD fixed mistakes. GF clarified text. RS added that after SR,
-	 ssthresh ought to match the behaviour of Cubic/Reno.
-	 updated the text to be allow for an implementation to update CWND ahead of entering
+     ssthresh ought to match the behaviour of Cubic/Reno.
+     updated the text to be allow for an implementation to update CWND ahead of entering
          the Unvalidated Phase, and to clarify that the Unvalidated Phase starts when the first
-	 unvalidated packet is actually sent.</t>
-	 <t>WG-12, JD, MH and GF clarified text, and checked for typos.</t>
-     <t>WG-13, After WGLC.</t>
+     unvalidated packet is actually sent.</t>
+     <t>WG-12, JD, MH and GF clarified text, and checked for typos.</t>
+     <t>WG-13, After WGLC including NC and MK's review comments.</t>
     </list></t>
 </section> <!-- End of Revisions -->
 
 </back>
 </rfc>
+
