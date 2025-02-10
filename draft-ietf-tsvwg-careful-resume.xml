@@ -313,8 +313,8 @@ specify just the year. -->
                 and to establish the minimum RTT.</t>
             
             <t>The second precaution is to cautiously use the saved parameters
-                when resuming, in what we will call the "unvalidated phase".
-                For example,
+                when resuming, in what we will call the "Unvalidated Phase".
+		    For example,
                 the jump in the size of CWND/rate is restricted to a fraction (1/2) of the saved_cwnd,
                 to avoid starving other flows that may have started or increased
                 their capacity after the last measurement.
@@ -330,7 +330,7 @@ specify just the year. -->
 		after validating that the used rate did not result in congestion,
 		the sender can then increase CWND to saved_cwnd.</t>
             
-            <t>The third precaution is to perform a "Safe Retreat" if the validation fails,
+            <t>The third precaution is to enter a "Safe Retreat Phase" if the validation fails,
                 for example if congestion is detected during validation. The risk here is that the
                 trial use of the saved parameters could have disrupted existing connections.
                 Suppose, for example a connection using Reno TCP congestion control.
@@ -550,9 +550,9 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
         When a sender has confirmed the RTT <xref target=""sec-confirm-rtt"></xref> and also has
             received an acknowledgement for the initial data without reported congestion,
             it MAY then enter the Unvalidated Phase.
-            This transition occurs when more data is sent
-	    than normally permitted by the congestion control algorithm.</t>
-
+	    Although a sender can immediately transition to the Unvalidated Phase,
+	    this transition MAY be deferred to the time at which more data is sent
+	   than would have normally permitted by the congestion control algorithm.</t>
     </list></t>
 
           <t>
