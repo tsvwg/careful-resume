@@ -1093,7 +1093,7 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
 </section> <!--  End of Guidelines -->
 
 <section anchor="sec-QLOG" title="Logging support">
-    <t><xref target="I-D.draft-custura-careful-resume-qlog"</xref> provides definitions that enable a
+    <t> <xref target="I-D.custura-careful-resume-qlog"</xref> provides definitions that enable a
     Careful Resume implementation
     to generate qlog events when using QUIC.</t>
 </section> <!--  End of Qlog -->
@@ -1151,7 +1151,7 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
         <?rfc include="reference.I-D.irtf-iccrg-sallantin-initial-spreading.xml"?>
         <?rfc include="reference.I-D.ietf-ccwg-bbr.xml"?>
         <!-- ?rfc include="reference.I-D.kuhn-quic-bdpframe-extension.xml"? -->
-         <?rfc include="reference.I-D.draft-custura-careful-resume-qlog.xml"?>
+        <?rfc include="reference.I-D.custura-careful-resume-qlog.xml"?>
         <?rfc include="reference.RFC.3465.xml"?>
         <?rfc include="reference.RFC.4782.xml"?>
         <?rfc include="reference.RFC.5681.xml"?>
