@@ -694,7 +694,7 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
             their share of the total capacity.
             (Note: The minimum CWND in QUIC is 2 packets, see: <xref target="RFC9002"></xref> section 4.8).</t>
 
-            <t>Safe Retreat Phase (Recovery): When the CWND is reduced,
+            <t>Safe Retreat Phase (Loss Recovery): When the CWND is reduced,
             a QUIC sender can immediately send a single packet prior to the reduction
             <xref target="RFC9002"></xref>. A
             similar method for TCP is described in Section 5 of <xref target="RFC6675"></xref>.
