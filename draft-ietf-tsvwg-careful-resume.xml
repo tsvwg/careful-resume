@@ -561,7 +561,7 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
     or the current_rtt is greater than (saved_rtt x 10)
     (see <xref target="sec-confirm-rtt"></xref>),
     the sender MUST enter the Normal Phase
-          (see trigger
+          (logged as
      rtt_not_validated in <xref target="sec-QLOG"></xref>).
          This is because the calculation
          of a sending rate from a saved_cwnd
@@ -610,7 +610,7 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
              The sender enters the Validating Phase when an acknowledgement is
              received for the first packet number (or higher) that was sent in the Unvalidated Phase
              or greater than 1 RTT has passed in the Unvalidated Phase
-         (see first_unvalidated_packet_acknowledged in <xref target="sec-QLOG"></xref>).</t>
+         (logged as first_unvalidated_packet_acknowledged in <xref target="sec-QLOG"></xref>).</t>
 
          <t>Unvalidated Phase (Limiting time in the Unvalidated Phase): A sender enters the
         Validating Phase if more than one RTT has elapsed while in the Unvalidated Phase.</t>
@@ -658,13 +658,13 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
             If a sender determines that congestion was experienced
             (e.g., packet loss or ECN-CE marking), Careful Resume
             enters the Safe Retreat Phase
-            (see trigger packet_loss and ECN_CE  in <xref target="sec-QLOG"></xref>).</t>
+            (logged as packet_loss and ECN_CE in <xref target="sec-QLOG"></xref>).</t>
 
             <t>Validating Phase (Receiving acknowledgement of the unvalidated packets):
             The sender enters the Normal Phase when an acknowledgement is
             received for the last packet number (or higher)
             that was sent in the Unvalidated Phase
-            (see last_unvalidated_packet_acknowledged in <xref target="sec-QLOG"></xref>).
+            (logged as last_unvalidated_packet_acknowledged in <xref target="sec-QLOG"></xref>).
             This means that the packets sent in the Unvalidated Phase were acknowledged
             without congestion.</t>
         </list></t> <!-- End of list of actions -->
@@ -724,8 +724,8 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
             is a scaling factor between 0.5 and 1. The default value
             is 0.5, chosen to reduce the probability of inducing
             a second round of congestion. Cubic defines a
-           Beta__cubic of 0.7 <xref target="RFC9438"></xref>.
-            (The log is updated to exit_recovery, see <xref target="sec-QLOG"></xref>.)</t>
+           Beta__cubic of 0.7 <xref target="RFC9438"></xref>
+            (logged as exit_recovery in <xref target="sec-QLOG"></xref>).</t>
         </list></t>
      
         <t>Implementation notes are provided in <xref target="req-retreat"></xref>.</t>
@@ -1092,82 +1092,10 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
 
 </section> <!--  End of Guidelines -->
 
-<section anchor="sec-QLOG" title="QLOG support for QUIC">
-    <t>This section provides definitions that enable a
+<section anchor="sec-QLOG" title="Logging support">
+    <t>I-D.XXX provides definitions that enable a
     Careful Resume implementation
-    to generate qlog events when using QUIC.
-    It introduces an event to report the current phase of a sender,
-    and an associated description.</t>
-    
-    <t>The event and data structure definitions in this section are
-    expressed in the Concise Data Definition Language (CDDL)
-    <xref target="RFC8610"></xref> and its
-    extensions described in <xref target="I-D.ietf-quic-qlog-quic-events"></xref>.
-    The current convention is to use long names for variables.
-    For example, "CWND" is expanded as "congestion_window"
-    and "saved_cwnd" is expanded as "saved_congestion_window".</t>
-    
-    <section title="The cr_phase Event">
-        <!--<name>cr_phase</name>-->
-        <t>Importance: Extra</t>
-
-        <t>When the CC algorithm changes the Careful Resume Phase
-        described in <xref target="sec-phase"></xref> of this specification.</t>
-        <t>Definition:</t>
-
-        <figure anchor="qlog-def">
-             <!--     <name>cr_phase</name> -->
-<sourcecode type="cddl"><![CDATA[
-RecoveryCarefulResumePhaseUpdated = {
-? old_phase: CarefulResumePhase,
-new_phase: CarefulResumePhase,
-state_data: CarefulResumeStateParameters,
-? restored_data: CarefulResumeRestoredParameters,
-? trigger:
-        ; for the Unvalidated phase, when no unvalidated packets
-        "congestion_window_limited" /
-        ; for the Validating phase
-        "first_unvalidated_packet_acknowledged" /
-    ; for the Normal phase
-    ; and no remaining unvalidated packets to be acknowledged
-        "last_unvalidated_packet_acknowledged" /
-        ; for the Normal phase, when CR not allowed
-        "rtt_not_validated" /
-        ; for the Normal phase,
-        ; when sending fewer unvalidated packets than CWND permits
-        "rate_limited" /
-    ; for the Safe Retreat phase, when loss detected
-        "packet_loss" /
-    ; for the Safe Retreat phase,
-    ; when ECN congestion experienced reported
-        "ECN_CE" /
-        ; for the Normal phase 1 RTT after a congestion event
-        "exit_recovery"
-}
-
-CarefulResumePhase =
-        "reconnaissance" /
-        "unvalidated" /
-        "validating" /
-        "normal" /
-        "safe_retreat"
-
-CarefulResumeStateParameters = {
-pipesize: uint,
-first_unvalidated_packet: uint,
-last_unvalidated_packet: uint,
-? congestion_window: uint,
-? ssthresh: uint
-}
-
-CarefulResumeRestoredParameters = {
-saved_congestion_window: uint,
-saved_rtt: float32
-}
-]]></sourcecode>
-        </figure>
-   
-    </section> <!-- END OF QLOG SUBSECTION -->
+    to generate qlog events when using QUIC.</t> 
 </section> <!--  End of Qlog -->
 
 <section anchor="sec-acknowledgments" title="Acknowledgments">
@@ -1176,8 +1104,7 @@ saved_rtt: float32
     Ana Custura, Neal Cardwell, Marten Seemann, Matthias Hofstaetter and Joerg Deutschmann for
     their fruitful comments in developing this specification.</t>
     <t>The authors would like to thank Tom Jones for co-authoring
-    several previous versions of this document.
-    Ana Custura and Robin Marx developed the qlog support.</t>
+    several previous versions of this document.</t>
 </section>
 
 <section anchor="sec-IANA" title="IANA Considerations">
