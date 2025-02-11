@@ -10,7 +10,7 @@
 <?rfc sortrefs="yes" ?>
 <?rfc compact="yes" ?>
 <?rfc subcompact="no" ?>
-<rfc category="std" docName="draft-ietf-tsvwg-careful-resume-13"
+<rfc category="std" docName="draft-ietf-tsvwg-careful-resume-14"
      ipr="trust200902" consensus="true" submissionType="IETF">
     <!-- category values: std, bcp, info, exp, and historic
     ipr values: full3667, noModification3667, noDerivatives3667
@@ -1095,7 +1095,7 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
 <section anchor="sec-QLOG" title="Logging support">
     <t>I-D.XXX provides definitions that enable a
     Careful Resume implementation
-    to generate qlog events when using QUIC.</t> 
+    to generate qlog events when using QUIC.</t>
 </section> <!--  End of Qlog -->
 
 <section anchor="sec-acknowledgments" title="Acknowledgments">
@@ -1147,7 +1147,7 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
     </references>
 
     <references title="Informative References">
-        <?rfc include="reference.I-D.ietf-quic-qlog-quic-events.xml"?>
+<!---        <?rfc include="reference.I-D.ietf-quic-qlog-quic-events.xml"?> -->
         <?rfc include="reference.I-D.irtf-iccrg-sallantin-initial-spreading.xml"?>
         <?rfc include="reference.I-D.ietf-ccwg-bbr.xml"?>
         <!-- ?rfc include="reference.I-D.kuhn-quic-bdpframe-extension.xml"? -->
@@ -1157,6 +1157,7 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
         <?rfc include="reference.RFC.9438.xml"?>         <!--  Cubic> -->
         <?rfc include="reference.RFC.5783.xml"?>
         <?rfc include="reference.RFC.6675.xml"?>
+        <?rfc include="reference.RFC.6928.xml"?>
         <?rfc include="reference.RFC.6937.xml"?>
         <?rfc include="reference.RFC.7661.xml"?>
         <?rfc include="reference.RFC.8867.xml"?>
@@ -1533,9 +1534,9 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
      unvalidated packet is actually sent.</t>
      <t>WG-12, JD, MH and GF clarified text, and checked for typos.</t>
      <t>WG-13, After WGLC including NC and MK's review comments.</t>
+     <t>WG-14, removed qlog to a separate ID (LP), made relevent to orther transports (MK).</t>
     </list></t>
 </section> <!-- End of Revisions -->
 
 </back>
 </rfc>
-
