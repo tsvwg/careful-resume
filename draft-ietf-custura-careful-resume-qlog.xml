@@ -78,7 +78,7 @@ specify just the year. -->
      <keyword>Transport, Congestion Control, QUIC</keyword>
 
     <!-- Keywords will be incorporated into HTML output
-     files in a meta tag but they have no effect on text or nroff
+     files in a meta tag  they have no effect on text or nroff
      output. If you submit your draft to the RFC Editor, the
      keywords will be used for the search engine. -->
 
@@ -148,7 +148,7 @@ specify just the year. -->
 
             <t>Unvalidated Packet: A packet sent when the CWND has been increased
             beyond the size normally permitted by the CC algorithm;
-            if such a packet is acknowledged, it contributes to the PipeSize, but
+            if such a packet is acknowledged, it contries to the PipeSize, 
             if congestion is detected, it triggers entry to the Safe Retreat Phase.</t>
      </list></t>
     </section> <!-- End of Notation: End of terms -->
@@ -287,31 +287,34 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
         <figure anchor="qlog-def">
              <!--     <name>cr_phase</name> -->
 <sourcecode type="cddl"><![CDATA[
-RecoveryCarefulResumePhaseUpdated = {
-? old_phase: CarefulResumePhase,
-new_phase: CarefulResumePhase,
+QUICCarefulResumePhaseUpdated = {
+? old: CarefulResumePhase,
+new: CarefulResumePhase,
 state_data: CarefulResumeStateParameters,
 ? restored_data: CarefulResumeRestoredParameters,
+
 ? trigger:
         ; for the Unvalidated phase, when no unvalidated packets
         "congestion_window_limited" /
         ; for the Validating phase
         "first_unvalidated_packet_acknowledged" /
-    ; for the Normal phase
-    ; and no remaining unvalidated packets to be acknowledged
+        ; for the Normal phase
+        ; and no remaining unvalidated packets to be acknowledged
         "last_unvalidated_packet_acknowledged" /
         ; for the Normal phase, when CR not allowed
         "rtt_not_validated" /
         ; for the Normal phase,
         ; when sending fewer unvalidated packets than CWND permits
         "rate_limited" /
-    ; for the Safe Retreat phase, when loss detected
+        ; for the Safe Retreat phase, when loss detected
         "packet_loss" /
-    ; for the Safe Retreat phase, 
-    ; when ECN congestion experienced reported
+        ; for the Safe Retreat phase,
+        ; when ECN congestion experienced reported
         "ECN_CE" /
         ; for the Normal phase 1 RTT after a congestion event
         "exit_recovery"
+
+* $$quic-carefulresumephaseupdated-extension
 }
 
 CarefulResumePhase =
@@ -322,17 +325,19 @@ CarefulResumePhase =
         "safe_retreat"
 
 CarefulResumeStateParameters = {
-pipesize: uint,
-first_unvalidated_packet: uint,
-last_unvalidated_packet: uint,
-? congestion_window: uint,
-? ssthresh: uint
+      pipesize: uint32,
+      first_unvalidated_packet: uint32,
+      last_unvalidated_packet: uint32,
+      ? congestion_window: uint32,
+      ? ssthresh: uint32
 }
 
 CarefulResumeRestoredParameters = {
-saved_congestion_window: uint,
-saved_rtt: float32
+      saved_congestion_window: uint32,
+      saved_rtt: float32
 }
+
+$ProtocolEventData /= QUICCarefulResumePhaseUpdated
 ]]></sourcecode>
         </figure>
    
@@ -345,7 +350,9 @@ saved_rtt: float32
 </section>
 
 <section anchor="sec-IANA" title="IANA Considerations">
-    <t>No current parameters are required to be registered by IANA.</t>
+    <t>Note by RM: This event type is to be added to the "qlog event schema URIs" registered at IANA,
+    but the qlog event schema URIs registry has not yet been actually created at 
+IANA because the qlog registry has not yet been created.</t>
 </section>
 
 <section anchor="sec-security" title="Security Considerations">
