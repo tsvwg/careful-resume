@@ -10,7 +10,7 @@
 <?rfc sortrefs="yes" ?>
 <?rfc compact="yes" ?>
 <?rfc subcompact="no" ?>
-<rfc category="std" docName="draft-ietf-tsvwg-careful-resume-14"
+<rfc category="std" docName="draft-ietf-tsvwg-careful-resume-15"
      ipr="trust200902" consensus="true" submissionType="IETF">
     <!-- category values: std, bcp, info, exp, and historic
     ipr values: full3667, noModification3667, noDerivatives3667
@@ -1533,8 +1533,10 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
      unvalidated packet is actually sent.</t>
      <t>WG-12, JD, MH and GF clarified text, and checked for typos.</t>
      <t>WG-13, After WGLC including NC and MK's review comments.</t>
-     <t>WG-14, removed qlog to a separate ID (LP), made relevent to orther transports (MK).</t>
+     <t>WG-14, removed qlog to a separate ID (LP), made relevent to other transports (MK).</t>
+     <t>WG-15, fixes typos and aligns with new Rev of the Qlog spec.</t>
     </list></t>
+     
 </section> <!-- End of Revisions -->
 
 </back>
