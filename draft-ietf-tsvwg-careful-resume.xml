@@ -380,7 +380,7 @@ specify just the year. -->
     </section> <!-- End of An Remote Endpoint -->
 
     <section anchor="sec-QLOG" title="Logging support">
-        <t>This document defines triggers that can provide support for logging key events.
+        <t>This document defines triggers to support logging key events.
         <xref target="I-D.custura-tsvwg-careful-resume-qlog"></xref> provides definitions that enable a
         Careful Resume implementation
         to generate qlog events when using QUIC.</t>
