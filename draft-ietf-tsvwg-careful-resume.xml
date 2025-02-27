@@ -279,10 +279,10 @@ specify just the year. -->
             gains for the new connection and the risks of degraded performance
             for other connections that share
             a common bottleneck. We describe a mechanism designed to obtain good performance when resuming is appropriate,
-            whileseeking to minimise the impact on other connections when it is
+            while seeking to minimise the impact on other connections when it is
             not appropriate.</t>
         
-        <t>The following design principlesseek to mitigate the risk that
+        <t>The following design principles seek to mitigate the risk that
             a sender adds excessive congestion to an already congested path:</t>
         
         <t><list>
@@ -498,7 +498,7 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
         The CWND MAY be increased using normal CC as each ACK
         confirms delivery of previously unacknowledged data (i.e., the CC is unchanged).</t>
 
-        <t>The phaseseeks to determine if the path is consistent with
+        <t>The phase seeks to determine if the path is consistent with
         a previously observed path (saved as a set of CC parameters).
         The following conditions need to be confirmed before the sender
         enters the Reconnaissance Phase:</t>
@@ -599,7 +599,7 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
              If a sender determines that the previous CC parameters
              are not valid (due to a detected path change),
              the Safe Retreat Phase is entered.
-         (This is becaise in the Unvalidated Phase, insufficient time has passed for
+         (This is because in the Unvalidated Phase, insufficient time has passed for
          a sender to receive feedback validating the jump in CWND.
          Therefore, any detected congestion must have resulted from packets sent
          before the Unvalidated Phase.)</t>
@@ -610,7 +610,7 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
              <t>Unvalidated Phase (Tracking PipeSize):
              The variable PipeSize is increased by the volume of data acknowledged
              by each received ACK. (This indicates a previously unvalidated packet has been
-             succesfully sent over the path.)</t>
+             successfully sent over the path.)</t>
              
              <t>Unvalidated Phase (Receiving acknowledgement for an unvalidated packet):
              The sender enters the Validating Phase when an acknowledgement is
@@ -913,7 +913,7 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
          <xref target="RFC7661"></xref> specifies a method for managing an
             unvalidated CWND. This states:
             "After a fixed period of time (the non-validated period (NVP)), the sender
-            adjusts the cwnd (Section 4.4.3). The NVP SHOULD NOT exceed five minutes."
+            adjusts the CWND (Section 4.4.3). The NVP SHOULD NOT exceed five minutes."
             Section 5 of <xref target="RFC7661"></xref> discusses the rationale for
             choosing that period.
             However, RFC 7661 targets rate-limited connections using normal
@@ -1290,7 +1290,7 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
 |      |         |confirmed|>= first    |enter      |ssthresh =  |
 |      |         |), enter |unvalidated |Normal     |PS x Beta;  |
 |      |         |Unvalidat|packet),    |           |and enter   |
-|      |         |ing else |enter       |           |Normal      |
+|      |         |ed else  |enter       |           |Normal      |
 |      |         |enter    |Validating  |           |            |
 |      |         |Normal   |            |           |            |
 +------+---------+---------+------------+-----------+------------+
@@ -1362,7 +1362,7 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
 
         <t>The sender then becomes rate-limited, because the example only sends 50 unvalidated packets.</t>
 
-        <t> After about one RTT (e.g., bycomparing the current time with local timestamps for each sent packet
+        <t> After about one RTT (e.g., by comparing the current time with local timestamps for each sent packet
     or by receiving an ACK for the first
         unvalidated packet), the sender will still not have fully-used the CWND. It then enters
         the Validating Phase and resets the CWND to the current flight_size, (i.e., 50 packets).
@@ -1377,7 +1377,7 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
 
     <section anchor="Examples-loss-recon" title="Example with Loss detected in the Reconnaissance Phase">
         <t>When a packet is lost in the Reconnaissance Phase, the sender will enter the Normal Phase
-        and recovers the loss using the normal method.
+        and recover the loss using the normal method.
     (It is considered that the sender has discovered a potential capacity limit and is not
         allowed to continue to use Careful Resume, therefore there is no change to
     the CC method and the CWND is the same as if Careful Resume had not been attempted.)</t>
@@ -1533,7 +1533,7 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
      unvalidated packet is actually sent.</t>
      <t>WG-12, JD, MH and GF clarified text, and checked for typos.</t>
      <t>WG-13, After WGLC including NC and MK's review comments.</t>
-     <t>WG-14, removed qlog to a separate ID (LP), made relevent to other transports (MK).</t>
+     <t>WG-14, removed qlog to a separate ID (LP), made relevant to other transports (MK).</t>
      <t>WG-15, fixes typos and aligns with new Rev of the Qlog spec.</t>
     </list></t>
      
