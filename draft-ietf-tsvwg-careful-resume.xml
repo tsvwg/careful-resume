@@ -581,13 +581,13 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
           The variable PipeSize is initialised to the flight_size on
           entry to the Unvalidated Phase. This records the
           CWND before a jump is applied.</t>
-          
-             <t>Unvalidated Phase (Setting the jump_cwnd):
-             To avoid starving other flows that could have either started
-             or increased their use of capacity after the Observation Phase,
-             the jump_cwnd MUST be no more than half of the saved_cwnd.
-             Hence, jump_cwnd is less than  or equal to Min(max_jump,(saved_cwnd/2)).
-             CWND = jump_cwnd. </t>
+
+        <t>Unvalidated Phase (Setting the jump_cwnd):
+        To avoid starving other flows that could have either started
+        or increased their use of capacity after the Observation Phase,
+        the jump_cwnd MUST be no more than half of the saved_cwnd.
+        Hence, jump_cwnd is less than  or equal to Min(max_jump,(saved_cwnd/2)).
+        CWND = jump_cwnd. </t>
 
      </list></t>
         <t>The following actions are performed during the Unvalidated Phase:</t>
@@ -619,7 +619,9 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
          (logged as first_unvalidated_packet_acknowledged, see <xref target="sec-QLOG"></xref>).</t>
 
          <t>Unvalidated Phase (Limiting time in the Unvalidated Phase): A sender enters the
-        Validating Phase if more than one RTT has elapsed while in the Unvalidated Phase.</t>
+        Validating Phase if more than one RTT has elapsed while in the Unvalidated Phase
+         (logged as rtt_exceeded, see <xref target="sec-QLOG"></xref>).</t>
+          
         </list></t> <!-- End of list of actions -->
 
         <t>Implementation notes are provided in <xref target="req-unvalid"></xref>. </t>
