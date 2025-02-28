@@ -91,7 +91,7 @@ specify just the year. -->
 <middle>
 <section anchor="sec-introduction" title="Introduction">
  <t> This document defines a way to provide logging for Careful Resume<xref target="I-D.ietf-tsvwg-careful-resume"></xref>
-     when used with QUIC<xref target="RFC9000"></xref><xref target="RFC9002"></xref>.
+     when used with QUIC <xref target="RFC9000"></xref><xref target="RFC9002"></xref>.
  </t>
     <t><xref target="I-D.ietf-tsvwg-careful-resume"></xref> defines a
     Congestion Control (CC) mechanism
