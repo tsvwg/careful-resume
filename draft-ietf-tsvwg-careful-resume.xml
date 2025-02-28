@@ -435,7 +435,7 @@ specify just the year. -->
             <t>Unvalidated Packet: A packet sent when the CWND has been increased
             beyond the size normally permitted by the CC algorithm;
             if such a packet is acknowledged, it contributes to the PipeSize, but
-            if congestion is detected, it s entry to the Safe Retreat Phase.</t>
+            if congestion is detected, it triggers entry to the Safe Retreat Phase.</t>
         </list></t>
     </section> <!-- End of Notation: End of terms -->
 </section><!-- End of Notation -->
