@@ -620,8 +620,8 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
 
          <t>Unvalidated Phase (Limiting time in the Unvalidated Phase): A sender enters the
         Validating Phase if more than one RTT has elapsed while in the Unvalidated Phase
-         (logged as rtt_exceeeded, see <xref target="sec-QLOG"></xref>).</t>
-             
+         (logged as rtt_exceeded, see <xref target="sec-QLOG"></xref>).</t>
+          
         </list></t> <!-- End of list of actions -->
 
         <t>Implementation notes are provided in <xref target="req-unvalid"></xref>. </t>
