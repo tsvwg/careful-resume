@@ -279,7 +279,7 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
         described in <xref target="sec-phase"></xref> of this specification.</t>
         <t>Definition:</t>
 
-        <figure anchor="" title="CDDL description of the CarefulResumePhaseUpdated event" >
+        <figure anchor="qlog-def" title="CDDL description of the CarefulResumePhaseUpdated event" >
              <!--     <name>cr_phase</name> -->
 <sourcecode type="cddl"><![CDATA[
 QUICCarefulResumePhaseUpdated = {
