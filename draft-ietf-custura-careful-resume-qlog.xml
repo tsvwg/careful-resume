@@ -10,7 +10,7 @@
 <?rfc sortrefs="yes" ?>
 <?rfc compact="yes" ?>
 <?rfc subcompact="no" ?>
-<rfc category="std" docName="draft-custura-tsvwg-careful-resume-qlog-00"
+<rfc category="std" docName="draft-custura-tsvwg-careful-resume-qlog-01"
      ipr="trust200902" consensus="true" submissionType="IETF">
     <!-- category values: std, bcp, info, exp, and historic
     ipr values: full3667, noModification3667, noDerivatives3667
@@ -196,52 +196,54 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
 <figure title="Mapping of triggers to phase transitions">
 <artwork align="left" name="" type="" alt=""><![CDATA[
      
-+---------------------+-----------------------------------------+-------+-------+
-| Trigger             | Description                             | From  | To    |
-+---------------------+-----------------------------------------+-------+-------+
-| cwnd_limited        | When a sender has confirmed the RTT,    | Recon | Unval |
-|                     | has received an acknowledgement for     |       |       |
-|                     | the initial data without reported       |       |       |
-|                     | congestion and has more data to send    |       |       |
-|                     | than the congestion window would allow, |       |       |
-|                     | see section xxx of the draft            |       |       |
-+---------------------+-----------------------------------------+-------+-------+
-| rtt_not_validated   | If the current_rtt is not confirmed,    | Recon | Norm  |
-|                     | the sender MUST enter the Normal Phase; | Unval |       |
-|                     | see section xxx of the draft            |       |       |
-+---------------------+------------------------------------------+------+-------+
-| first_unvalidated_  | The sender enters the Validating Phase  | Unval | Val   |
-| packet_acknowledged | when an acknowledgement is received for |       |       |
-|                     | the first packet number (or higher)     |       |       |
-|                     | that was sent in the Unvalidated Phase  |       |       |
-+---------------------+-----------------------------------------+-------+-------+
-| rtt_limited         | Or greater than 1 RTT has passed in the | Unval | Val   |
-|                     | Unvalidated Phase                       |       |       |
-+---------------------+-----------------------------------------+-------+-------+
-| rate_limited        | If the flight_size is less than or      | Unval | Norm  |
-|                     | equal to the PipeSize, the Normal       |       |       |
-|                     | Phase is entered                        |       |       |
-+---------------------+-----------------------------------------+-------+-------+
-| last_unvalidated_   | The sender enters the Normal Phase when | Val   | Norm  |
-| packet_acknowledged | an acknowledgement is received for the  |       |       |
-|                     | last packet number (or higher) that     |       |       |
-|                     | was sent in the Unvalidated Phase       |       |       |
-+---------------------+-----------------------------------------+-------+-------+
-| packet_loss         | If a sender determines that congestion  | Unval | SR    |
-|                     | was experienced (e.g., packet loss or   | Val   |       |
-|                     | ECN-CE marking), Careful Resume enters  |       |       |
-|                     | the Safe Retreat Phase                  |       |       |
-+---------------------+-----------------------------------------+-------+-------+
-| ECN_CE              | If a sender determines that congestion  | Unval | SR    |
-|                     | was experienced (e.g., packet loss or   | Val   |       |
-|                     | ECN-CE marking), Careful Resume enters  |       |       |
-|                     | the Safe Retreat Phase                  |       |       |
-+---------------------+-----------------------------------------+-------+-------+
-| exit_recovery       | The sender enters the Normal Phase when | SR    | Norm  |
-|                     | the last packet (or a later packet)     |       |       |
-|                     | sent in the Unvalidated Phase has been  |       |       |
-|                     | acknowledged.                           |       |       |
-+---------------------+-----------------------------------------+-------+-------+
++---------------------+-------------------------------+-------+-------+
+| Trigger             | Description                   | From  | To    |
++---------------------+-------------------------------+-------+-------+
+| cwnd_limited        | When sender has confirmed the | Recon | Unval |
+|                     | RTT, has received an ACK for  |       |       |
+|                     | the initial data without      |       |       |
+|                     | reported congestion and has   |       |       |
+|                     | more data to send than the    |       |       |
+|                     | cwnd would allow.             |       |       |
++---------------------+-------------------------------+-------+-------+
+| rtt_not_validated   | If the current_rtt is not     | Recon | Norm  |
+|                     | confirmed the sender MUST     | Unval |       |
+|                     | enter the Normal Phase.       |       |       |
++---------------------+-------------------------------+------+--------+
+| first_unvalidated_  | The sender enters the         | Unval | Val   |
+| packet_acknowledged | Validating Phase when an ACK  |       |       |
+|                     | is received for the first     |       |       |
+|                     | packet number (or higher)     |       |       |
+|                     | sent in the Unvalidated Phase |       |       |
++---------------------+-------------------------------+-------+-------+
+| rtt_exceeded        | When greater than 1 RTT has   | Unval | Val   |
+|                     | passed in Unvalidated Phase   |       |       |
++---------------------+-------------------------------+-------+-------+
+| rate_limited        | If the flight_size is less    | Unval | Norm  |
+|                     | than or equal to the PipeSize |       |       |
+|                     | sender enters Normal Phase    |       |       |
++---------------------+-------------------------------+-------+-------+
+| last_unvalidated_   | The sender enters the Normal  | Val   | Norm  |
+| packet_acknowledged | Phase when an ACK is received |       |       |
+|                     | for the last packet number    |       |       |
+|                     | (or higher) that was sent in  |       |       |
+|                     | the Unvalidated Phase         |       |       |
++---------------------+-------------------------------+-------+-------+
+| packet_loss         | If a sender determines that   | Unval | SR    |
+|                     | congestion was experienced,   | Val   |       |
+|                     | e.g., packet loss, the sender |       |       |
+|                     | enters the Safe Retreat Phase |       |       |
++---------------------+-------------------------------+-------+-------+
+| ECN_CE              | If a sender determines that   | Unval | SR    |
+|                     | congestion was experienced,   | Val   |       |
+|                     | e.g., ECN-CE marking, sender  |       |       |
+|                     | enters the Safe Retreat Phase |       |       |
++---------------------+-------------------------------+-------+-------+
+| exit_recovery       | The sender enters the Normal  | SR    | Norm  |
+|                     | Phase when the last packet    |       |       |
+|                     | sent in the Unvalidated Phase |       |       |
+|                     | is ACKed                      |       |       |
++---------------------+-------------------------------+-------+-------+
 
      
  ]]></artwork>
@@ -283,8 +285,12 @@ state_data: CarefulResumeStateParameters,
 ? restored_data: CarefulResumeRestoredParameters,
 
 ? trigger:
-        ; for the Unvalidated phase, when no unvalidated packets
+        ; for the Unvalidated phase, 
+        ; when there is more data to send than available CWND
         "congestion_window_limited" /
+        ; for the Validating phase
+        ; when more than one RTT has passed in the Unvalidated Phase
+        "rtt_exceeded" /
         ; for the Validating phase
         "first_unvalidated_packet_acknowledged" /
         ; for the Normal phase
@@ -393,6 +399,11 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
 <section anchor="rev" title="Internet Draft Revision details">
     <list>
         <t>ID -00 Text extracted from the TSVWG WG draft for CR.</t>
+        <t>ID -01 Refactors initial text from CR into a table matching the qlog triggers. 
+          Add one new trigger, 'rtt_exceeded'; update text for trigger "congestion_window_limited",
+          based on comments from Finic8; updates CDDL based on comments from R. Marx</t>
+
+
     </list>
 </section> <!-- End of Revisions -->
 
