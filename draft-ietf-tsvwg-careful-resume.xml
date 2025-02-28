@@ -637,7 +637,7 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
         <t><list style="symbols">
             <t>Validating Phase (Check flight_size on entry):
             On entry to the Validating Phase, if the flight_size is less
-            equal to the PipeSize, the Normal Phase is entered with the CWND
+            than or equal to the PipeSize, the Normal Phase is entered with the CWND
             reset to the PipeSize. (The PipeSize does not include the part of the jump_cwnd that was not utilised.)</t>
 
             <t>Validating Phase (Limiting CWND on entry):
