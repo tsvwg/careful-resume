@@ -135,8 +135,8 @@ specify just the year. -->
    <list>
 
              
-        <t>Careful Resume (CR): The method specified in <xref target="I-D.ietf-tsvwg-careful-resume">. 
-          All other terms in this section, except CWND, are defined in the same document. </xref> </t>
+        <t>Careful Resume (CR): The method specified in <xref target="I-D.ietf-tsvwg-careful-resume"></xref>. 
+          All other terms in this section, except CWND, are defined in the same document. </t>
 
         <t>CWND: The congestion window, or equivalent CC variable limiting
         the maximum sending rate;</t>
