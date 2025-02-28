@@ -90,6 +90,9 @@ specify just the year. -->
 
 <middle>
 <section anchor="sec-introduction" title="Introduction">
+ <t> This document defines a way to provide logging for Careful Resume<xref target="I-D.ietf-tsvwg-careful-resume"></xref>
+     when used with QUIC <xref target="RFC9000"></xref><xref target="RFC9002"></xref>.
+ </t>
     <t><xref target="I-D.ietf-tsvwg-careful-resume"></xref> defines a
     Congestion Control (CC) mechanism
     called Careful Resume, which is expected to
@@ -132,7 +135,8 @@ specify just the year. -->
    <list>
 
              
-             <t>Careful Resume (CR): The method specified in XXX </t>
+        <t>Careful Resume (CR): The method specified in <xref target="I-D.ietf-tsvwg-careful-resume"></xref>. 
+          All other terms in this section, except CWND, are defined in the same document. </t>
 
         <t>CWND: The congestion window, or equivalent CC variable limiting
         the maximum sending rate;</t>
@@ -142,9 +146,9 @@ specify just the year. -->
         <t>PipeSize: A measure of the validated available capacity based on the acknowledged data;</t>
 
             <t>saved_cwnd: The preserved capacity derived from observation of a
-            previous connection (see <xref target="I-D.ietf-tsvwg-careful-resume"></xref>);</t>
+            previous connection;</t>
 
-            <t>saved_rtt: The preserved minimum RTT (see <xref target="I-D.ietf-tsvwg-careful-resume"></xref>).</t>
+            <t>saved_rtt: The preserved minimum RTT;</t>
 
             <t>Unvalidated Packet: A packet sent when the CWND has been increased
             beyond the size normally permitted by the CC algorithm;
@@ -214,35 +218,35 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
 | packet_acknowledged | Validating Phase when an ACK  |       |       |
 |                     | is received for the first     |       |       |
 |                     | packet number (or higher)     |       |       |
-|                     | sent in the Unvalidated Phase |       |       |
+|                     | sent in the Unvalidated Phase.|       |       |
 +---------------------+-------------------------------+-------+-------+
 | rtt_exceeded        | When greater than 1 RTT has   | Unval | Val   |
-|                     | passed in Unvalidated Phase   |       |       |
+|                     | passed in Unvalidated Phase.  |       |       |
 +---------------------+-------------------------------+-------+-------+
 | rate_limited        | If the flight_size is less    | Unval | Norm  |
 |                     | than or equal to the PipeSize |       |       |
-|                     | sender enters Normal Phase    |       |       |
+|                     | sender enters Normal Phase.   |       |       |
 +---------------------+-------------------------------+-------+-------+
 | last_unvalidated_   | The sender enters the Normal  | Val   | Norm  |
 | packet_acknowledged | Phase when an ACK is received |       |       |
 |                     | for the last packet number    |       |       |
 |                     | (or higher) that was sent in  |       |       |
-|                     | the Unvalidated Phase         |       |       |
+|                     | the Unvalidated Phase.        |       |       |
 +---------------------+-------------------------------+-------+-------+
 | packet_loss         | If a sender determines that   | Unval | SR    |
 |                     | congestion was experienced,   | Val   |       |
 |                     | e.g., packet loss, the sender |       |       |
-|                     | enters the Safe Retreat Phase |       |       |
+|                     | enters the Safe Retreat Phase.|       |       |
 +---------------------+-------------------------------+-------+-------+
 | ECN_CE              | If a sender determines that   | Unval | SR    |
 |                     | congestion was experienced,   | Val   |       |
 |                     | e.g., ECN-CE marking, sender  |       |       |
-|                     | enters the Safe Retreat Phase |       |       |
+|                     | enters the Safe Retreat Phase.|       |       |
 +---------------------+-------------------------------+-------+-------+
 | exit_recovery       | The sender enters the Normal  | SR    | Norm  |
 |                     | Phase when the last packet    |       |       |
 |                     | sent in the Unvalidated Phase |       |       |
-|                     | is ACKed                      |       |       |
+|                     | is ACKed.                     |       |       |
 +---------------------+-------------------------------+-------+-------+
 
      
@@ -267,7 +271,7 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
     For example, "CWND" is expanded as "congestion_window"
     and "saved_cwnd" is expanded as "saved_congestion_window".</t>
     
-    <section title="The cr_phase Event">
+    <section title="The CarefulResumePhaseUpdated Event">
         <!--<name>cr_phase</name>-->
         <t>Importance: Extra</t>
 
@@ -275,7 +279,7 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
         described in <xref target="sec-phase"></xref> of this specification.</t>
         <t>Definition:</t>
 
-        <figure anchor="qlog-def">
+        <figure anchor="" title="CDDL description of the CarefulResumePhaseUpdated event" >
              <!--     <name>cr_phase</name> -->
 <sourcecode type="cddl"><![CDATA[
 QUICCarefulResumePhaseUpdated = {
