@@ -615,8 +615,7 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
              <t>Unvalidated Phase (Receiving acknowledgement for an unvalidated packet):
              The sender enters the Validating Phase when an acknowledgement is
              received for the first packet number (or higher) that was sent in the Unvalidated Phase
-             or greater than 1 RTT has passed in the Unvalidated Phase
-         (logged as first_unvalidated_packet_acknowledged, see <xref target="sec-QLOG"></xref>).</t>
+              (logged as first_unvalidated_packet_acknowledged, see <xref target="sec-QLOG"></xref>).</t>
 
          <t>Unvalidated Phase (Limiting time in the Unvalidated Phase): A sender enters the
         Validating Phase if more than one RTT has elapsed while in the Unvalidated Phase
