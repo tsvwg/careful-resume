@@ -596,14 +596,18 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
                <t>Unvalidated Phase (Confirming the path during transmission):
                If a sender determines that the previous CC parameters
                are not valid (due to a detected path change),
-               the Safe Retreat Phase is entered.
+               the Safe Retreat Phase is entered
+               (logged as
+               path_change in <xref target="I-D.custura-tsvwg-careful-resume-qlog"></xref>).
               (This is because in the Unvalidated Phase, insufficient time has passed for
               a sender to receive feedback validating the jump in CWND.
               Therefore, any detected congestion must have resulted from packets sent
               before the Unvalidated Phase.)</t>
 
                <t>Unvalidated Phase (Completed sending all unvalidated packets):
-               The sender enters the Validating Phase when the flight_size equals the CWND.</t>
+               The sender enters the Validating Phase when the flight_size equals the CWND
+               (logged as
+               start_validating in <xref target="I-D.custura-tsvwg-careful-resume-qlog"></xref>)..</t>
              
                <t>Unvalidated Phase (Tracking PipeSize):
                The variable PipeSize is increased by the volume of data acknowledged
@@ -613,7 +617,6 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
                <t>Unvalidated Phase (Receiving acknowledgement for an unvalidated packet):
                The sender enters the Validating Phase when an acknowledgement is
                received for the first packet number (or higher) that was sent in the Unvalidated Phase
-               or greater than 1 RTT has passed in the Unvalidated Phase
                (logged as first_unvalidated_packet_acknowledged, see <xref target="sec-QLOG"></xref>).</t>
 
                <t>Unvalidated Phase (Limiting time in the Unvalidated Phase): A sender enters the
