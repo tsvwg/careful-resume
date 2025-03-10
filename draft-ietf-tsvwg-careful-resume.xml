@@ -321,9 +321,9 @@ specify just the year. -->
                 for example if congestion is detected during validation. The risk here is that the
                 trial use of the saved parameters could have disrupted existing connections.
                 Suppose, for example a connection using Reno TCP CC.
-        When exiting "slow start" mode due to loss, Reno would normally update the CWND to a
-        "slow start threshold" set to half the volume of data in flight.
-        However, during this validation
+             When exiting "slow start" mode due to loss, Reno would normally update the CWND to a
+             "slow start threshold" set to half the volume of data in flight.
+             However, during this validation
                 the CWND is restored from the saved parameters. The resultant sending rate
                 could be much larger than the value that would have been reached by a
                 "standard" slow start process, and the overload of the path potentially
@@ -519,12 +519,11 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
     <t>The following actions are performed during the Reconnaissance Phase:</t>
     <t><list style="symbols">
              <t>Reconnaissance Phase (Recording the current_rtt): During this phase,
-       a sender MUST record the minimum RTT for the current connection as the current_rtt</t>
+            a sender MUST record the minimum RTT for the current connection as the current_rtt</t>
 
             <t>Reconnaissance Phase (Detected congestion): If the sender detects
             congestion (e.g., packet loss or ECN-CE marking), the sender MUST enter the Normal Phase
-        to respond to the detected congestion.
-        </t>
+             to respond to the detected congestion.</t>
         
         <t>Reconnaissance Phase (Using saved_cwnd):
             Only one connection can use a specific set of saved CC parameters.
@@ -533,16 +532,15 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
 
         <t>Reconnaissance Phase (Path confirmed):
         When a sender has confirmed the RTT (see <xref target="sec-confirm-rtt"></xref>) and also has
-            received an acknowledgement for the initial data without reported congestion,
-            it MAY then enter the Unvalidated Phase.
+        received an acknowledgement for the initial data without reported congestion,
+        it MAY then enter the Unvalidated Phase.
         Although a sender can immediately transition to the Unvalidated Phase,
         this transition MAY be deferred to the time at which more data is sent
        than would have normally permitted by the CC algorithm.</t>
     </list></t>
 
           <t>
-            If a sender is rate-limited <xref target="RFC7661"></xref>,
-        it might send insufficient data
+            If a sender is rate-limited <xref target="RFC7661"></xref>, it might send insufficient data
             to be able to validate transmission at the higher rate.
             A sender is allowed to remain in the Reconnaissance Phase and to not
             transition to the Unvalidated Phase until there is
@@ -562,95 +560,96 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
         The following conditions
         need to be confirmed before the sender enters the Unvalidated Phase:</t>
 
-    <t><list style="symbols"> <t>Unvalidated Phase (Confirming the path on entry):
-         If the current_rtt is less than or equal to (saved_rtt / 2)
-    or the current_rtt is greater than (saved_rtt x 10)
-    (see <xref target="sec-confirm-rtt"></xref>),
-    the sender MUST enter the Normal Phase
-          (logged as
-     rtt_not_validated in <xref target="I-D.custura-tsvwg-careful-resume-qlog"></xref>).
-         This is because the calculation
-         of a sending rate from a saved_cwnd
-             is directly impacted by the RTT, therefore a significant change in the RTT
-             is a strong indication that the previously observed CC
-             parameters are not valid for the current path.</t>
-     </list></t>
-     <t>On entry to the Unvalidated Phase, the actions are performed:</t>
-     <t><list style="symbols">
-          <t>Unvalidated Phase (Initialising PipeSize):
-          The variable PipeSize is initialised to the flight_size on
-          entry to the Unvalidated Phase. This records the
-          CWND before a jump is applied.</t>
+         <t><list style="symbols"> 
+              <t>Unvalidated Phase (Confirming the path on entry):
+               If the current_rtt is less than or equal to (saved_rtt / 2)
+               or the current_rtt is greater than (saved_rtt x 10)
+               (see <xref target="sec-confirm-rtt"></xref>),
+               the sender MUST enter the Normal Phase (logged as
+               rtt_not_validated in <xref target="I-D.custura-tsvwg-careful-resume-qlog"></xref>).
+               This is because the calculation of a sending rate from a saved_cwnd
+               is directly impacted by the RTT, therefore a significant change in the RTT
+               is a strong indication that the previously observed CC
+               parameters are not valid for the current path.</t>
+          </list></t>
+         
+          <t>On entry to the Unvalidated Phase, the actions are performed:</t>
+          <t><list style="symbols">
+               <t>Unvalidated Phase (Initialising PipeSize):
+               The variable PipeSize is initialised to the flight_size on
+               entry to the Unvalidated Phase. This records the
+               CWND before a jump is applied.</t>
 
-        <t>Unvalidated Phase (Setting the jump_cwnd):
-        To avoid starving other flows that could have either started
-        or increased their use of capacity after the Observation Phase,
-        the jump_cwnd MUST be no more than half of the saved_cwnd.
-        Hence, jump_cwnd is less than  or equal to Min(max_jump,(saved_cwnd/2)).
-        CWND = jump_cwnd. </t>
+               <t>Unvalidated Phase (Setting the jump_cwnd):
+               To avoid starving other flows that could have either started
+               or increased their use of capacity after the Observation Phase,
+               the jump_cwnd MUST be no more than half of the saved_cwnd.
+               Hence, jump_cwnd is less than  or equal to Min(max_jump,(saved_cwnd/2)).
+               CWND = jump_cwnd. </t>
 
-     </list></t>
-        <t>The following actions are performed during the Unvalidated Phase:</t>
-        <t><list style="symbols">
-             <t>Unvalidated Phase (Pacing transmission): All packets sent in the
-           Unvalidated Phase MUST use pacing based on the current_rtt.</t>
+          </list></t>
+          <t>The following actions are performed during the Unvalidated Phase:</t>
+          <t><list style="symbols">
+               <t>Unvalidated Phase (Pacing transmission): All packets sent in the
+               Unvalidated Phase MUST use pacing based on the current_rtt.</t>
              
-             <t>Unvalidated Phase (Confirming the path during transmission):
-             If a sender determines that the previous CC parameters
-             are not valid (due to a detected path change),
-             the Safe Retreat Phase is entered.
-         (This is because in the Unvalidated Phase, insufficient time has passed for
-         a sender to receive feedback validating the jump in CWND.
-         Therefore, any detected congestion must have resulted from packets sent
-         before the Unvalidated Phase.)</t>
+               <t>Unvalidated Phase (Confirming the path during transmission):
+               If a sender determines that the previous CC parameters
+               are not valid (due to a detected path change),
+               the Safe Retreat Phase is entered.
+              (This is because in the Unvalidated Phase, insufficient time has passed for
+              a sender to receive feedback validating the jump in CWND.
+              Therefore, any detected congestion must have resulted from packets sent
+              before the Unvalidated Phase.)</t>
 
-            <t>Unvalidated Phase (Completed sending all unvalidated packets):
-             The sender enters the Validating Phase when the flight_size equals the CWND.</t>
+               <t>Unvalidated Phase (Completed sending all unvalidated packets):
+               The sender enters the Validating Phase when the flight_size equals the CWND.</t>
              
-             <t>Unvalidated Phase (Tracking PipeSize):
-             The variable PipeSize is increased by the volume of data acknowledged
-             by each received ACK. (This indicates a previously unvalidated packet has been
-             successfully sent over the path.)</t>
+               <t>Unvalidated Phase (Tracking PipeSize):
+               The variable PipeSize is increased by the volume of data acknowledged
+               by each received ACK. (This indicates a previously unvalidated packet has been
+               successfully sent over the path.)</t>
              
-             <t>Unvalidated Phase (Receiving acknowledgement for an unvalidated packet):
-             The sender enters the Validating Phase when an acknowledgement is
-             received for the first packet number (or higher) that was sent in the Unvalidated Phase
-             or greater than 1 RTT has passed in the Unvalidated Phase
-         (logged as first_unvalidated_packet_acknowledged, see <xref target="sec-QLOG"></xref>).</t>
+               <t>Unvalidated Phase (Receiving acknowledgement for an unvalidated packet):
+               The sender enters the Validating Phase when an acknowledgement is
+               received for the first packet number (or higher) that was sent in the Unvalidated Phase
+               or greater than 1 RTT has passed in the Unvalidated Phase
+               (logged as first_unvalidated_packet_acknowledged, see <xref target="sec-QLOG"></xref>).</t>
 
-         <t>Unvalidated Phase (Limiting time in the Unvalidated Phase): A sender enters the
-        Validating Phase if more than one RTT has elapsed while in the Unvalidated Phase
-         (logged as rtt_exceeded, see <xref target="sec-QLOG"></xref>).</t>
+               <t>Unvalidated Phase (Limiting time in the Unvalidated Phase): A sender enters the
+               Validating Phase if more than one RTT has elapsed while in the Unvalidated Phase
+               (logged as rtt_exceeded, see <xref target="sec-QLOG"></xref>).</t>
           
-        </list></t> <!-- End of list of actions -->
+          </list></t> <!-- End of list of actions -->
 
-        <t>Implementation notes are provided in <xref target="req-unvalid"></xref>. </t>
+          <t>Implementation notes are provided in <xref target="req-unvalid"></xref>. </t>
 
-        <t>Notes describing how this phase is implemented for BBR are
-        provided in <xref target="sec-phase-unval-bbr"></xref>.</t>
+          <t>Notes describing how this phase is implemented for BBR are
+          provided in <xref target="sec-phase-unval-bbr"></xref>.</t>
 
     </section> <!-- End of define Unvalidated Phase -->
 
     <section anchor="sec-phase-val-phase" title="Validating Phase">
-        <t>The Validating Phase checks whether all packets
-        sent in the Unvalidated Phase were received without inducing congestion.
-        The CWND remains unvalidated and the sender typically remains in this phase for one RTT.
-        On entry to the Validating Phase, the sender:</t>
-        <t><list style="symbols">
-            <t>Validating Phase (Check flight_size on entry):
-            On entry to the Validating Phase, if the flight_size is less
-            than or equal to the PipeSize, the Normal Phase is entered with the CWND
-            reset to the PipeSize. (The PipeSize does not include the part of the jump_cwnd that was not utilised.)</t>
+          <t>The Validating Phase checks whether all packets
+          sent in the Unvalidated Phase were received without inducing congestion.
+          The CWND remains unvalidated and the sender typically remains in this phase for one RTT.
+          On entry to the Validating Phase, the sender:</t>
+         
+          <t><list style="symbols">
+               <t>Validating Phase (Check flight_size on entry):
+               On entry to the Validating Phase, if the flight_size is less
+               than or equal to the PipeSize, the Normal Phase is entered with the CWND
+               reset to the PipeSize. (The PipeSize does not include the part of the 
+               jump_cwnd that was not utilised.)</t>
 
-            <t>Validating Phase (Limiting CWND on entry):
-            On entry to the Validating Phase (when flight_size is greater
-             than the PipeSize), the CWND is set to the flight_size.</t>
+               <t>Validating Phase (Limiting CWND on entry):
+               On entry to the Validating Phase (when flight_size is greater
+               than the PipeSize), the CWND is set to the flight_size.</t>
+          </list></t> <!-- End of list of actions -->
 
-        </list></t> <!-- End of list of actions -->
+          <t>During the Validating Phase, the sender performs the following actions:</t>
 
-    <t>During the Validating Phase, the sender performs the following actions:</t>
-
-        <t><list style="symbols">
+          <t><list style="symbols">
 
             <t>Validating Phase (Tracking PipeSize):
             The PipeSize is increased by the volume of acknowledged data for each
@@ -658,7 +657,8 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
             successfully sent over the path.</t>
 
             <t>Validating Phase (Updating CWND): The CWND is updated using the
-            normal rules for the current congestion controller, this typically will use "slow start", which
+            normal rules for the current congestion controller,
+            this typically will use "slow start", which
             allows CWND to be increased for each received acknowledgement that
             indicates a packet has been successfully sent across the path.</t>
 
