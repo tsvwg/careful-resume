@@ -669,7 +669,7 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
             If a sender determines that congestion was experienced
             (e.g., packet loss or ECN-CE marking), Careful Resume
             enters the Safe Retreat Phase
-            (logged as packet_loss and ECN_CE, see <xref target="sec-QLOG"></xref>).</t>
+            (logged as packet_loss or ECN_CE, see <xref target="sec-QLOG"></xref>).</t>
 
             <t>Validating Phase (Receiving acknowledgement of the unvalidated packets):
             The sender enters the Normal Phase when an acknowledgement is
