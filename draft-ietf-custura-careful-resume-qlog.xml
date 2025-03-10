@@ -213,7 +213,10 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
 | rtt_not_validated   | If the current_rtt is not     | Recon | Norm  |
 |                     | confirmed the sender MUST     | Unval |       |
 |                     | enter the Normal Phase.       |       |       |
-+---------------------+-------------------------------+------+--------+
++---------------------+-------------------------------+-------+-------+
+| start_validating    | Completed sending all         | Unval | Val   |
+|                     | unvalidated packets.          |       |       |
++---------------------+-------------------------------+------+--------+     
 | first_unvalidated_  | The sender enters the         | Unval | Val   |
 | packet_acknowledged | Validating Phase when an ACK  |       |       |
 |                     | is received for the first     |       |       |
