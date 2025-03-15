@@ -10,7 +10,7 @@
 <?rfc sortrefs="yes" ?>
 <?rfc compact="yes" ?>
 <?rfc subcompact="no" ?>
-<rfc category="std" docName="draft-custura-tsvwg-careful-resume-qlog-01"
+<rfc category="std" docName="draft-custura-tsvwg-careful-resume-qlog-02"
      ipr="trust200902" consensus="true" submissionType="IETF">
     <!-- category values: std, bcp, info, exp, and historic
     ipr values: full3667, noModification3667, noDerivatives3667
@@ -213,7 +213,10 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
 | rtt_not_validated   | If the current_rtt is not     | Recon | Norm  |
 |                     | confirmed the sender MUST     | Unval |       |
 |                     | enter the Normal Phase.       |       |       |
-+---------------------+-------------------------------+------+--------+
++---------------------+-------------------------------+-------+-------+
+| start_validating    | Completed sending all         | Unval | Val   |
+|                     | unvalidated packets.          |       |       |
++---------------------+-------------------------------+------+--------+     
 | first_unvalidated_  | The sender enters the         | Unval | Val   |
 | packet_acknowledged | Validating Phase when an ACK  |       |       |
 |                     | is received for the first     |       |       |
@@ -406,7 +409,7 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
         <t>ID -01 Refactors initial text from CR into a table matching the qlog triggers. 
           Add one new trigger, 'rtt_exceeded'; update text for trigger "congestion_window_limited",
           based on comments from Finic8; updates CDDL based on comments from R. Marx</t>
-
+        <t>ID -02 Adds a missing trigger when jump cwnd fully used.</t>
 
     </list>
 </section> <!-- End of Revisions -->
