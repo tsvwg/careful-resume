@@ -607,7 +607,7 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
                <t>Unvalidated Phase (Completed sending all unvalidated packets):
                The sender enters the Validating Phase when the flight_size equals the CWND
                (logged as
-               start_validating in <xref target="I-D.custura-tsvwg-careful-resume-qlog"></xref>)..</t>
+               last_unvalidated_packet_sent in <xref target="I-D.custura-tsvwg-careful-resume-qlog"></xref>)..</t>
              
                <t>Unvalidated Phase (Tracking PipeSize):
                The variable PipeSize is increased by the volume of data acknowledged
