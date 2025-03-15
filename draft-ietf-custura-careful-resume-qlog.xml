@@ -197,6 +197,17 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
           
     <section anchor="Phases" title="Mapping of triggers to phase transitions">
     <t>
+        <t>
+            Careful Resume phases are abbreviated as follows:
+            <ul>
+                <li><strong>Unval</strong> = Unvalidated Phase</li>
+                <li><strong>Val</strong> = Validating Phase</li>
+                <li><strong>Recon</strong> = Reconnaissance Phase</li>
+                <li><strong>SR</strong> = Safe Retreat Phase</li>
+                <li><strong>Norm</strong> = Normal Phase</li>
+            </ul>
+        </t>
+         
 <figure title="Mapping of triggers to phase transitions">
 <artwork align="left" name="" type="" alt=""><![CDATA[
      
@@ -208,15 +219,17 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
 |                     | the initial data without      |       |       |
 |                     | reported congestion and has   |       |       |
 |                     | more data to send than the    |       |       |
-|                     | cwnd would allow.             |       |       |
+|                     | CWND would allow.             |       |       |
 +---------------------+-------------------------------+-------+-------+
 | rtt_not_validated   | If the current_rtt is not     | Recon | Norm  |
 |                     | confirmed the sender MUST     | Unval |       |
 |                     | enter the Normal Phase.       |       |       |
 +---------------------+-------------------------------+-------+-------+
-| start_validating    | Completed sending all         | Unval | Val   |
-|                     | unvalidated packets.          |       |       |
-+---------------------+-------------------------------+------+--------+     
+| last_unvalidated_   | Completed sending all         | Unval | Val   |
+| packet_sent         | unvalidated packets, e.g.,    |       |       |
+|                     | when flight_size is equal to  |       |       |
+|                     | the CWND after the jump       |       |       |
++---------------------+-------------------------------+-------+-------+     
 | first_unvalidated_  | The sender enters the         | Unval | Val   |
 | packet_acknowledged | Validating Phase when an ACK  |       |       |
 |                     | is received for the first     |       |       |
@@ -254,7 +267,7 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
 
      
  ]]></artwork>
-    </figure>
+    </figure>         
     </t>
     </section> 
  
@@ -263,8 +276,11 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
     <t>This section provides definitions that enable a
     Careful Resume implementation
     to generate qlog events when using QUIC.
-    It introduces an event to report the current phase of a sender,
-    and an associated description.</t>
+    It introduces an event to report a phase transition at the sender,
+    and its associated description. 
+    The event's state parameters (which include mandatory CR-specific metrics and optionally
+    CWND or ssthresh) are intended to reflect the state after the phase transition.
+    </t> 
     
     <t>The event and data structure definitions in this section are
     expressed in the Concise Data Definition Language (CDDL)
@@ -300,13 +316,14 @@ state_data: CarefulResumeStateParameters,
         "rtt_exceeded" /
         ; for the Validating phase
         "first_unvalidated_packet_acknowledged" /
+        ; for the Validating phase
+        ; when all unvalidated packets have been sent
+        "last_unvalidated_packet_sent" /
         ; for the Normal phase
         ; and no remaining unvalidated packets to be acknowledged
         "last_unvalidated_packet_acknowledged" /
         ; for the Normal phase, when CR not allowed
         "rtt_not_validated" /
-        ; when all unvalidated packets ahev been sent
-        "start_validating" /
         ; for the Normal phase,
         ; when sending fewer unvalidated packets than CWND permits
         "rate_limited" /
@@ -411,7 +428,8 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
         <t>ID -01 Refactors initial text from CR into a table matching the qlog triggers. 
           Add one new trigger, 'rtt_exceeded'; update text for trigger "congestion_window_limited",
           based on comments from Finic8; updates CDDL based on comments from R. Marx</t>
-        <t>ID -02 Adds a missing trigger when jump cwnd fully used.</t>
+        <t>ID -02 Adds a missing trigger when jump cwnd fully used, a list of abbreviations and 
+          clarifies that logged values are expected to reflect the post-transition state. </t>
 
     </list>
 </section> <!-- End of Revisions -->
