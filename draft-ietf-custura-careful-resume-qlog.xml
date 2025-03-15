@@ -305,6 +305,8 @@ state_data: CarefulResumeStateParameters,
         "last_unvalidated_packet_acknowledged" /
         ; for the Normal phase, when CR not allowed
         "rtt_not_validated" /
+        ; when all unvalidated packets ahev been sent
+        "start_validating" /
         ; for the Normal phase,
         ; when sending fewer unvalidated packets than CWND permits
         "rate_limited" /
