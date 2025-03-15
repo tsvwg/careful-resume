@@ -757,10 +757,10 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
         </section>     <!-- End of subsection Safe Retreat Phase: loss recovery -->
     </section> <!-- End of Safe Retreat Phase -->
 
-    <section title="RTO Expiry while using Careful Resume">
+    <section title="Detecting Persistent Congestion while using Careful Resume">
 
-        <t> A sender that experiences a Retransmission Time Out (RTO) expiry
-        ceases to use Careful Resume.
+        <t> A sender that experiences persisent congestion (e.g., a Retransmission Time Out, RTO, expiry in TCP)
+          ceases to use Careful Resume.
         The sender enters the Normal Phase. If using BBR, the normal
         processing of packet losses will cause it to enter the
         Drain state while the "carefully-resuming" flag is set to True,see <xref target="sec-BBR-SR"></xref>.</t>
@@ -793,13 +793,13 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
     <section anchor="req-observe" title="Observing the Path Capacity">
             
         <t>There are various approaches to measuring the capacity used by a connection.
-        Congestion controllers, such as CUBIC or Reno, can estimate the
+        Congestion controllers, such as CUBIC or Reno, could estimate the
         capacity based on the
         CWND, flight_size, acknowledged rate, etc. A different approach could
         estimate the same parameters for a rate-based congestion
         controller, such as BBR <xref target="I-D.ietf-ccwg-bbr"></xref>,
         or by observing the rate at which data is acknowledged by the remote endpoint.</t>
-
+        
         <t>Implementations are required to calculate a saved_rtt, measuring
         the minimum RTT while observing the capacity. For example, this could be the minimum
         of a set RTT of measurements measured over the previous 5 minutes.</t>
@@ -818,10 +818,10 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
             overshoot). It is inappropriate to use an
             overshoot in the CWND as a basis for estimating the
             capacity. In most cases, the CWND will converge to a stable
-            value after several more RTTs.
-            One mitigation could be to set the
-            saved_cwnd based on
-            the flight_size, or an averaged CWND.</t>
+            value after several more RTTs. 
+            One mitigation when a connection is in Slow Start
+            could be to set the
+            saved_cwnd based on the validated pipe size (i.e., CWND / 2).</t>
         
             <t>When a sender
             is rate-limited, or in the RTT following a burst of
