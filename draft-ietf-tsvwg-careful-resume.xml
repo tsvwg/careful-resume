@@ -1104,7 +1104,8 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
 <section anchor="sec-acknowledgments" title="Acknowledgments">
     <t>The authors would like to thank John Border, Gabriel Montenegro, Patrick McManus,
     Ian Swett, Igor Lubashev, Robin Marx, Roland Bless, Franklin Simo, Kazuho Oku, Tong,
-    Ana Custura, Neal Cardwell, Marten Seemann, Matthias Hofstaetter and Joerg Deutschmann for
+    Ana Custura, Neal Cardwell, Marten Seemann, Matthias Hofstaetter, Nicolai Fischer
+    and Joerg Deutschmann for
     their fruitful comments in developing this specification.</t>
     <t>The authors would like to thank Tom Jones for co-authoring
     several previous versions of this document.</t>
@@ -1539,7 +1540,9 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
      <t>WG-12, JD, MH and GF clarified text, and checked for typos.</t>
      <t>WG-13, After WGLC including NC and MK's review comments.</t>
      <t>WG-14, removed qlog to a separate ID (LP), made relevant to other transports (MK).</t>
-     <t>WG-15, fixes typos and aligns with new Rev of the Qlog spec.</t>
+     <t>WG-15, fixes typos and aligns with new rev of the Qlog spec.</t>
+     <t>WG-16, updated after review by Kazuho, Nicolai Fischer and aligns with latest rev of the CR Qlog I-D.</t>
+
     </list></t>
      
 </section> <!-- End of Revisions -->
