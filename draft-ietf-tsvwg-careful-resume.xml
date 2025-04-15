@@ -522,7 +522,7 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
             the sender MUST record the minimum RTT for the current connection as the current_rtt</t>
 
             <t>Reconnaissance Phase (Detected congestion): If the sender detects
-            congestion (e.g., packet loss or -CE marking), the sender MUST enter the Normal Phase
+            congestion (e.g., packet loss or ECN-CE marking), the sender MUST enter the Normal Phase
              to respond to the detected congestion.</t>
         
         <t>Reconnaissance Phase (Using saved_cwnd):
@@ -674,7 +674,7 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
             If the sender determines that congestion was experienced
             (e.g., packet loss or -CE marking), Careful Resume
             enters the Safe Retreat Phase
-            (logged as packet_loss or _CE, see <xref target="sec-QLOG"></xref>).</t>
+            (logged as packet_loss or ECN_CE, see <xref target="sec-QLOG"></xref>).</t>
 
             <t>Validating Phase (Receiving acknowledgement of the unvalidated packets):
             The sender enters the Normal Phase when an acknowledgement is
