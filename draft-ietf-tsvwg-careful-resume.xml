@@ -522,7 +522,7 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
             the sender MUST record the minimum RTT for the current connection as the current_rtt</t>
 
             <t>Reconnaissance Phase (Detected congestion): If the sender detects
-            congestion (e.g., packet loss or ECN-CE marking), the sender MUST enter the Normal Phase
+            congestion (e.g., packet loss or -CE marking), the sender MUST enter the Normal Phase
              to respond to the detected congestion.</t>
         
         <t>Reconnaissance Phase (Using saved_cwnd):
@@ -603,7 +603,7 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
                Unvalidated Phase (Detected congestion): If the sender detects
                congestion (e.g., packet loss or ECN-CE marking), 
                the Safe Retreat Phase is entered 
-               (logged as packet_loss in [I-D.custura-tsvwg-careful-resume-qlog]). 
+               (logged as packet_loss or ECN_CE in [I-D.custura-tsvwg-careful-resume-qlog]). 
                (Note that in the Unvalidated Phase, insufficient time has passed for a 
                sender to receive feedback validating the jump in CWND.
                Therefore, any detected congestion must have resulted from packets 
@@ -672,9 +672,9 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
 
             <t>Validating Phase (Detected congestion):
             If the sender determines that congestion was experienced
-            (e.g., packet loss or ECN-CE marking), Careful Resume
+            (e.g., packet loss or -CE marking), Careful Resume
             enters the Safe Retreat Phase
-            (logged as packet_loss or ECN_CE, see <xref target="sec-QLOG"></xref>).</t>
+            (logged as packet_loss or _CE, see <xref target="sec-QLOG"></xref>).</t>
 
             <t>Validating Phase (Receiving acknowledgement of the unvalidated packets):
             The sender enters the Normal Phase when an acknowledgement is
@@ -1016,7 +1016,7 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
 
         <t>The Safe Retreat Phase sets a safe CWND value to drain any unvalidated packets
         from the path after a packet loss has been detected or when ACKs that indicate sent
-        packets were ECN CE-marked. The CC parameters that were used are invalid,
+        packets were  CE-marked. The CC parameters that were used are invalid,
         and are removed.</t>
 
         <t>The Safe Retreat reaction differs from a traditional
