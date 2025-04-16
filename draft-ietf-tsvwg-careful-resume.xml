@@ -139,13 +139,13 @@ specify just the year. -->
 
     <t>A CC algorithm typically takes time to ramp-up the sending rate,
     called the "Slow-Start phase", informally known as the time to "Get up
-    to speed". This defines a time in which a sender
+    to speed". This defines a time in which the sender
     intentionally uses less capacity than might be available, with the
     intention to avoid or limit overshoot of the available capacity for the path.
     This can increase queuing (latency or jitter) and/or
     congestion packet loss for the flow. Any overshoot can have a
     detrimental effect on other flows sharing a common bottleneck.
-    A sender can use a method that observes the rate of acknowledged data,
+    The sender can use a method that observes the rate of acknowledged data,
     and seek to avoid an overshoot of the bottleneck capacity (e.g., Hystart++
     <xref target="RFC9406"></xref>).
     In the extreme case, an overshoot can result in persistent congestion
@@ -181,7 +181,7 @@ specify just the year. -->
     those that could be implemented in TCP, using methods such as TCP Control Block (TCB)
     <xref target="RFC9040"></xref> caching.</t>
 
-    <section anchor="sec-CC-params" title="Use of saved CC parameters by a Sender">
+    <section anchor="sec-CC-params" title="Use of saved CC parameters by the Sender">
         <t>CC parameters are used by Careful Resume for three functions:
         <list style="numbers">
             <t>Information to confirm whether a saved path corresponds to
@@ -203,7 +203,7 @@ specify just the year. -->
     </section>  <!-- End of using with care -->
           
     <section anchor="rec-choice" title="Receiver Preference">
-            <t>Whilst a sender could take optimisation decisions without considering
+            <t>Whilst the sender could take optimisation decisions without considering
             the receiver's preference, there are cases where a receiver
             could have information that
             is not available at the sender, or might benefit from
@@ -481,7 +481,7 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
     measured as the volume of bytes sent during an RTT. This could be computed
     by measuring the volume of data acknowledged in one RTT.
     If the measured CWND is less than four times the Initial Window (IW)
-        a sender can choose to not save the CC parameters, because the additional actions associated with
+        the sender can choose to not save the CC parameters, because the additional actions associated with
     performing Careful Resume for a small CWND would not justify its use.</t>
         
      <t>Observing (saved_rtt): The minimum RTT at the time of observation is saved as the saved_rrt.</t>
@@ -493,7 +493,7 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
     </section> <!-- End of define Observing:-->
           
     <section anchor="sec-phase-rec-phase" title="Reconnaissance Phase">
-        <t> A sender enters the Reconnaissance Phase after connection setup.
+        <t> The sender enters the Reconnaissance Phase after connection setup.
         In this phase, the CWND is initialised to the IW, and the sender transmits initial data.
         The CWND MAY be increased using normal CC as each ACK
         confirms delivery of previously unacknowledged data (i.e., the CC is unchanged).</t>
@@ -519,7 +519,7 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
     <t>The following actions are performed during the Reconnaissance Phase:</t>
     <t><list style="symbols">
              <t>Reconnaissance Phase (Recording the current_rtt): During this phase,
-            a sender MUST record the minimum RTT for the current connection as the current_rtt</t>
+            the sender MUST record the minimum RTT for the current connection as the current_rtt</t>
 
             <t>Reconnaissance Phase (Detected congestion): If the sender detects
             congestion (e.g., packet loss or ECN-CE marking), the sender MUST enter the Normal Phase
@@ -531,7 +531,7 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
             MUST enter the Normal Phase.</t>
 
         <t>Reconnaissance Phase (Path confirmed):
-        When a sender has confirmed the RTT (see <xref target="sec-confirm-rtt"></xref>) and also has
+        When the sender has confirmed the RTT (see <xref target="sec-confirm-rtt"></xref>) and also has
         received an acknowledgement for the initial data without reported congestion,
         it MAY then enter the Unvalidated Phase.
         Although a sender can immediately transition to the Unvalidated Phase,
@@ -540,9 +540,9 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
     </list></t>
 
           <t>
-            If a sender is rate-limited <xref target="RFC7661"></xref>, it might send insufficient data
+            If the sender is rate-limited <xref target="RFC7661"></xref>, it might send insufficient data
             to be able to validate transmission at the higher rate.
-            A sender is allowed to remain in the Reconnaissance Phase and to not
+            The sender is allowed to remain in the Reconnaissance Phase and to not
             transition to the Unvalidated Phase until there is
             more data in the transmission buffer
             than normally permitted by the CC algorithm.
@@ -594,15 +594,20 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
                Unvalidated Phase MUST use pacing based on the current_rtt.</t>
              
                <t>Unvalidated Phase (Confirming the path during transmission):
-               If a sender determines that the previous CC parameters
+               If the sender determines that the previous CC parameters
                are not valid (due to a detected path change),
                the Safe Retreat Phase is entered
                (logged as
-               path_change in <xref target="I-D.custura-tsvwg-careful-resume-qlog"></xref>).
-              (This is because in the Unvalidated Phase, insufficient time has passed for
-              a sender to receive feedback validating the jump in CWND.
-              Therefore, any detected congestion must have resulted from packets sent
-              before the Unvalidated Phase.)</t>
+               path_change in <xref target="I-D.custura-tsvwg-careful-resume-qlog"></xref>).</t>
+
+               Unvalidated Phase (Detected congestion): If the sender detects
+               congestion (e.g., packet loss or ECN-CE marking), 
+               the Safe Retreat Phase is entered 
+               (logged as packet_loss or ECN_CE in [I-D.custura-tsvwg-careful-resume-qlog]). 
+               (Note that in the Unvalidated Phase, insufficient time has passed for a 
+               sender to receive feedback validating the jump in CWND.
+               Therefore, any detected congestion must have resulted from packets 
+               sent before the Unvalidated Phase.)
 
                <t>Unvalidated Phase (Completed sending all unvalidated packets):
                The sender enters the Validating Phase when the flight_size equals the CWND
@@ -619,7 +624,7 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
                received for the first packet number (or higher) that was sent in the Unvalidated Phase
                (logged as first_unvalidated_packet_acknowledged, see <xref target="sec-QLOG"></xref>).</t>
 
-               <t>Unvalidated Phase (Limiting time in the Unvalidated Phase): A sender enters the
+               <t>Unvalidated Phase (Limiting time in the Unvalidated Phase): The sender enters the
                Validating Phase if more than one RTT has elapsed while in the Unvalidated Phase
                (logged as rtt_exceeded, see <xref target="sec-QLOG"></xref>).</t>
           
@@ -665,9 +670,9 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
             allows CWND to be increased for each received acknowledgement that
             indicates a packet has been successfully sent across the path.</t>
 
-            <t>Validating Phase (Congestion indication):
-            If a sender determines that congestion was experienced
-            (e.g., packet loss or ECN-CE marking), Careful Resume
+            <t>Validating Phase (Detected congestion):
+            If the sender determines that congestion was experienced
+            (e.g., packet loss or -CE marking), Careful Resume
             enters the Safe Retreat Phase
             (logged as packet_loss or ECN_CE, see <xref target="sec-QLOG"></xref>).</t>
 
@@ -823,7 +828,7 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
             could be to set the
             saved_cwnd based on the validated pipe size (i.e., CWND / 2).</t>
         
-            <t>When a sender
+            <t>When the sender
             is rate-limited, or in the RTT following a burst of
             transmission, a sender typically transmits
             less data than allowed by the CWND. Such observations could be discounted when
@@ -833,7 +838,7 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
     </section> <!-- Observing  (measuring) -->
 
     <section anchor="req-recon"  title="Confirming the Path in the Reconnaissance Phase">
-        <t>In the Reconnaissance Phase, a sender initiates a connection
+        <t>In the Reconnaissance Phase, the sender initiates a connection
         and starts sending initial data, while measuring the current_rtt.
         The CC is not modified.
         A sender therefore needs to limit the initial data,
@@ -847,7 +852,7 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
         the saved CC parameters. When multiple new concurrent connections
         are made to a server, each can have a valid saved_remote_endpoint,
         but the saved_cwnd can only be used for one connection at a time.
-        This is to prevent a sender from performing multiple jumps in the CWND,
+        This is to prevent the sender from performing multiple jumps in the CWND,
         each individually based on the same saved_cwnd, and hence creating an
         excessive aggregate load at the bottleneck.</t>
 
@@ -887,7 +892,7 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
             (The value of ten accommodates both increases in latency from buffering
             on a path and any variation between RTT samples).</t>
         
-            <t>A sender also verifies that the initial data was acknowledged
+            <t>The sender also verifies that the initial data was acknowledged
             (i.e., a loss could be indicative of persistent congestion).
         A sender in Reconnaissance Phase reverts to the Normal Phase if congestion is detected.
             Some transport protocols implement CC mechanisms that infer potential congestion
@@ -931,7 +936,7 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
             
         <section anchor="req-pace" title="Pacing in the Unvalidated Phase">
         
-            <t> A sender needs to avoid sending a burst of packets greater than IW as a result of a
+            <t> The sender needs to avoid sending a burst of packets greater than IW as a result of a
             step-increase in the CWND. This is consistent with <xref target="RFC8085"></xref>,
             <xref target="RFC9000"></xref>.</t>
 
@@ -985,7 +990,7 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
         <t>The purpose of the Validating Phase is to trigger an
         entry to the Safe Retreat Phase if the capacity is not validated.</t>
 
-        <t>When a sender completes the Unvalidated Phase, either by sending a jump_cwnd of data
+        <t>When the sender completes the Unvalidated Phase, either by sending a jump_cwnd of data
         or after one RTT or an acknowledgment for an unvalidated packet,
         it ceases to use the unvalidated CWND.</t>
         <t>If the flight_size was less than or equal to the PipeSize, the
@@ -1011,7 +1016,7 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
 
         <t>The Safe Retreat Phase sets a safe CWND value to drain any unvalidated packets
         from the path after a packet loss has been detected or when ACKs that indicate sent
-        packets were ECN CE-marked. The CC parameters that were used are invalid,
+        packets were  CE-marked. The CC parameters that were used are invalid,
         and are removed.</t>
 
         <t>The Safe Retreat reaction differs from a traditional
@@ -1076,7 +1081,7 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
             state <xref target="bbr"</xref>.</t>
         </list></t>-->
 
-        In the Normal Phase, a sender is permitted to start
+        In the Normal Phase, the sender is permitted to start
         Observing the capacity of the path.</t>
                 
     </section> <!-- End of Normal Phase -->
@@ -1084,7 +1089,7 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
     <section anchor="flow-control" title="Limitations from Transport Protocols">
 
         <t>The CWND is one factor that limits the
-        sending rate of a sender. Other mechanisms can also constrain
+        sending rate of the sender. Other mechanisms can also constrain
         the maximum sending rate of a transport protocol.
         A transport protocol might need to update these mechanisms
         to fully utilise the CWND made available by Careful Resume:
@@ -1342,7 +1347,7 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
         <t>The sender now sends 121 unvalidated packets (the unused portion of the current CWND).
         Each time a packet is sent, the sender checks whether 1 RTT has passed since entering the
         Unvalidated Phase (otherwise, the Validating Phase is entered). This check triggers only
-        for cases where a sender is rate-limited,see the following example.</t>
+        for cases where the sender is rate-limited,see the following example.</t>
 
         <t>The PipeSize increases after each ACK is received.</t>
 
@@ -1542,6 +1547,7 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
      <t>WG-14, removed qlog to a separate ID (LP), made relevant to other transports (MK).</t>
      <t>WG-15, fixes typos and aligns with new rev of the Qlog spec.</t>
      <t>WG-16, updated after review by Kazuho, Nicolai Fischer and aligns with latest rev of the CR Qlog I-D.</t>
+     <t>WG-17, updated comments from Joerg Deutschman, harmonised  "congestiuon detected".</t>
 
     </list></t>
      
