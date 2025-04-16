@@ -10,7 +10,7 @@
 <?rfc sortrefs="yes" ?>
 <?rfc compact="yes" ?>
 <?rfc subcompact="no" ?>
-<rfc category="std" docName="draft-ietf-tsvwg-careful-resume-16"
+<rfc category="std" docName="draft-ietf-tsvwg-careful-resume-17"
      ipr="trust200902" consensus="true" submissionType="IETF">
     <!-- category values: std, bcp, info, exp, and historic
     ipr values: full3667, noModification3667, noDerivatives3667
@@ -139,7 +139,7 @@ specify just the year. -->
 
     <t>A CC algorithm typically takes time to ramp-up the sending rate,
     called the "Slow-Start phase", informally known as the time to "Get up
-    to speed". This defines a time in which the sender
+    to speed". This defines a time in which a sender
     intentionally uses less capacity than might be available, with the
     intention to avoid or limit overshoot of the available capacity for the path.
     This can increase queuing (latency or jitter) and/or
@@ -181,7 +181,7 @@ specify just the year. -->
     those that could be implemented in TCP, using methods such as TCP Control Block (TCB)
     <xref target="RFC9040"></xref> caching.</t>
 
-    <section anchor="sec-CC-params" title="Use of saved CC parameters by the Sender">
+    <section anchor="sec-CC-params" title="Use of saved CC parameters by a Sender">
         <t>CC parameters are used by Careful Resume for three functions:
         <list style="numbers">
             <t>Information to confirm whether a saved path corresponds to
@@ -596,23 +596,23 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
                <t>Unvalidated Phase (Confirming the path during transmission):
                If the sender determines that the previous CC parameters
                are not valid (due to a detected path change),
-               the Safe Retreat Phase is entered
+               the Safe Retreat Phase MUST be entered
                (logged as
                path_change in <xref target="I-D.custura-tsvwg-careful-resume-qlog"></xref>).</t>
 
-               Unvalidated Phase (Detected congestion): If the sender detects
-               congestion (e.g., packet loss or ECN-CE marking), 
-               the Safe Retreat Phase is entered 
-               (logged as packet_loss or ECN_CE in [I-D.custura-tsvwg-careful-resume-qlog]). 
-               (Note that in the Unvalidated Phase, insufficient time has passed for a 
+               <t>Unvalidated Phase (Detected congestion): If the sender detects
+               congestion (e.g., packet loss or ECN-CE marking),
+               the Safe Retreat Phase MUST be entered
+               (logged as packet_loss or ECN_CE in <xref target="I-D.custura-tsvwg-careful-resume-qlog"></xref>).
+               (Note that in the Unvalidated Phase, insufficient time has passed for a
                sender to receive feedback validating the jump in CWND.
                Therefore, any detected congestion must have resulted from packets 
-               sent before the Unvalidated Phase.)
+               sent before the Unvalidated Phase.)</t>
 
                <t>Unvalidated Phase (Completed sending all unvalidated packets):
                The sender enters the Validating Phase when the flight_size equals the CWND
                (logged as
-               last_unvalidated_packet_sent in <xref target="I-D.custura-tsvwg-careful-resume-qlog"></xref>)..</t>
+               last_unvalidated_packet_sent in <xref target="I-D.custura-tsvwg-careful-resume-qlog"></xref>).</t>
              
                <t>Unvalidated Phase (Tracking PipeSize):
                The variable PipeSize is increased by the volume of data acknowledged
@@ -671,8 +671,8 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
             indicates a packet has been successfully sent across the path.</t>
 
             <t>Validating Phase (Detected congestion):
-            If the sender determines that congestion was experienced
-            (e.g., packet loss or -CE marking), Careful Resume
+            If the sender determines that congestion was detected
+            (e.g., packet loss or ECN-CE marking), Careful Resume
             enters the Safe Retreat Phase
             (logged as packet_loss or ECN_CE, see <xref target="sec-QLOG"></xref>).</t>
 
@@ -1016,7 +1016,7 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
 
         <t>The Safe Retreat Phase sets a safe CWND value to drain any unvalidated packets
         from the path after a packet loss has been detected or when ACKs that indicate sent
-        packets were  CE-marked. The CC parameters that were used are invalid,
+        packets were marked as ECN-CE. The CC parameters that were used are invalid,
         and are removed.</t>
 
         <t>The Safe Retreat reaction differs from a traditional
@@ -1049,7 +1049,7 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
         there was also a significant overshoot at the bottleneck,
         and must not be used to reinitialise the CWND.</t>
 
-            <t>The Proportional Rate Reduction (PRR) <xref target="RFC6937"></xref>
+            <t>Proportional Rate Reduction (PRR) <xref target="I-D.ietf-tcpm-prr-rfc6937bis"></xref>
             assumes that it is safe to reduce
             the rate gradually when in congestion avoidance.
             PRR is therefore not appropriate
@@ -1145,7 +1145,6 @@ with a value containing a set of directories to search.  These can be either in 
 filing system or remote ones accessed by http (http://domain/dir/... ).-->
 
     <references title="Normative References">
-    
         <?rfc include="reference.RFC.2119.xml"?>
         <!-- <?rfc include="reference.RFC.6349.xml"?> -->
         <?rfc include="reference.RFC.8085.xml"?>
@@ -1168,7 +1167,9 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
         <?rfc include="reference.RFC.5783.xml"?>
         <?rfc include="reference.RFC.6675.xml"?>
         <?rfc include="reference.RFC.6928.xml"?>
-        <?rfc include="reference.RFC.6937.xml"?>
+       <!-- <?rfc include="reference.RFC.6937.xml"?>-->
+        <?rfc include="reference.I-D.ietf-tcpm-prr-rfc6937bis.xml"?>
+
         <?rfc include="reference.RFC.7661.xml"?>
         <?rfc include="reference.RFC.8867.xml"?>
         <?rfc include="reference.RFC.9002.xml"?>
@@ -1476,7 +1477,7 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
        At that stage (after the capacity has been validated),
            the measured delivery rate is expected to reflect the probing rate.</t>
 
-       <t>If congestion is experienced while the "carefully-resuming" flag
+       <t>If congestion is detected while the "carefully-resuming" flag
            is True, BBR exits the Startup state
                and enters the Drain state (implementing the Safe Retreat Phase).</t>
 </section> <!-- Unvalidated Phase for BBR -->
@@ -1485,7 +1486,7 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
    <t>When using BBR, the Validation Phase is realised using the
    BBR rules for exiting Startup. Upon exiting Startup, the connection
    estimates that the measured delivery rate will reflect the flow's share of
-   the actual bottleneck bandwidth. If congestion is experienced (e.g., packet losses were detected)
+   the actual bottleneck bandwidth. If congestion is detected
    while using careful resume (i.e, the "carefully-resuming" flag is True), BBR then exits the Startup state
        and enters the Drain state.</t>
 </section> <!-- Validating Phase for BBR -->
@@ -1547,7 +1548,7 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
      <t>WG-14, removed qlog to a separate ID (LP), made relevant to other transports (MK).</t>
      <t>WG-15, fixes typos and aligns with new rev of the Qlog spec.</t>
      <t>WG-16, updated after review by Kazuho, Nicolai Fischer and aligns with latest rev of the CR Qlog I-D.</t>
-     <t>WG-17, updated comments from Joerg Deutschman, harmonised  "congestiuon detected".</t>
+     <t>WG-17, updated comments from Joerg Deutschman, harmonised use of "congestion detected" and mentions of ECN. Updated reference to PRR.bis.</t>
 
     </list></t>
      
