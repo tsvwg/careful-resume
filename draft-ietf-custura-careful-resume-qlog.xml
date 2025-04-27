@@ -221,8 +221,8 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
 |                     | more data to send than the    |       |       |
 |                     | CWND would allow.             |       |       |
 +---------------------+-------------------------------+-------+-------+
-| rtt_not_validated   | If the current_rtt is not     | Recon | Norm  |
-|                     | confirmed the sender MUST     | Unval |       |
+| path_rtt_not_va-    | If the current_rtt is not     | Recon | Norm  |
+| lidated             | confirmed the sender MUST     | Unval |       |
 |                     | enter the Normal Phase.       |       |       |
 +---------------------+-------------------------------+-------+-------+
 | last_unvalidated_   | Completed sending all         | Unval | Val   |
@@ -320,10 +320,11 @@ state_data: CarefulResumeStateParameters,
         ; when all unvalidated packets have been sent
         "last_unvalidated_packet_sent" /
         ; for the Normal phase
-        ; and no remaining unvalidated packets to be acknowledged
+        ; when no remaining unvalidated packets to be acknowledged
         "last_unvalidated_packet_acknowledged" /
-        ; for the Normal phase, when CR not allowed
-        "rtt_not_validated" /
+        ; for the Normal phase
+        ; when CR not allowed due to detected path change
+        "path_rtt_not_validated" /
         ; for the Normal phase,
         ; when sending fewer unvalidated packets than CWND permits
         "rate_limited" /
