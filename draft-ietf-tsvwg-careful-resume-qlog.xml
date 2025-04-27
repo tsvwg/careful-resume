@@ -152,7 +152,7 @@ specify just the year. -->
 
             <t>Unvalidated Packet: A packet sent when the CWND has been increased
             beyond the size normally permitted by the CC algorithm;
-            if such a packet is acknowledged, it contries to the PipeSize, 
+            if such a packet is acknowledged, it contributes to the PipeSize, 
             if congestion is detected, it triggers entry to the Safe Retreat Phase.</t>
      </list></t>
     </section> <!-- End of Notation: End of terms -->
@@ -367,7 +367,7 @@ $ProtocolEventData /= QUICCarefulResumePhaseUpdated
 </section> 
 
 <section anchor="sec-acknowledgments" title="Acknowledgments">
-    <t>The authors would like to thank Robin Marx and Lucar Purdue for
+    <t>The authors would like to thank Robin Marx and Lucas Pardue for
     their fruitful comments in developing this specification.</t>
 </section>
 
