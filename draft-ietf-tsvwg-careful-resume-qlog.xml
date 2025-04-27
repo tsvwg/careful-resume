@@ -253,11 +253,21 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
 |                     | congestion was experienced,   | Val   |       |
 |                     | e.g., packet loss, the sender |       |       |
 |                     | enters the Safe Retreat Phase.|       |       |
+|                     |                               |       |       |
+|                     | If the sender determines      | Recon | Norm  |
+|                     | congestion was experienced in |       |       |
+|                     | the Recon Phase, the sender   |       |       |
+|                     | enters the Normal Phase.      |       |       |
 +---------------------+-------------------------------+-------+-------+
 | ECN_CE              | If a sender determines that   | Unval | SR    |
 |                     | congestion was experienced,   | Val   |       |
 |                     | e.g., ECN-CE marking, sender  |       |       |
 |                     | enters the Safe Retreat Phase.|       |       |
+|                     |                               |       |       |
+|                     | If the sender determines      | Recon | Norm  |
+|                     | congestion was experienced in |       |       |
+|                     | the Recon Phase, the sender   |       |       |
+|                     | enters the Normal Phase.      |       |       |
 +---------------------+-------------------------------+-------+-------+
 | exit_recovery       | The sender enters the Normal  | SR    | Norm  |
 |                     | Phase when the last packet    |       |       |
@@ -308,31 +318,35 @@ state_data: CarefulResumeStateParameters,
 ? restored_data: CarefulResumeRestoredParameters,
 
 ? trigger:
-        ; for the Unvalidated phase, 
-        ; when there is more data to send than available CWND
+        ; for the Unvalidated Phase,
+        ; when there is more data to send than available CWND.
         "congestion_window_limited" /
-        ; for the Validating phase
-        ; when more than one RTT has passed in the Unvalidated Phase
+        ; for the Validating Phase
+        ; when more than one RTT has passed in the Unvalidated Phase.
         "rtt_exceeded" /
-        ; for the Validating phase
+        ; for the Validating Phase
         "first_unvalidated_packet_acknowledged" /
-        ; for the Validating phase
-        ; when all unvalidated packets have been sent
+        ; for the Validating Phase
+        ; when all unvalidated packets have been sent.
         "last_unvalidated_packet_sent" /
-        ; for the Normal phase
-        ; and no remaining unvalidated packets to be acknowledged
+        ; for the Normal Phase
+        ; and no remaining unvalidated packets to be acknowledged.
         "last_unvalidated_packet_acknowledged" /
-        ; for the Normal phase, when CR not allowed
+        ; for the Normal Phase, when CR not allowed.
         "rtt_not_validated" /
-        ; for the Normal phase,
-        ; when sending fewer unvalidated packets than CWND permits
+        ; for the Normal Phase,
+        ; when sending fewer unvalidated packets than CWND permits.
         "rate_limited" /
-        ; for the Safe Retreat phase, when loss detected
+        ; for the Safe Retreat Phase, when loss detected.
+        ; for the Normal Phase,
+        ; when loss detected in the Reconnaissance Phase.
         "packet_loss" /
-        ; for the Safe Retreat phase,
-        ; when ECN congestion experienced reported
+        ; for the Safe Retreat Phase,
+        ; when ECN congestion experienced reported.
+        ; for the Normal Phase,
+        ; when ECN congestion experienced in the Reconnaissance Phase.
         "ECN_CE" /
-        ; for the Normal phase 1 RTT after a congestion event
+        ; for the Normal Phase 1 RTT after a congestion event
         "exit_recovery"
 
 * $$quic-carefulresumephaseupdated-extension
