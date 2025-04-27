@@ -1,0 +1,438 @@
+<?xml version="1.0" encoding="US-ASCII"?>
+<!--<!DOCTYPE rfc SYSTEM "rfc2629.dtd" [
+<!ENTITY RFC2119 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.2119.xml">
+]>-->
+<!---?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>-->
+<?rfc strict="yes" ?>
+<?rfc toc="yes"?>
+<?rfc tocdepth="4"?>
+<?rfc symrefs="yes"?>
+<?rfc sortrefs="yes" ?>
+<?rfc compact="yes" ?>
+<?rfc subcompact="no" ?>
+<rfc category="std" docName="draft-tsvwg-careful-resume-qlog-00"
+     ipr="trust200902" consensus="true" submissionType="IETF">
+    <!-- category values: std, bcp, info, exp, and historic
+    ipr values: full3667, noModification3667, noDerivatives3667
+    you can add the attributes updates="NNNN" and obsoletes="NNNN"
+    they will automatically be output with "(if approved)" -->
+
+    <!-- ***** FRONT MATTER ***** -->
+
+  <front>
+    <!-- The abbreviated title is used in the page header
+     - it is only necessary if the
+full title is longer than 39 characters -->
+
+    <title abbrev="Qlog for Careful Resume"> Quic Logging for Convergence of Congestion
+    Control from Retained State</title>
+
+    <author fullname="Ana Custura" initials="A" surname="Custura">
+      <organization>University of Aberdeen</organization>
+      <address>
+        <postal>
+          <street>Department of Engineering</street>
+          <street>Fraser Noble Building</street>
+          <city>Aberdeen</city>
+          <code>AB24 3UE</code>
+          <country>UK</country>
+        </postal>
+        <email>ana@erg.abdn.ac.uk</email>
+      </address>
+    </author>
+
+    <author fullname="Godred Fairhurst" initials="G" surname="Fairhurst">
+      <organization>University of Aberdeen</organization>
+      <address>
+        <postal>
+          <street>Department of Engineering</street>
+          <street>Fraser Noble Building</street>
+          <city>Aberdeen</city>
+          <code>AB24 3UE</code>
+          <country>UK</country>
+        </postal>
+        <email>gorry@erg.abdn.ac.uk</email>
+      </address>
+    </author>
+
+    <date year="2025" />
+
+    <!-- If the month and year are both specified and are the current ones, xml2rfc will fill
+in the current day for you. If only the current year is specified, xml2rfc will fill
+in the current day and month for you. If the year is not the current one, it is
+necessary to specify at least a month (xml2rfc assumes day="1" if not specified for the
+purpose of calculating the expiry date).  With drafts it is normally sufficient to
+specify just the year. -->
+
+    <!-- Meta-data Declarations -->
+
+    <area>Transport</area>
+
+    <workgroup>Internet Engineering Task Force</workgroup>
+
+     <!-- WG name at the upperleft corner of the doc,
+     IETF is fine for individual submissions.
+     If this element is not present, the default is "Network Working Group",
+     which is used by the RFC Editor as a nod to the history of the IETF. -->
+
+     <keyword>Transport, Congestion Control, QUIC</keyword>
+
+    <!-- Keywords will be incorporated into HTML output
+     files in a meta tag  they have no effect on text or nroff
+     output. If you submit your draft to the RFC Editor, the
+     keywords will be used for the search engine. -->
+
+    <abstract>
+      <t>This document specifies a logging format for a cautious method for
+      Careful Resume when using the IETF quic transport protocol. It defines the logging format for qlog.</t>
+    </abstract>
+  </front>
+
+<middle>
+<section anchor="sec-introduction" title="Introduction">
+ <t> This document defines a way to provide logging for Careful Resume<xref target="I-D.ietf-tsvwg-careful-resume"></xref>
+     when used with QUIC <xref target="RFC9000"></xref><xref target="RFC9002"></xref>.
+ </t>
+    <t><xref target="I-D.ietf-tsvwg-careful-resume"></xref> defines a
+    Congestion Control (CC) mechanism
+    called Careful Resume, which is expected to
+    reduce the time to complete a transfer
+    when the transfer sends significantly more data than allowed by the
+    Initial congestion Window (IW), and
+    where the BDP of the path is also significantly
+    more than the IW.
+    It introduces an alternative mechanism to select initial CC parameters that
+    seeks to more rapidly and safely grow the sending rate controlled by
+    the congestion window (CWND). CC algorithms that are rate-based can make
+    similar adjustments to their target sending rate.</t>
+     
+    <t>When used with the QUIC transport, Careful Resume provides transport services that resemble
+    those that could be implemented in TCP, using methods such as TCP Control Block (TCB)
+    <xref target="RFC9040"></xref> caching.</t>
+
+</section> <!-- End of introduction and motivation -->
+
+<section anchor="notation" title="Language, Notation and Terms">
+
+    <t>This subsection provides a brief summary of key terms and the
+    requirements language.</t>
+
+    <section anchor="sec:req_language" title="Requirements Language">
+        <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+         "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
+         "OPTIONAL" in this document are to be interpreted as described in
+         BCP 14
+         <xref target="RFC2119"/>
+         <xref target="RFC8174"/>
+         when, and only when, they appear in all
+         capitals, as shown here.</t>
+    </section>
+         
+    <section anchor="sec-terms_def" title="Notation and Terms">
+        <t> The document uses language drawn
+        from a range of IETF RFCs.
+        The following terms are defined:
+   <list>
+
+             
+        <t>Careful Resume (CR): The method specified in <xref target="I-D.ietf-tsvwg-careful-resume"></xref>. 
+          All other terms in this section, except CWND, are defined in the same document. </t>
+
+        <t>CWND: The congestion window, or equivalent CC variable limiting
+        the maximum sending rate;</t>
+                         
+        <t>current_rtt: A sample measurement of the current RTT;</t>
+
+        <t>PipeSize: A measure of the validated available capacity based on the acknowledged data;</t>
+
+            <t>saved_cwnd: The preserved capacity derived from observation of a
+            previous connection;</t>
+
+            <t>saved_rtt: The preserved minimum RTT;</t>
+
+            <t>Unvalidated Packet: A packet sent when the CWND has been increased
+            beyond the size normally permitted by the CC algorithm;
+            if such a packet is acknowledged, it contries to the PipeSize, 
+            if congestion is detected, it triggers entry to the Safe Retreat Phase.</t>
+     </list></t>
+    </section> <!-- End of Notation: End of terms -->
+</section><!-- End of Notation -->
+
+<section anchor="sec-phase" title="The Phases of CC using Careful Resume">
+    <t>Careful Resume<xref target="I-D.ietf-tsvwg-careful-resume"></xref> defines
+        a series of phases that a
+    congestion controller moves through as a connection
+    uses the mechanism. The key phases are illustrated in Figure 1.
+</t>
+
+    <t>
+<figure title="Key transitions between Phases in Careful Resume.">
+<artwork align="left" name="" type="" alt=""><![CDATA[
+     
+Normal ...> Connect -> Reconnaissance --------------------> Normal
+(Observing)              |                                    ^
+                         v                                    |
+                        Unvalidated --------------------------+
+                         |      |                             |
+                         |      +--> Validating --------------+
+                         |               |                    |
+                         |               |                    |
+                         +---------------+--> Safe Retreat ---+
+     
+ ]]></artwork>
+    </figure>
+    </t>
+    
+    <t>
+    Examples of these transitions between phases
+    are provided in the annexe to <xref target="I-D.ietf-tsvwg-careful-resume"></xref>.</t>
+     
+    <!-- These subsections to match next section format -->
+    
+    <section title="Observing">
+        
+        <t>There are currently no qlog events associated with this phase.</t>
+
+    </section> <!-- End of define Observing:-->
+          
+    <section anchor="Phases" title="Mapping of triggers to phase transitions">
+    <t>
+        <t>
+            Careful Resume phases are abbreviated as follows:
+            <ul>
+                <li><strong>Unval</strong> = Unvalidated Phase</li>
+                <li><strong>Val</strong> = Validating Phase</li>
+                <li><strong>Recon</strong> = Reconnaissance Phase</li>
+                <li><strong>SR</strong> = Safe Retreat Phase</li>
+                <li><strong>Norm</strong> = Normal Phase</li>
+            </ul>
+        </t>
+         
+<figure title="Mapping of triggers to phase transitions">
+<artwork align="left" name="" type="" alt=""><![CDATA[
+     
++---------------------+-------------------------------+-------+-------+
+| Trigger             | Description                   | From  | To    |
++---------------------+-------------------------------+-------+-------+
+| cwnd_limited        | When sender has confirmed the | Recon | Unval |
+|                     | RTT, has received an ACK for  |       |       |
+|                     | the initial data without      |       |       |
+|                     | reported congestion and has   |       |       |
+|                     | more data to send than the    |       |       |
+|                     | CWND would allow.             |       |       |
++---------------------+-------------------------------+-------+-------+
+| rtt_not_validated   | If the current_rtt is not     | Recon | Norm  |
+|                     | confirmed the sender MUST     | Unval |       |
+|                     | enter the Normal Phase.       |       |       |
++---------------------+-------------------------------+-------+-------+
+| last_unvalidated_   | Completed sending all         | Unval | Val   |
+| packet_sent         | unvalidated packets, e.g.,    |       |       |
+|                     | when flight_size is equal to  |       |       |
+|                     | the CWND after the jump       |       |       |
++---------------------+-------------------------------+-------+-------+     
+| first_unvalidated_  | The sender enters the         | Unval | Val   |
+| packet_acknowledged | Validating Phase when an ACK  |       |       |
+|                     | is received for the first     |       |       |
+|                     | packet number (or higher)     |       |       |
+|                     | sent in the Unvalidated Phase.|       |       |
++---------------------+-------------------------------+-------+-------+
+| rtt_exceeded        | When greater than 1 RTT has   | Unval | Val   |
+|                     | passed in Unvalidated Phase.  |       |       |
++---------------------+-------------------------------+-------+-------+
+| rate_limited        | If the flight_size is less    | Unval | Norm  |
+|                     | than or equal to the PipeSize |       |       |
+|                     | sender enters Normal Phase.   |       |       |
++---------------------+-------------------------------+-------+-------+
+| last_unvalidated_   | The sender enters the Normal  | Val   | Norm  |
+| packet_acknowledged | Phase when an ACK is received |       |       |
+|                     | for the last packet number    |       |       |
+|                     | (or higher) that was sent in  |       |       |
+|                     | the Unvalidated Phase.        |       |       |
++---------------------+-------------------------------+-------+-------+
+| packet_loss         | If a sender determines that   | Unval | SR    |
+|                     | congestion was experienced,   | Val   |       |
+|                     | e.g., packet loss, the sender |       |       |
+|                     | enters the Safe Retreat Phase.|       |       |
++---------------------+-------------------------------+-------+-------+
+| ECN_CE              | If a sender determines that   | Unval | SR    |
+|                     | congestion was experienced,   | Val   |       |
+|                     | e.g., ECN-CE marking, sender  |       |       |
+|                     | enters the Safe Retreat Phase.|       |       |
++---------------------+-------------------------------+-------+-------+
+| exit_recovery       | The sender enters the Normal  | SR    | Norm  |
+|                     | Phase when the last packet    |       |       |
+|                     | sent in the Unvalidated Phase |       |       |
+|                     | is ACKed.                     |       |       |
++---------------------+-------------------------------+-------+-------+
+
+     
+ ]]></artwork>
+    </figure>         
+    </t>
+    </section> 
+ 
+
+<section anchor="sec-QLOG" title="QLOG support for QUIC">
+    <t>This section provides definitions that enable a
+    Careful Resume implementation
+    to generate qlog events when using QUIC.
+    It introduces an event to report a phase transition at the sender,
+    and its associated description. 
+    The event's state parameters (which include mandatory CR-specific metrics and optionally
+    CWND or ssthresh) are intended to reflect the state after the phase transition.
+    </t> 
+    
+    <t>The event and data structure definitions in this section are
+    expressed in the Concise Data Definition Language (CDDL)
+    <xref target="RFC8610"></xref> and its
+    extensions described in <xref target="I-D.ietf-quic-qlog-quic-events"></xref>.
+    The current convention is to use long names for variables.
+    For example, "CWND" is expanded as "congestion_window"
+    and "saved_cwnd" is expanded as "saved_congestion_window".</t>
+    
+    <section title="The CarefulResumePhaseUpdated Event">
+        <!--<name>cr_phase</name>-->
+        <t>Importance: Extra</t>
+
+        <t>When the CC algorithm changes the Careful Resume Phase
+        described in <xref target="sec-phase"></xref> of this specification.</t>
+        <t>Definition:</t>
+
+        <figure anchor="qlog-def" title="CDDL description of the CarefulResumePhaseUpdated event" >
+             <!--     <name>cr_phase</name> -->
+<sourcecode type="cddl"><![CDATA[
+QUICCarefulResumePhaseUpdated = {
+? old: CarefulResumePhase,
+new: CarefulResumePhase,
+state_data: CarefulResumeStateParameters,
+? restored_data: CarefulResumeRestoredParameters,
+
+? trigger:
+        ; for the Unvalidated phase, 
+        ; when there is more data to send than available CWND
+        "congestion_window_limited" /
+        ; for the Validating phase
+        ; when more than one RTT has passed in the Unvalidated Phase
+        "rtt_exceeded" /
+        ; for the Validating phase
+        "first_unvalidated_packet_acknowledged" /
+        ; for the Validating phase
+        ; when all unvalidated packets have been sent
+        "last_unvalidated_packet_sent" /
+        ; for the Normal phase
+        ; and no remaining unvalidated packets to be acknowledged
+        "last_unvalidated_packet_acknowledged" /
+        ; for the Normal phase, when CR not allowed
+        "rtt_not_validated" /
+        ; for the Normal phase,
+        ; when sending fewer unvalidated packets than CWND permits
+        "rate_limited" /
+        ; for the Safe Retreat phase, when loss detected
+        "packet_loss" /
+        ; for the Safe Retreat phase,
+        ; when ECN congestion experienced reported
+        "ECN_CE" /
+        ; for the Normal phase 1 RTT after a congestion event
+        "exit_recovery"
+
+* $$quic-carefulresumephaseupdated-extension
+}
+
+CarefulResumePhase =
+        "reconnaissance" /
+        "unvalidated" /
+        "validating" /
+        "normal" /
+        "safe_retreat"
+
+CarefulResumeStateParameters = {
+      pipesize: uint32,
+      first_unvalidated_packet: uint32,
+      last_unvalidated_packet: uint32,
+      ? congestion_window: uint32,
+      ? ssthresh: uint32
+}
+
+CarefulResumeRestoredParameters = {
+      saved_congestion_window: uint32,
+      saved_rtt: float32
+}
+
+$ProtocolEventData /= QUICCarefulResumePhaseUpdated
+]]></sourcecode>
+        </figure>
+   
+    </section> <!-- END OF QLOG SUBSECTION -->
+</section> <!--  End of Qlog -->
+</section> 
+
+<section anchor="sec-acknowledgments" title="Acknowledgments">
+    <t>The authors would like to thank Robin Marx and Lucar Purdue for
+    their fruitful comments in developing this specification.</t>
+</section>
+
+<section anchor="sec-IANA" title="IANA Considerations">
+    <t>Note by RM: This event type is to be added to the "qlog event schema URIs" registered at IANA,
+    but the qlog event schema URIs registry has not yet been actually created at 
+IANA because the qlog registry has not yet been created.</t>
+</section>
+
+<section anchor="sec-security" title="Security Considerations">
+    <t>This document does not exhibit specific security considerations.</t>
+    <!-- Security considerations for the
+    interactions with the receiver are discussed in
+    <xref target="I-D.kuhn-quic-bdpframe-extension"></xref>.-->
+</section> <!-- Sec Considerations -->
+        
+</middle>
+
+  <!--  BACK MATTER -->
+
+  <back>
+    <!-- References split into informative and normative -->
+
+    <!-- There are 2 ways to insert reference entries from the citation libraries:
+1. define an ENTITY at the top, and use "ampersand character"RFC2629; here (as shown)
+2. simply use a PI "less than character"?rfc include="reference.RFC.2119.xml"?> here
+(for I-Ds: include="reference.I-D.narten-iana-considerations-rfc2434bis.xml")
+Both are cited textually in the same manner: by using xref elements.
+If you use the PI option, xml2rfc will, by default, try to find included files in the same
+directory as the including file. You can also define the XML_LIBRARY environment variable
+with a value containing a set of directories to search.  These can be either in the local
+filing system or remote ones accessed by http (http://domain/dir/... ).-->
+
+    <references title="Normative References">
+    
+        <?rfc include="reference.RFC.2119.xml"?>
+        <!-- <?rfc include="reference.RFC.6349.xml"?> -->
+        <?rfc include="reference.RFC.8174.xml"?>
+        <?rfc include="reference.RFC.9000.xml"?>
+        <!-- <?rfc include="reference.RFC.9001.xml"?> -->
+        <?rfc include="reference.RFC.8610.xml"?>
+        <?rfc include="reference.I-D.ietf-quic-qlog-quic-events.xml"?>
+        <?rfc include="reference.I-D.ietf-tsvwg-careful-resume.xml"?>
+
+    </references>
+
+    <references title="Informative References">
+        <?rfc include="reference.RFC.9002.xml"?>
+        <?rfc include="reference.RFC.9040.xml"?>
+        
+
+      
+    </references>
+      
+<section anchor="rev" title="Internet Draft Revision details">
+    <list>
+        <t>ID -00 Text extracted from the TSVWG WG draft for CR.</t>
+        <t>ID -01 Refactors initial text from CR into a table matching the qlog triggers. 
+          Add one new trigger, 'rtt_exceeded'; update text for trigger "congestion_window_limited",
+          based on comments from Finic8; updates CDDL based on comments from R. Marx</t>
+        <t>ID -02 Adds a missing trigger when jump cwnd fully used, a list of abbreviations and 
+          clarifies that logged values are expected to reflect the post-transition state. </t>
+
+    </list>
+</section> <!-- End of Revisions -->
+
+</back>
+</rfc>
