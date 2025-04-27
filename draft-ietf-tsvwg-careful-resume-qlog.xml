@@ -438,12 +438,7 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
       
 <section anchor="rev" title="Internet Draft Revision details">
     <list>
-        <t>ID -00 Text extracted from the TSVWG WG draft for CR.</t>
-        <t>ID -01 Refactors initial text from CR into a table matching the qlog triggers. 
-          Add one new trigger, 'rtt_exceeded'; update text for trigger "congestion_window_limited",
-          based on comments from Finic8; updates CDDL based on comments from R. Marx</t>
-        <t>ID -02 Adds a missing trigger when jump cwnd fully used, a list of abbreviations and 
-          clarifies that logged values are expected to reflect the post-transition state. </t>
+        <t>WG -00 Addresses comments from Mike Heard and Joerg Deutschmann.</t>
 
     </list>
 </section> <!-- End of Revisions -->
