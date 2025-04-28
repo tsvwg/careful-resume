@@ -598,7 +598,7 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
                are not valid (due to a detected path change),
                the Safe Retreat Phase MUST be entered
                (logged as
-               path_change in <xref target="I-D.custura-tsvwg-careful-resume-qlog"></xref>).</t>
+               path_changed in <xref target="I-D.custura-tsvwg-careful-resume-qlog"></xref>).</t>
 
                <t>Unvalidated Phase (Detected congestion): If the sender detects
                congestion (e.g., packet loss or ECN-CE marking),

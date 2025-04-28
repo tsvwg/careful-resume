@@ -221,8 +221,8 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
 |                     | more data to send than the    |       |       |
 |                     | CWND would allow.             |       |       |
 +---------------------+-------------------------------+-------+-------+
-| path_rtt_not_va-    | If the current_rtt is not     | Recon | Norm  |
-| lidated             | confirmed the sender MUST     | Unval |       |
+| rtt_not_validated   | If the current_rtt is not     | Recon | Norm  |
+|                     | confirmed the sender MUST     | Unval |       |
 |                     | enter the Normal Phase.       |       |       |
 +---------------------+-------------------------------+-------+-------+
 | last_unvalidated_   | Completed sending all         | Unval | Val   |
@@ -249,6 +249,14 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
 |                     | (or higher) that was sent in  |       |       |
 |                     | the Unvalidated Phase.        |       |       |
 +---------------------+-------------------------------+-------+-------+
+| path_changed        | If a sender determines that   | Unval | SR    |
+|                     | it is not valid to use the    |       |       |
+|                     | previous CC parameters due to |       |       |
+|                     | a detected path change (e.g., |       |       |
+|                     | a change in RTT or an         |       |       |
+|                     | explicit signal indicating a  |       |       |
+|                     | path change.                  |       |       |
++---------------------+-------------------------------+-------+-------|
 | packet_loss         | If a sender determines that   | Unval | SR    |
 |                     | congestion was experienced,   | Val   |       |
 |                     | e.g., packet loss, the sender |       |       |
@@ -333,11 +341,13 @@ state_data: CarefulResumeStateParameters,
         ; when no remaining unvalidated packets to be acknowledged.
         "last_unvalidated_packet_acknowledged" /
         ; for the Normal Phase
-        ; when CR not allowed due to a detected path change.
-        "path_rtt_not_validated" /
+        ; when CR not allowed due to a detected RTT change.
+        "rtt_not_validated" /
         ; for the Normal Phase,
         ; when sending fewer unvalidated packets than CWND permits.
         "rate_limited" /
+        ; for the Safe Retreat Phase, when path change detected.
+        "path_changed" /
         ; for the Safe Retreat Phase, when loss detected.
         ; for the Normal Phase,
         ; when loss detected in the Reconnaissance Phase.
