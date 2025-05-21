@@ -646,7 +646,7 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
                <t>Validating Phase (Check flight_size on entry):
                On entry to the Validating Phase, if the flight_size is less
                than or equal to the PipeSize, the Normal Phase is entered with the CWND
-               reset to the PipeSize. (The PipeSize does not include the part of the 
+               reset to the PipeSize (logged as rate_limited in <xref target="I-D.custura-tsvwg-careful-resume-qlog"></xref>). (The PipeSize does not include the part of the
                jump_cwnd that was not utilised.)</t>
 
                <t>Validating Phase (Limiting CWND on entry):
