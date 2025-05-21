@@ -594,10 +594,9 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
                Unvalidated Phase MUST use pacing based on the current_rtt.</t>
              
                <t>Unvalidated Phase (Confirming the path during transmission):
-               If the sender determines that the previous CC parameters
-               are not valid (due to a detected path change),
-               the Safe Retreat Phase MUST be entered
-               (logged as
+               If the sender determines that it is not valid to use the previous CC parameters
+               due to a detected path change (e.g., a change in the RTT or an explicit signal indicating a path change),
+               the Safe Retreat Phase MUST be entered (logged as
                path_change in <xref target="I-D.custura-tsvwg-careful-resume-qlog"></xref>).</t>
 
                <t>Unvalidated Phase (Detected congestion): If the sender detects
