@@ -450,7 +450,7 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
 <section anchor="rev" title="Internet Draft Revision details">
     <list>
         <t>WG -00 Addresses comments from Mike Heard and Joerg Deutschmann.</t>
-
+        <t>WG -01 Adds a new entry, fix NiTs.</t>
     </list>
 </section> <!-- End of Revisions -->
 
