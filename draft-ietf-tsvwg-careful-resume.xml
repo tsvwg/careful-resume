@@ -10,7 +10,7 @@
 <?rfc sortrefs="yes" ?>
 <?rfc compact="yes" ?>
 <?rfc subcompact="no" ?>
-<rfc category="std" docName="draft-ietf-tsvwg-careful-resume-17"
+<rfc category="std" docName="draft-ietf-tsvwg-careful-resume-18"
      ipr="trust200902" consensus="true" submissionType="IETF">
     <!-- category values: std, bcp, info, exp, and historic
     ipr values: full3667, noModification3667, noDerivatives3667
@@ -1548,7 +1548,7 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
      <t>WG-15, fixes typos and aligns with new rev of the Qlog spec.</t>
      <t>WG-16, updated after review by Kazuho, Nicolai Fischer and aligns with latest rev of the CR Qlog I-D.</t>
      <t>WG-17, updated comments from Joerg Deutschman, harmonised use of "congestion detected" and mentions of ECN. Updated reference to PRR.bis.</t>
-
+     <t>WG-18, NiTs fixed to reconcile with logging in qlog.
     </list></t>
      
 </section> <!-- End of Revisions -->
