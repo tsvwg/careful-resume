@@ -10,7 +10,7 @@
 <?rfc sortrefs="yes" ?>
 <?rfc compact="yes" ?>
 <?rfc subcompact="no" ?>
-<rfc category="std" docName="draft-custura-tsvwg-careful-resume-qlog-02"
+<rfc category="std" docName="draft-ietf-tsvwg-careful-resume-qlog-01"
      ipr="trust200902" consensus="true" submissionType="IETF">
     <!-- category values: std, bcp, info, exp, and historic
     ipr values: full3667, noModification3667, noDerivatives3667
@@ -152,7 +152,7 @@ specify just the year. -->
 
             <t>Unvalidated Packet: A packet sent when the CWND has been increased
             beyond the size normally permitted by the CC algorithm;
-            if such a packet is acknowledged, it contries to the PipeSize, 
+            if such a packet is acknowledged, it contributes to the PipeSize, 
             if congestion is detected, it triggers entry to the Safe Retreat Phase.</t>
      </list></t>
     </section> <!-- End of Notation: End of terms -->
@@ -249,15 +249,33 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
 |                     | (or higher) that was sent in  |       |       |
 |                     | the Unvalidated Phase.        |       |       |
 +---------------------+-------------------------------+-------+-------+
+| path_changed        | If a sender determines that   | Unval | SR    |
+|                     | it is not valid to use the    |       |       |
+|                     | previous CC parameters due to |       |       |
+|                     | a detected path change (e.g., |       |       |
+|                     | a change in RTT or an         |       |       |
+|                     | explicit signal indicating a  |       |       |
+|                     | path change.                  |       |       |
++---------------------+-------------------------------+-------+-------|
 | packet_loss         | If a sender determines that   | Unval | SR    |
 |                     | congestion was experienced,   | Val   |       |
 |                     | e.g., packet loss, the sender |       |       |
 |                     | enters the Safe Retreat Phase.|       |       |
+|                     |                               |       |       |
+|                     | If the sender determines      | Recon | Norm  |
+|                     | congestion was experienced in |       |       |
+|                     | the Recon Phase, the sender   |       |       |
+|                     | enters the Normal Phase.      |       |       |
 +---------------------+-------------------------------+-------+-------+
 | ECN_CE              | If a sender determines that   | Unval | SR    |
 |                     | congestion was experienced,   | Val   |       |
 |                     | e.g., ECN-CE marking, sender  |       |       |
 |                     | enters the Safe Retreat Phase.|       |       |
+|                     |                               |       |       |
+|                     | If the sender determines      | Recon | Norm  |
+|                     | congestion was experienced in |       |       |
+|                     | the Recon Phase, the sender   |       |       |
+|                     | enters the Normal Phase.      |       |       |
 +---------------------+-------------------------------+-------+-------+
 | exit_recovery       | The sender enters the Normal  | SR    | Norm  |
 |                     | Phase when the last packet    |       |       |
@@ -308,31 +326,38 @@ state_data: CarefulResumeStateParameters,
 ? restored_data: CarefulResumeRestoredParameters,
 
 ? trigger:
-        ; for the Unvalidated phase, 
-        ; when there is more data to send than available CWND
+        ; for the Unvalidated Phase,
+        ; when there is more data to send than available CWND.
         "congestion_window_limited" /
-        ; for the Validating phase
-        ; when more than one RTT has passed in the Unvalidated Phase
+        ; for the Validating Phase
+        ; when more than one RTT has passed in the Unvalidated Phase.
         "rtt_exceeded" /
-        ; for the Validating phase
+        ; for the Validating Phase
         "first_unvalidated_packet_acknowledged" /
-        ; for the Validating phase
-        ; when all unvalidated packets have been sent
+        ; for the Validating Phase
+        ; when all unvalidated packets have been sent.
         "last_unvalidated_packet_sent" /
-        ; for the Normal phase
-        ; and no remaining unvalidated packets to be acknowledged
+        ; for the Normal Phase
+        ; when no remaining unvalidated packets to be acknowledged.
         "last_unvalidated_packet_acknowledged" /
-        ; for the Normal phase, when CR not allowed
+        ; for the Normal Phase
+        ; when CR not allowed due to a detected RTT change.
         "rtt_not_validated" /
-        ; for the Normal phase,
-        ; when sending fewer unvalidated packets than CWND permits
+        ; for the Normal Phase,
+        ; when sending fewer unvalidated packets than CWND permits.
         "rate_limited" /
-        ; for the Safe Retreat phase, when loss detected
+        ; for the Safe Retreat Phase, when path change detected.
+        "path_changed" /
+        ; for the Safe Retreat Phase, when loss detected.
+        ; for the Normal Phase,
+        ; when loss detected in the Reconnaissance Phase.
         "packet_loss" /
-        ; for the Safe Retreat phase,
-        ; when ECN congestion experienced reported
+        ; for the Safe Retreat Phase,
+        ; when ECN congestion experienced reported.
+        ; for the Normal Phase,
+        ; when ECN congestion experienced in the Reconnaissance Phase.
         "ECN_CE" /
-        ; for the Normal phase 1 RTT after a congestion event
+        ; for the Normal Phase 1 RTT after a congestion event
         "exit_recovery"
 
 * $$quic-carefulresumephaseupdated-extension
@@ -367,7 +392,7 @@ $ProtocolEventData /= QUICCarefulResumePhaseUpdated
 </section> 
 
 <section anchor="sec-acknowledgments" title="Acknowledgments">
-    <t>The authors would like to thank Robin Marx and Lucar Purdue for
+    <t>The authors would like to thank Robin Marx and Lucas Pardue for
     their fruitful comments in developing this specification.</t>
 </section>
 
@@ -424,13 +449,8 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
       
 <section anchor="rev" title="Internet Draft Revision details">
     <list>
-        <t>ID -00 Text extracted from the TSVWG WG draft for CR.</t>
-        <t>ID -01 Refactors initial text from CR into a table matching the qlog triggers. 
-          Add one new trigger, 'rtt_exceeded'; update text for trigger "congestion_window_limited",
-          based on comments from Finic8; updates CDDL based on comments from R. Marx</t>
-        <t>ID -02 Adds a missing trigger when jump cwnd fully used, a list of abbreviations and 
-          clarifies that logged values are expected to reflect the post-transition state. </t>
-
+        <t>WG -00 Addresses comments from Mike Heard and Joerg Deutschmann.</t>
+        <t>WG -01 Adds a new entry, fix NiTs.</t>
     </list>
 </section> <!-- End of Revisions -->
 
