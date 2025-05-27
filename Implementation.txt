@@ -6,13 +6,11 @@ Implementation Experience with CR
 =================================
 
 The algorithm has been implemented in:
-1. a fork of CF Quiche: https://github.com/ana-cc/quiche/tree/resume_latest (Ana Custura & Mihail Yanev).
+1. a fork of CF Quiche: https://github.com/ana-cc/quiche/tree/resume_latest (Ana Custura, Q Misell & Mihail Yanev).
 2. a fork of Picoquic: https://github.com/hfstco/picoquic/tree/cr (Joerg Deustchman & Matthias Hofstaette).
-3. a prototype implementation in quicly (Kazuho).
-4. a prototype implementation in neqo: https://github.com/mozilla/neqo/issues/2394 (Nicolai Fischer)
+3. an implementation in quicly (Kazuho).
+4. a prototype implementation in neqo: https://github.com/mozilla/neqo/issues/2394 (Nicolai Fischer).
 
 Interworking was demonstrated in Nov 2024 from 1,2 with clients using Chrome, Firefox and Safari, with results presented in tsvwg at IETF 121, Dublin. Results showing performance with quicly were also shared in tsvwg at IETF 121, Dublin.
 
-The 4 above versions currently track the latest revision of the specification.
-
-Last updated 10 Mar 2025.
+Last updated 27 May 2025.
