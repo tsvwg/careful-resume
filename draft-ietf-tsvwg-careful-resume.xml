@@ -1142,6 +1142,8 @@ If you use the PI option, xml2rfc will, by default, try to find included files i
 directory as the including file. You can also define the XML_LIBRARY environment variable
 with a value containing a set of directories to search.  These can be either in the local
 filing system or remote ones accessed by http (http://domain/dir/... ).-->
+      
+ <displayreference target="I-D.custura-tsvwg-careful-resume-qlog" to="LOG"/>
 
     <references title="Normative References">
         <?rfc include="reference.RFC.2119.xml"?>
@@ -1155,9 +1157,9 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
 
     <references title="Informative References">
 <!---        <?rfc include="reference.I-D.ietf-quic-qlog-quic-events.xml"?> -->
+<!-- ?rfc include="reference.I-D.kuhn-quic-bdpframe-extension.xml"? -->
         <?rfc include="reference.I-D.irtf-iccrg-sallantin-initial-spreading.xml"?>
         <?rfc include="reference.I-D.ietf-ccwg-bbr.xml"?>
-        <!-- ?rfc include="reference.I-D.kuhn-quic-bdpframe-extension.xml"? -->
         <?rfc include="reference.I-D.custura-tsvwg-careful-resume-qlog.xml"?>
         <?rfc include="reference.RFC.3465.xml"?>
         <?rfc include="reference.RFC.4782.xml"?>
