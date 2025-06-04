@@ -377,6 +377,9 @@ specify just the year. -->
         to the same endpoint.
         Although additional information could improve the path
         differentiation, it could reduce the re-usability of saved parameters.</t>
+
+        <t>The saved CC parameters can only be used to modify the startup when 
+        the Remote Endpoint is not known to have changed (see <xref target="sec-phase-rec-phase").</t> 
     </section> <!-- End of An Remote Endpoint -->
 
     <section anchor="sec-QLOG" title="Logging support">
@@ -491,7 +494,11 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
     </section> <!-- End of define Observing:-->
           
     <section anchor="sec-phase-rec-phase" title="Reconnaissance Phase">
-        <t> The sender enters the Reconnaissance Phase after connection setup.
+        <t> The sender enters the Reconnaissance Phase after connection setup. 
+        A sender that is aware of either a change in the path or the remote endpoint MAY remain
+        in the Normal Phase and does not need to enter the Reconnaissance Phase."</t>
+
+        <t>     
         In this phase, the CWND is initialised to the IW, and the sender transmits initial data.
         The CWND MAY be increased using normal CC as each ACK
         confirms delivery of previously unacknowledged data (i.e., the CC is unchanged).</t>
