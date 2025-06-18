@@ -714,12 +714,20 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
             their share of the total capacity.
             (Note: The minimum CWND in QUIC is 2 packets,see: <xref target="RFC9002"></xref> section 4.8).</t>
 
-            <t>Safe Retreat Phase (Loss Recovery): When the CWND is reduced,
+            <t>Safe Retreat Phase (Loss Recovery): 
+            Loss recovery commences using a reduced CWND
+            that was set on entry to the Safe Retreat Phase.
+            When the CWND is reduced,
             a QUIC sender can immediately send a single packet prior to the reduction
-            <xref target="RFC9002"></xref>. A
+            <xref target="RFC9002"></xref> to speed up loss
+            recovery. A
             similar method for TCP is described in Section 5 of <xref target="RFC6675"></xref>.
-            This speeds up loss
-            recovery if the data in the lost packet is retransmitted.</t>
+             if the data in the lost packet is retransmitted.  
+            The loss recovery continues
+            until acknowledgment of the last packet number (or a later packet) sent in the
+            Unvalidated or Validating Phase.     
+            Note: If the last unvalidated packet is not cumulatively acknowledged, then
+            additional packets might also need to be retransmitted.</t>
         </list></t>
 
         <t> In the Safe Retreat Phase, the sender performs the following actions:</t>
@@ -750,20 +758,6 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
      
         <t>Implementation notes are provided in <xref target="req-retreat"></xref>.</t>
         <t>Notes describing the implementation of the Safe Retreat Phase for BBR are described in <xref target="sec-BBR-SR"></xref>.</t>
-
-        <section anchor="loss" title="Loss Recovery after entering Safe Retreat">
-
-            <t>Unacknowledged packets that were sent in the Unvalidated Phase
-            can be lost.
-            Loss recovery commences using the reduced CWND
-            that was set on entry to the Safe Retreat Phase and continues
-            until acknowledgment of the last packet number (or a later packet) sent in the
-            Unvalidated Phase.
-                 
-            If the last unvalidated packet is not cumulatively acknowledged, then
-            additional packets might need to be retransmitted.</t>
-             
-        </section>     <!-- End of subsection Safe Retreat Phase: loss recovery -->
     </section> <!-- End of Safe Retreat Phase -->
 
     <section title="Detecting Persistent Congestion while using Careful Resume">
