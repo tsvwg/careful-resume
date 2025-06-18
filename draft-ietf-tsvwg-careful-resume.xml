@@ -10,7 +10,7 @@
 <?rfc sortrefs="yes" ?>
 <?rfc compact="yes" ?>
 <?rfc subcompact="no" ?>
-<rfc category="std" docName="draft-ietf-tsvwg-careful-resume-18"
+<rfc category="std" docName="draft-ietf-tsvwg-careful-resume-19"
      ipr="trust200902" consensus="true" submissionType="IETF">
     <!-- category values: std, bcp, info, exp, and historic
     ipr values: full3667, noModification3667, noDerivatives3667
@@ -379,7 +379,7 @@ specify just the year. -->
         differentiation, it could reduce the re-usability of saved parameters.</t>
 
         <t>The saved CC parameters can only be used to modify the startup when 
-        the Remote Endpoint is not known to have changed (see <xref target="sec-phase-rec-phase").</t> 
+        the Remote Endpoint is not known to have changed (see <xref target="sec-phase-rec-phase"></xref>).</t>
     </section> <!-- End of An Remote Endpoint -->
 
     <section anchor="sec-QLOG" title="Logging support">
@@ -769,8 +769,7 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
         Drain state while the "carefully-resuming" flag is set to True,see <xref target="sec-BBR-SR"></xref>.</t>
 
         <t> As in loss recovery, data sent in the
-        Unvalidated Phase could be later acknowledged after an RTO event
-        (see <xref target="loss"></xref>).</t>
+        Unvalidated Phase could be later acknowledged after an RTO event.</t>
     </section> <!-- End of section: RTO Expiry -->
     
     <section anchor="Normal_Phase" title="Normal Phase">
