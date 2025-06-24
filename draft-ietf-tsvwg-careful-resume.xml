@@ -524,7 +524,7 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
     <t>The following actions are performed during the Reconnaissance Phase:</t>
     <t><list style="symbols">
              <t>Reconnaissance Phase (Recording the current_rtt): During this phase,
-            the sender MUST record the minimum RTT for the current connection as the current_rtt</t>
+            the sender MUST record the minimum RTT for the current connection as the current_rtt.</t>
 
             <t>Reconnaissance Phase (Detected congestion): If the sender detects
             congestion (e.g., packet loss or ECN-CE marking), the sender MUST enter the Normal Phase
@@ -877,9 +877,9 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
         sending rate ought not to exceed the observed rate when
             the saved_cwnd was measured.)</t>
         <t> If the current RTT is larger than saved_rtt,
-            this would results
+            this would result
             in a proportionally lower resumed rate, because the transmission
-            is paced based on the current_rtt ,and hence is still safe.
+            is paced based on the current_rtt. Hence this rate is still safe.
             If the current_rtt is incorrectly measured as larger
             than the actual path RTT, the sender will receive an ACK for an
             unvalidated packet before it completed the Unvalidated Phase, this
