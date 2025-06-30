@@ -945,13 +945,13 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
 
             <t>The following example provides a relevant pacing rhythm:
         An Inter-packet Transmission Time (ITT) is determined
-            by using the current Maximum Message Size (MMS),
+            by using the current Maximum Packet Size (MPS), including headers,
             the saved_cwnd and the current_RTT. A safety
             margin can be configured to avoid sending more than a maximum
             (max_jump):
             <list>
                  <t>jump_cwnd = Min(max_jump,saved_cwnd/2)</t>
-                 <t>ITT = (current_RTT x MMS)/jump_cwnd</t>
+                 <t>ITT = (current_RTT x MPS)/jump_cwnd</t>
             </list></t>
             <t>This follows the idea presented in <xref target="RFC4782"></xref>,
             <xref target="I-D.irtf-iccrg-sallantin-initial-spreading"></xref> and
