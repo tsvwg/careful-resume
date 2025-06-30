@@ -496,7 +496,7 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
         <t> The sender enters the Reconnaissance Phase after connection setup.</t>
 
         <t>     
-        In this phase, the CWND is initialised to the IW, and the sender transmits initial data.
+        In this phase, the CWND is initialised to the IW, and the sender transmits any initial data.
         The CWND MAY be increased using normal CC as each ACK
         confirms delivery of previously unacknowledged data (i.e., the CC is unchanged).</t>
 
@@ -537,7 +537,7 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
 
         <t>Reconnaissance Phase (Path confirmed):
          When the sender has
-        received an acknowledgement for the initial data (usually the IW) without reported congestion,
+        received an acknowledgement for all the initial data (usually the IW) without reported congestion,
         it MAY then enter the Unvalidated Phase.
         Although a sender can immediately transition to the Unvalidated Phase,
         this transition MAY be deferred to the time at which more data is sent
