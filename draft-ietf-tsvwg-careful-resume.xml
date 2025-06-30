@@ -268,7 +268,6 @@ specify just the year. -->
         expected for other sizes of transfer and for different path
         characteristics when a path has a large BDP.</t>
 
-        <!-- XXX-Editor note: A future revision would helpfully provide further Path Examples here.} -->
     </section> <!-- Introduction: End of examples -->
 
     <section anchor="sec-principle" title="Design Principles">
@@ -412,7 +411,7 @@ specify just the year. -->
             <t>CWND: The congestion window, or equivalent CC variable limiting
             the maximum sending rate;</t>
 
-            <t>current_rtt: A sample measurement of the current RTT;</t>
+            <t>current rtt: A sample measurement of the current RTT;</t>
 
             <t>flight_size: The current volume of unacknowledged data;</t>
 
@@ -508,7 +507,11 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
 
         <t><list style="symbols">
 
-            <t>Reconnaissance Phase (Path change):
+             <t>Reconnaissance Phase (Recording the minimum of the current rtt): During this
+      phase, the sender MUST record the minimum RTT for the current
+      connection.</t>
+             
+             <t>Reconnaissance Phase (Path change):
             If the remote endpoint is not the same as a saved_remote_endpoint,
             or receives a signal from the local stack indicates that the path is now
             different to the observed path, the sender MUST enter the Normal Phase. (Note: A receiver
@@ -523,9 +526,6 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
         
     <t>The following actions are performed during the Reconnaissance Phase:</t>
     <t><list style="symbols">
-             <t>Reconnaissance Phase (Recording the current_rtt): During this phase,
-            the sender MUST record the minimum RTT for the current connection as the current_rtt.</t>
-
             <t>Reconnaissance Phase (Detected congestion): If the sender detects
             congestion (e.g., packet loss or ECN-CE marking), the sender MUST enter the Normal Phase
              to respond to the detected congestion.</t>
@@ -536,8 +536,8 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
             MUST enter the Normal Phase.</t>
 
         <t>Reconnaissance Phase (Path confirmed):
-        When the sender has confirmed the RTT (see <xref target="sec-confirm-rtt"></xref>) and also has
-        received an acknowledgement for the initial data without reported congestion,
+         When the sender has also
+        received an acknowledgement for the initial data (usually the IW) without reported congestion,
         it MAY then enter the Unvalidated Phase.
         Although a sender can immediately transition to the Unvalidated Phase,
         this transition MAY be deferred to the time at which more data is sent
@@ -567,15 +567,16 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
 
          <t><list style="symbols"> 
               <t>Unvalidated Phase (Confirming the path on entry):
-               If the current_rtt is less than or equal to (saved_rtt / 2)
-               or the current_rtt is greater than (saved_rtt x 10)
+               If the recorded minimum RTT is less than or equal to (saved_rtt / 2)
+               or the recorded minimum RTT is greater than (saved_rtt x 10)
                (see <xref target="sec-confirm-rtt"></xref>),
                the sender MUST enter the Normal Phase (logged as
                rtt_not_validated in <xref target="I-D.custura-tsvwg-careful-resume-qlog"></xref>).
                This is because the calculation of a sending rate from a saved_cwnd
                is directly impacted by the RTT, therefore a significant change in the RTT
                is a strong indication that the previously observed CC
-               parameters are not valid for the current path.</t>
+               parameters are not valid for the current path.
+              </t>
           </list></t>
          
           <t>On entry to the Unvalidated Phase, the actions are performed:</t>
@@ -596,7 +597,7 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
           <t>The following actions are performed during the Unvalidated Phase:</t>
           <t><list style="symbols">
                <t>Unvalidated Phase (Pacing transmission): All packets sent in the
-               Unvalidated Phase MUST use pacing based on the current_rtt.</t>
+               Unvalidated Phase MUST use pacing based on the current rtt.</t>
              
                <t>Unvalidated Phase (Confirming the path during transmission):
                If the sender determines that it is not valid to use the previous CC parameters
@@ -836,7 +837,7 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
 
     <section anchor="req-recon"  title="Confirming the Path in the Reconnaissance Phase">
         <t>In the Reconnaissance Phase, the sender initiates a connection
-        and starts sending initial data, while measuring the current_rtt.
+        and starts sending initial data, while measuring the current rtt.
         The CC is not modified.
         A sender therefore needs to limit the initial data,
         sent in the first RTT of transmitted data,
@@ -869,8 +870,8 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
             becoming irrelevant.</t>
              
             <t> To help confirm the path, the sender compares the
-            saved_rrt with each current_rtt sample.</t>
-            <t>If the current_rtt is less than a half of the
+            saved_rrt with each current rtt sample.</t>
+            <t>If the current rtt is less than a half of the
             saved_rrt, this is regarded as too small, this is an indicator of a path change.
             (This factor of two arises, because the jump_cwnd is calculated as half the
             measured saved_cwnd and
@@ -879,21 +880,29 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
         <t> If the current RTT is larger than saved_rtt,
             this would result
             in a proportionally lower resumed rate, because the transmission
-            is paced based on the current_rtt. Hence this rate is still safe.
-            If the current_rtt is incorrectly measured as larger
+            is paced based on the current rtt. Hence this rate is still safe.
+            If the current rtt is incorrectly measured as larger
             than the actual path RTT, the sender will receive an ACK for an
             unvalidated packet before it completed the Unvalidated Phase, this
             ACK resets the CWND to reflect the flight_size, and the sender then enters
-            the Validating Phase. A current_rtt more than ten times the
+            the Validating Phase. A current rtt that is more than ten times the
             saved_rrt is indicative of a path change.
             (The value of ten accommodates both increases in latency from buffering
             on a path and any variation between RTT samples).</t>
+
+            <t>Note: In the Reconaisance Phase, the sender calculates a minimum RTT over the 
+              phase and checks this on entry to the Unvalidated Phase. This avoids needing 
+              to check as each current rtt sample is accumulated.</t>
+             <t>
+              Note 2: During the Unvalidated Phase, the
+              minimum RTT cannot increase, and hence the minimum RTT can never be larger
+              than than (saved_rtt x 10) during the Unvalidated Phase.</t>
         
             <t>The sender also verifies that the initial data was acknowledged
             (i.e., a loss could be indicative of persistent congestion).
         A sender in Reconnaissance Phase reverts to the Normal Phase if congestion is detected.
             Some transport protocols implement CC mechanisms that infer potential congestion
-            from an increase in the current_rtt. Designs need to consider if such an indication is
+            from an increase in the current rtt. Designs need to consider if such an indication is
             a suitable trigger to revert to the Normal Phase.</t>
         </section> <!-- End of Reconnaissance:Confirming the Path -->
         
@@ -938,20 +947,20 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
             <xref target="RFC9000"></xref>.</t>
 
             <t> Pacing packets as a function of
-            the current_rtt, rather than the saved_rrt provides additional safety during the
+            the current rtt, rather than the saved_rrt provides additional safety during the
             Unvalidated Phase, because it avoids a smaller saved_rrt inflating the sending rate.
-            A limit to the minimum acceptable current_RTT
+            Setting a limit to the minimum acceptable current RTT
             avoids sending at a rate higher than was previously observed. </t>
 
             <t>The following example provides a relevant pacing rhythm:
         An Inter-packet Transmission Time (ITT) is determined
             by using the current Maximum Packet Size (MPS), including headers,
-            the saved_cwnd and the current_RTT. A safety
+            the saved_cwnd and the current RTT. A safety
             margin can be configured to avoid sending more than a maximum
             (max_jump):
             <list>
                  <t>jump_cwnd = Min(max_jump,saved_cwnd/2)</t>
-                 <t>ITT = (current_RTT x MPS)/jump_cwnd</t>
+                 <t>ITT = (current RTT x MPS)/jump_cwnd</t>
             </list></t>
             <t>This follows the idea presented in <xref target="RFC4782"></xref>,
             <xref target="I-D.irtf-iccrg-sallantin-initial-spreading"></xref> and
