@@ -536,7 +536,7 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
             MUST enter the Normal Phase.</t>
 
         <t>Reconnaissance Phase (Path confirmed):
-         When the sender has also
+         When the sender has
         received an acknowledgement for the initial data (usually the IW) without reported congestion,
         it MAY then enter the Unvalidated Phase.
         Although a sender can immediately transition to the Unvalidated Phase,
