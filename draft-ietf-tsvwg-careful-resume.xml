@@ -779,8 +779,8 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
     
     <section anchor="Normal_Phase" title="Normal Phase">
 
-        <t>The CWND on entry Normal Phase, will have been
-        increased when a sender using Careful Resume has passed through
+        <t>The CWND on entry to the Normal Phase, will have been
+        increased when a sender has passed through
          the Unvalidated Phase. However, note that in some cases the value of the CWND
          could be significnatly lower than the
          jump_cwnd (e.g., when a sender did not utilise 
