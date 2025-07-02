@@ -807,8 +807,8 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
         the minimum RTT while observing the capacity. For example, this could be the minimum
         of a set RTT of measurements measured over the previous 5 minutes.</t>
 
-        <t>Implementations are expected to include a
-        LifeTime parameter in the CC parameters that can be used to remove old CC parameters
+        <t>Implementations are required include a
+        LifeTime parameter in the CC parameters that is used to remove old CC parameters
         when no longer needed, or the CC parameters are out of date.</t>
 
         <t> <list style="symbols">
@@ -921,7 +921,7 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
         <section anchor="req-lifetime" title="Lifetime of CC Parameters">
 
             <t>The long-term use of the previously observed parameters is not appropriate,
-            a lifetime therefore needs to be specified during
+            a LifeTime needs to define the duration during
             which the saved CC parameters can be safely re-used.
         <xref target="RFC9040"></xref> provides guidance on the implementation of
             TCP Control Block Interdependence, but does not specify how long a saved
@@ -935,7 +935,7 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
             However, RFC 7661 targets rate-limited connections using normal
             CC. Careful Resume includes additional
             mechanisms to avoid and mitigate the effects of overshoot, and therefore
-            this can be used to justify a longer lifetime of the saved_cwnd using
+            this can be used to justify a longer period for using the saved_cwnd with
             Careful Resume.</t>
         
         </section> <!-- End of Reconnaissance:Liftetime of Params -->
@@ -1305,7 +1305,7 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
 +------+---------+---------+------------+-----------+------------+
 |Next  |Observing|If (     |If (FS=CWND |If (ACK    |If (ACK     |
 |Phase:|(as      |FS=CWND, |or >1 RTT   |>= last    |>= last     |
-|      |needed)  |Lifetime,|has passed  |unvalidated|unvalidated |
+|      |needed)  |LifeTime,|has passed  |unvalidated|unvalidated |
 |      |         |and RTT  |or ACK      |packet),   |packet),    |
 |      |         |confirmed|>= first    |enter      |ssthresh =  |
 |      |         |), enter |unvalidated |Normal     |PS x Beta;  |
@@ -1514,6 +1514,8 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
 </section> <!-- End of define Implementation Notes for using BBR -->
 
 <section anchor="rev" title="Internet Draft Revision details">
+
+    <t>RFC Editor -- please remove this section prior to publication.</t>
     <t>Previous individual submissions were discussed in TSVWG and QUIC.
     <list>
         <t>WG -00 included clarifications and restructuring to form the 1st WG draft.</t>
@@ -1559,6 +1561,7 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
      <t>WG-17, updated comments from Joerg Deutschman, harmonised use of "congestion detected" and mentions of ECN. Updated reference to PRR.bis.</t>
      <t>WG-18, NiTs fixed to reconcile with logging in qlog. Removed "current_remote_endpoint" as requested by Doc Shepherd.</t>
      <t>WG-19, after WG Shepherd review.</t>
+     <t>WG-20, after AD review.</t>
     </list></t>
      
 </section> <!-- End of Revisions -->
