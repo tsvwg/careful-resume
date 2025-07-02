@@ -252,15 +252,15 @@ specify just the year. -->
         (e.g., remote execution of an application, or a
         bidirectional video conference call).</t>
 
-        <t>For example, consider an application uses a series of connections over a path.
+        <t>For example, consider an application that uses a series of connections over a path:
         Without a new method,
         each connection would need to individually
         discover appropriate CC parameters, whereas Careful Resume allows the flow
         to use a rate based on the previously observed CC parameters.</t>
 
-        <t>Another example occurs when an application connects after a disruption
+        <t>Another example considers an application that connects after a disruption
         had temporarily reduced the path
-        capacity. When this endpoint
+        capacity: When this endpoint
         returns to use the path using Careful Resume, the
         sending rate can be based on the previously observed CC parameters.</t>
         <t>
@@ -581,7 +581,7 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
          <t><list style="symbols"> 
               <t>Unvalidated Phase (Confirming the path on entry):
                If the minimum RTT recorded in the Reconnaissance Phase is less than or equal to (saved_rtt / 2)
-               or the minimum RTT recorded is greater than (saved_rtt x 10)
+               or the minimum RTT is greater than (saved_rtt x 10)
                (see <xref target="sec-confirm-rtt"></xref>),
                the sender MUST enter the Normal Phase (logged as
                rtt_not_validated in <xref target="I-D.custura-tsvwg-careful-resume-qlog"></xref>).
