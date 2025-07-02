@@ -142,7 +142,7 @@ specify just the year. -->
     intentionally uses less capacity than might be available, with the
     intention to avoid or limit overshoot of the available capacity for the path.
     This seeks to avoid an increase queuing (latency or jitter) and/or
-    congestion packet loss for the flow. Any overshoot of the bootleneck rate can have a
+    congestion packet loss for the flow. Any overshoot of the bottleneck rate can have a
     detrimental effect on other flows that share a common bottleneck.
     A sender can also use a method that observes the rate of acknowledged data
     to seek to avoid an overshoot of this bottleneck capacity (e.g., Hystart++
@@ -310,8 +310,8 @@ specify just the year. -->
                 to avoid starving other flows that may have started or increased
                 their capacity after the last capacity measurement.
                 The same principle applies for CC algorithms that use different parameters to classic
-                TCP CC: i.e., do not push more than a fraction
-                of the remembered values. For example, a connection using a rate-based CC algorithm
+                TCP CC: i.e., a sender must not push more than a fraction
+                of the remembered CC parameters. For example, a connection using a rate-based CC algorithm
                 (e.g., BBR) will set the
                 pacing rate to half the remembered value of the "bottleneck bandwidth".
                 The sender also needs to pace all unvalidated packets,
@@ -478,7 +478,7 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
     <section title="Observing">
         <t>An established connection in the Normal Phase can save a set of CC parameters for the specific path
         to the current endpoint. Each set of CC parameters includes the saved_remote_endpoint and the
-        LifeTime (e.g., as a timestamp after which the parameters must not be used). 
+        Lifetime (e.g., as a timestamp after which the parameters must not be used). 
         A sender MUST NOT retain more than one 
         set of CC parameters for a path that it is observing,
         but the set of CC parameters SHOULD be updated (or replaced) after a later observation of the same path.</t>
@@ -887,7 +887,7 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
             the saved_cwnd was measured.</t>
         <t> If the current RTT is larger than saved_rtt,
             this would result
-            in a proportionally lower unvalidated rate, because the transmission
+            in a proportionally lower rate for the unvalidated packets, because the transmission
             is paced based on the current rtt. Hence this rate is still safe.
             If the current rtt is incorrectly measured as larger
             than the actual path RTT, the sender will receive an ACK for an
@@ -959,7 +959,7 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
             the current rtt, rather than the saved_rrt provides additional safety during the
             Unvalidated Phase, because it avoids a smaller saved_rrt inflating the sending rate.
             The lower bound to the minimum acceptable current RTT
-            avoids sending an unvalidated rate that would be higher than previously observed. </t>
+            avoids sending unvalidated packets at a rate that would be higher than previously observed. </t>
 
             <t>The following example provides a relevant pacing rhythm:
         An Inter-packet Transmission Time (ITT) is determined
