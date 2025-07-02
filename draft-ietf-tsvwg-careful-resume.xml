@@ -484,6 +484,7 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
         to the current endpoint. A set of CC parameters includes the
         Lifetime (e.g., as a timestamp after which the parameters must not be used),
         and corresponds to one saved_remote_endpoint.</t>
+         <t>The following rules apply to observing a flow in the Normal Phase:</t>
         <t><list style="symbols">
      <t>Observing (saved_cwnd):
     The currently utilised capacity for the connection is
@@ -511,10 +512,11 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
         <t>     
         In this phase, the CWND is initialised to the IW, and the sender transmits any initial data.
         The CWND MAY be increased using normal CC as each ACK
-        confirms delivery of previously unacknowledged data (i.e., the CC is unchanged).</t>
+        confirms delivery of previously unacknowledged data (i.e., the base congestion control algorithm continues to operate normally).</t>
 
         <t>The phase seeks to determine if the path is consistent with
-        a previously observed path (saved as a set of CC parameters).
+        a previously observed path (i.e, match the saved_remote_endpoint 
+         in a set of saved CC parameters).
         The following conditions need to be confirmed before the sender
         enters the Reconnaissance Phase:</t>
 
@@ -529,7 +531,7 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
             or the sender receives a signal from the local stack indicating that the path is now
             different to the observed path, the sender MUST enter the Normal Phase. (Note: A receiver
             implementation could avoid entering the Reconnaissance Phase when the
-            curent_remote_endpoint does not match a saved_remote_endpoint.)</t>
+            current Remote Endpoint does not match a saved_remote_endpoint.)</t>
     
         <t>Reconnaissance Phase (Lifetime of saved CC parameters): The CC parameters are temporal.
         If the Lifetime of the observed CC parameters is exceeded,
@@ -556,15 +558,6 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
         this transition MAY be deferred to the time at which more data is sent
        than would have normally permitted by the CC algorithm.</t>
     </list></t>
-
-          <t>
-            If the sender is rate-limited <xref target="RFC7661"></xref>, it might send insufficient data
-            to be able to validate transmission at the higher rate.
-            The sender is allowed to remain in the Reconnaissance Phase and to not
-            transition to the Unvalidated Phase until there is
-            more data in the transmission buffer
-            than normally permitted by the CC algorithm.
-            </t>
         
         <t>When a path is not confirmed, Careful Resume does not modify the CWND and the sender enters the Normal Phase.</t>
 
@@ -596,7 +589,7 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
           <t><list style="symbols">
                <t>Unvalidated Phase (Initialising PipeSize):
                The variable PipeSize is initialised to the flight_size on
-               entry to the Unvalidated Phase. This records the
+               entry to the Unvalidated Phase. This records the validated
                CWND before a jump is applied.</t>
 
                <t>Unvalidated Phase (Setting the jump_cwnd):
@@ -729,14 +722,13 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
             (Note: The minimum CWND in QUIC is 2 packets, see: <xref target="RFC9002"></xref> section 4.8).</t>
 
             <t>Safe Retreat Phase (Loss Recovery): 
-            Loss recovery commences using a reduced CWND
+            Loss recovery commences using the newly reduced CWND
             that was set on entry to the Safe Retreat Phase.
             When the CWND is reduced,
             a QUIC sender can immediately send a single packet prior to the reduction
             <xref target="RFC9002"></xref> to speed up loss
             recovery. A
             similar method for TCP is described in Section 5 of <xref target="RFC6675"></xref>.
-             if the data in the lost packet is retransmitted.  
             The loss recovery continues
             until acknowledgment of the last packet number (or a later packet) sent in the
             Unvalidated or Validating Phase.     
@@ -750,9 +742,8 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
             <t>Safe Retreat Phase (Tracking PipeSize):
             The sender continues to update
             the PipeSize after processing each acknowledgement.
-            (This PipeSize is used to
-            reset the ssthresh when leaving this phase, it does
-            not modify CWND.)</t>
+            (The PipeSize will be used to update ssthresh when
+           leaving this phase, but does not affect the CWND.)</t>
 
             <t>Safe Retreat Phase (Maintaining CWND):
             The CWND MUST NOT be increased in the Safe Retreat Phase.</t>
@@ -788,11 +779,15 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
     
     <section anchor="Normal_Phase" title="Normal Phase">
 
+        <t>When entering the Normal Phase, the CWND
+        could have been updated. Note that the CWND might not be the same
+         as jump_cwnd (e.g., when a sender did not utilise 
+         the entire CWND in the Unvalidated Phase).</t>
+         
         <t>In the Normal Phase, the sender transitions to using
             the normal CC algorithm (e.g., in congestion avoidance when CWND is more than ssthresh, or slow start when
-            less than or equal to ssthresh).
-            (Note that when the sender did not use the entire jump_cwnd the CWND was reduced
-         on entering the Validating Phase.)</t>
+            less than or equal to ssthresh).</t>
+         
         <t>Implementation notes are provided in <xref target="req-normal"></xref>.</t>
 
     </section> <!-- End of define "Normal Phase:" -->
@@ -877,6 +872,14 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
         connections by 4-tuple and hence multiple connections from the same
         client device are served by different server processes.)</t>
 
+         <t> A sender that is rate-limited <xref target="RFC7661"></xref>,
+          might send sufficient data
+          to be able to validate transmission at the higher rate.
+          Such as sender is allowed to remain in the Reconnaissance Phase and to not
+            transition to the Unvalidated Phase until there is
+            more data in the transmission buffer
+            than would normally be permitted by the CC algorithm.
+            </t>
         <section anchor="sec-confirm-rtt" title="Confirming the Path">
             <t>Path characteristics can change over time for many reasons.
             This can result in the previously observed CC parameters
@@ -897,8 +900,11 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
             If the current rtt is incorrectly measured as larger
             than the actual path RTT, the sender will receive an ACK for an
             unvalidated packet before it has completed the Unvalidated Phase, this
-            ACK resets the CWND to reflect the flight_size, and the sender then enters
-            the Validating Phase. A current rtt that is more than ten times the
+            ACK resets the CWND to reflect the flight_size, 
+            and the sender then enters the Validating Phase. 
+            The flight_size reflects the actual data in flight rather than the
+            maximum hat is permitted by the CWND. 
+            A current rtt that is more than ten times the
             saved_rrt is indicative of a path change.
             The value of ten accommodates both increases in latency from buffering
             on a path and any variation between RTT samples.</t>
