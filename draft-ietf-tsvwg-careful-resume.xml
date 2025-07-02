@@ -418,11 +418,11 @@ specify just the year. -->
             observing the capacity of an established connection (see <xref target="sec-CC-params"/>).</t>
 
             <t>CWND: The congestion window, or equivalent CC variable limiting
-            the maximum sending rate;</t>
+            the maximum sending rate (see <xref target="RFC5681"></xref>);</t>
 
             <t>current rtt: A sample measurement of the current RTT;</t>
 
-            <t>flight_size: The current volume of unacknowledged data;</t>
+            <t>flight_size: The current volume of unacknowledged data (see <xref target="RFC5681"></xref>);</t>
 
             <t>jump_cwnd: The resumed CWND, used in the Unvalidated Phase.</t>
 
@@ -806,7 +806,7 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
     <section anchor="req-observe" title="Observing the Path Capacity">
             
         <t>There are various approaches to measuring the capacity used by a connection.
-        Congestion controllers, such as CUBIC or Reno, could estimate the
+        Congestion controllers, such as such as Reno <xref target="RFC5681"></xref>  or Cubic <xref target="RFC9438"></xref>, could estimate the
         capacity based on the
         CWND, flight_size, acknowledged rate, etc. A different approach could
         estimate the same parameters for a rate-based congestion
@@ -904,8 +904,9 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
             unvalidated packet before it has completed the Unvalidated Phase, this
             ACK resets the CWND to reflect the flight_size, 
             and the sender then enters the Validating Phase. 
-            The flight_size reflects the actual data in flight rather than the
-            maximum hat is permitted by the CWND. 
+            The flight_size reflects the amount of outstanding data
+            in the network rather than the
+            maximum that is permitted by the CWND. 
             A current rtt that is more than ten times the
             saved_rrt is indicative of a path change.
             The value of ten accommodates both increases in latency from buffering
