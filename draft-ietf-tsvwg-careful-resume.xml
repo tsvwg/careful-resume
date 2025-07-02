@@ -417,7 +417,7 @@ specify just the year. -->
 
             <t>jump_cwnd: The resumed CWND, used in the Unvalidated Phase.</t>
 
-            <t>LifeTime: The time for which the saved CC parameters can be safely re-used.</t>
+            <t>Lifetime: The time for which the saved CC parameters can be safely re-used.</t>
 
             <t>max_jump: The configured maximum jump_cwnd;</t>
 
@@ -473,7 +473,7 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
     <section title="Observing">
         <t>An established connection in the Normal Phase, can save a set of CC parameters for the specific path
         to the current endpoint. Each set of CC parameters includes the saved_remote_endpoint and the
-        LifeTime (e.g., as a timestamp after which the parameters must not be used).</t>
+        Lifetime (e.g., as a timestamp after which the parameters must not be used).</t>
         
         <t><list style="symbols">
      <t>Observing (saved_cwnd):
@@ -519,7 +519,7 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
             curent_remote_endpoint does not match a saved_remote_endpoint.)</t>
     
         <t>Reconnaissance Phase (Lifetime of saved CC parameters): The CC parameters are temporal.
-        If the LifeTime of the observed CC parameters is exceeded,
+        If the Lifetime of the observed CC parameters is exceeded,
         the CC parameters are not used and the sender enters the Normal Phase.</t>
         
     </list></t>
@@ -808,7 +808,7 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
         of a set RTT of measurements measured over the previous 5 minutes.</t>
 
         <t>Implementations are required include a
-        LifeTime parameter in the CC parameters that is used to remove old CC parameters
+        Lifetime parameter in the CC parameters that is used to remove old CC parameters
         when no longer needed, or the CC parameters are out of date.</t>
 
         <t> <list style="symbols">
@@ -921,7 +921,7 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
         <section anchor="req-lifetime" title="Lifetime of CC Parameters">
 
             <t>The long-term use of the previously observed parameters is not appropriate,
-            a LifeTime needs to define the duration during
+            a Lifetime needs to define the duration during
             which the saved CC parameters can be safely re-used.
         <xref target="RFC9040"></xref> provides guidance on the implementation of
             TCP Control Block Interdependence, but does not specify how long a saved
@@ -1305,7 +1305,7 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
 +------+---------+---------+------------+-----------+------------+
 |Next  |Observing|If (     |If (FS=CWND |If (ACK    |If (ACK     |
 |Phase:|(as      |FS=CWND, |or >1 RTT   |>= last    |>= last     |
-|      |needed)  |LifeTime,|has passed  |unvalidated|unvalidated |
+|      |needed)  |Lifetime,|has passed  |unvalidated|unvalidated |
 |      |         |and RTT  |or ACK      |packet),   |packet),    |
 |      |         |confirmed|>= first    |enter      |ssthresh =  |
 |      |         |), enter |unvalidated |Normal     |PS x Beta;  |
