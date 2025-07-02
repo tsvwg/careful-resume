@@ -487,9 +487,7 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
     If the measured CWND is less than four times the Initial Window (IW)
         the sender can choose to not save the CC parameters, because the additional actions associated with
     performing Careful Resume for a small CWND would not justify its use.</t>
-        
-     <t>Observing (saved_rtt): The minimum RTT at the time of observation is saved as the saved_rrt.</t>
-        
+     <t>Observing (saved_rtt): The minimum RTT at the time of observation is saved as the saved_rrt.</t>   
     </list></t>
 
             <t>Implementation notes are provided in <xref target="req-observe"></xref>.</t>
