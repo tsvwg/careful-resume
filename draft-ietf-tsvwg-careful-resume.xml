@@ -1058,7 +1058,6 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
         reducing CWND significantly
         below the saved_cwnd.</t>
             
-        <t><list>
            
             <t>During loss recovery, a receiver can cumulatively acknowledge
             data that was previously sent in the Unvalidated Phase in addition
@@ -1092,7 +1091,6 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
             On entry to the Safe Retreat Phase, the CWND can be
             significantly reduced. When there was multiple loss,
             a sender recovering all lost data could then take multiple RTTs to complete.</t>
-        </list></t>
      
     </section><!-- End of Safety for the Safe Retreat Phase -->
 
