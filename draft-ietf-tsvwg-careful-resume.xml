@@ -310,7 +310,7 @@ specify just the year. -->
                 to avoid starving other flows that may have started or increased
                 their capacity after the last capacity measurement.
                 The same principle applies for CC algorithms that use different parameters to classic
-                TCP CC: i.e., a sender must not push more than a fraction
+                TCP CC: i.e., a sender must not send at rate allowd by more than a fraction
                 of the remembered CC parameters. For example, a connection using a rate-based CC algorithm
                 (e.g., BBR) will set the
                 pacing rate to half the remembered value of the "bottleneck bandwidth".
@@ -487,7 +487,12 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
     If the measured CWND is less than four times the Initial Window (IW)
         the sender can choose to not save the CC parameters, because the additional actions associated with
     performing Careful Resume for a small CWND would not justify its use.</t>
-     <t>Observing (saved_rtt): The minimum RTT at the time of observation is saved as the saved_rrt.</t>   
+     <t>Observing (saved_rtt): The minimum RTT at the time of observation is saved as the saved_rrt.</t> 
+     <t>Observing (updating saved CC parameters): A sender MUST NOT retain more than one 
+        set of CC parameters for a path that it is observing,
+        but the set of CC parameters SHOULD be updated (or replaced) 
+        after a later observation of a path to the same Remote Endpoint.</t>
+     
     </list></t>
 
             <t>Implementation notes are provided in <xref target="req-observe"></xref>.</t>
