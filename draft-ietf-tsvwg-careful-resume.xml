@@ -152,14 +152,15 @@ specify just the year. -->
     other flows <xref target="RFC8867"></xref> (i.e., preventing other flows
     from successfully sharing the capacity at a common bottleneck).</t>
 
-    <t>The present document specifies a method,
-    called Careful Resume, which is expected to
-    reduce the time to complete a transfer
-    when the transfer sends significantly more data than allowed by the
-    Initial congestion Window (IW) and
-    where the BDP of the path is also significantly
-    more than the IW.
-    It introduces an alternative method to select initial CC parameters that
+    <t>This document specifies Careful Resume.
+    The method seeks to reduce the time to complete
+    a transfer when the sending rate is limited by the congestion controller. 
+    (That is, when a transfer seeks to send significantly more data than 
+    allowed by the Initial congestion Window (IW) and where the BDP of the
+    path is also significantly more than the prodduct of the IW and path 
+    Round Trip Time, RTT.)</t>
+     
+    <t>Careful Resume introduces an alternative method to select initial CC parameters that
     seeks to more rapidly and safely grow the sending rate controlled by
     the congestion window (CWND). CC algorithms that are rate-based can make
     similar adjustments to their target sending rate.</t>
@@ -167,21 +168,24 @@ specify just the year. -->
     <t>Careful Resume is based on temporal sharing (sometimes known as
     caching) of a saved set of CC parameters that relate to previous observations
     of the same path. The parameters include:
-    the saved_cwnd for the path, the minimum Round Trip Time (RTT), 
-         and a Lifetime for these parameters. The
+    the saved_cwnd for the path, the minimum RTT, 
+         and a Lifetime for using these parameters. The
     parameters are saved and used to modify the CC
     behaviour of a subsequent connection between the
-    same endpoints. Some CC algorithms might save a different, but equivalent
-    parameter to the saved_cwnd, when recording the observed capacity.
+    same endpoints. When saving the observed capacity,
+    some CC algorithms might save a different parameter
+    that is equivalent to the saved_cwnd.
     For example, a rate-based CC algorithm,
     such as BBR <xref target="I-D.ietf-ccwg-bbr"></xref> can retain the
     value of the bottleneck bandwidth required to reach the capacity available to
     the flow (e.g., BBR.max_bw).
     </t>
 
-    <t>When used with the QUIC transport, this provides transport services that resemble
+     <!-- In some ways the para below is true that one could use TCB-based methods, but
+     the RFC defining TCB does not say how this would be safely done, this is better not said: -->
+     <!-- <t>When used with the QUIC transport, this provides transport services that resemble
     those that could be implemented in TCP, using methods such as TCP Control Block (TCB)
-    <xref target="RFC9040"></xref> caching.</t>
+    <xref target="RFC9040"></xref> caching.</t> -->
 
     <section anchor="sec-CC-params" title="Use of saved CC parameters by a Sender">
         <t>CC parameters are used by Careful Resume for three functions:
@@ -248,15 +252,15 @@ specify just the year. -->
         (e.g., remote execution of an application, or a
         bidirectional video conference call).</t>
 
-        <t>In one example, an application uses a series of connections over a path.
+        <t>For example, consider an application uses a series of connections over a path.
         Without a new method,
         each connection would need to individually
         discover appropriate CC parameters, whereas Careful Resume allows the flow
         to use a rate based on the previously observed CC parameters.</t>
 
-        <t>In another example, an application connects after a disruption
+        <t>Another example occurs when an application connects after a disruption
         had temporarily reduced the path
-        capacity. When the endpoint
+        capacity. When this endpoint
         returns to use the path using Careful Resume, the
         sending rate can be based on the previously observed CC parameters.</t>
         <t>
@@ -336,9 +340,9 @@ specify just the year. -->
                 congestion window (rate) to a value no greater than what a standard process would have
                 discovered. For other CC algorithms,
                 such as Cubic <xref target="RFC9438"></xref> or BBR, the implementation
-                details may differ, but the principle remains: trying and failing should not confer
-                an undue advantage (e.g., starving) over existing connections that
-                share a common bottleneck.</t>
+                details may differ, but the principle remains: trying and failing should not 
+                unduly disadvantage existing connections that
+                share a common bottleneck (e.g., resulting in starving these connections).</t>
         </list></t>
     </section> <!-- Principles -->
 </section> <!-- End of introduction and motivation -->
@@ -422,20 +426,20 @@ specify just the year. -->
 
             <t>jump_cwnd: The resumed CWND, used in the Unvalidated Phase.</t>
 
-            <t>Lifetime: The time for which the saved CC parameters can be safely re-used.</t>
+            <t>Lifetime: The time after which a set of saved CC parameters can no longer be safely re-used.</t>
 
             <t>max_jump: The configured maximum jump_cwnd;</t>
 
             <t>PipeSize: A measure of the validated available capacity based on the acknowledged data;</t>
 
-            <t>Remote Endpoint: See <xref target="endpoint"></xref>;</t>
+            <t>Remote Endpoint: The endpoint corresponding to a connection; see <xref target="endpoint"></xref>;</t>
 
-            <t>saved_cwnd: The preserved capacity derived from observation of a
+            <t>saved_cwnd: A CC parameter with the preserved capacity derived from observation of a
             previous connection (see <xref target="req-observe"></xref>);</t>
 
-            <t>saved_remote_endpoint: The Remote Endpoint associated with a set of CC parameters;</t>
+            <t>saved_remote_endpoint: The Remote Endpoint that was associated with a set of saved CC parameters;</t>
 
-            <t>saved_rtt: The preserved minimum RTT (see <xref target="req-observe"></xref>).</t>
+            <t>saved_rtt: A CC parameter with the preserved minimum RTT (see <xref target="req-observe"></xref>).</t>
 
             <t>unvalidated packet: A packet sent when the CWND has been increased
             beyond the size normally permitted by the CC algorithm;
@@ -477,12 +481,14 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
     
     <section title="Observing">
         <t>An established connection in the Normal Phase can save a set of CC parameters for the specific path
-        to the current endpoint. Each set of CC parameters includes the saved_remote_endpoint and the
-        Lifetime (e.g., as a timestamp after which the parameters must not be used).</t>
+        to the current endpoint. A set of CC parameters includes the
+        Lifetime (e.g., as a timestamp after which the parameters must not be used),
+        and corresponds to one saved_remote_endpoint.</t>
         <t><list style="symbols">
      <t>Observing (saved_cwnd):
-    The saved_cwnd is a measure of the currently utilised capacity for the connection,
-    measured as the volume of bytes sent during an RTT. This could be computed
+    The currently utilised capacity for the connection is
+    measured as the volume of bytes sent during an RTT and recorded in the 
+    saved_cwnd. This could be computed
     by measuring the volume of data acknowledged in one RTT.
     If the measured CWND is less than four times the Initial Window (IW)
         the sender can choose to not save the CC parameters, because the additional actions associated with
@@ -527,7 +533,7 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
     
         <t>Reconnaissance Phase (Lifetime of saved CC parameters): The CC parameters are temporal.
         If the Lifetime of the observed CC parameters is exceeded,
-        the CC parameters are not used and the sender enters the Normal Phase.</t>
+        this set of CC parameters are not used and the sender enters the Normal Phase.</t>
         
     </list></t>
         
@@ -574,8 +580,8 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
 
          <t><list style="symbols"> 
               <t>Unvalidated Phase (Confirming the path on entry):
-               If the recorded minimum RTT is less than or equal to (saved_rtt / 2)
-               or the recorded minimum RTT is greater than (saved_rtt x 10)
+               If the minimum RTT recorded in the Reconnaissance Phase is less than or equal to (saved_rtt / 2)
+               or the minimum RTT recorded is greater than (saved_rtt x 10)
                (see <xref target="sec-confirm-rtt"></xref>),
                the sender MUST enter the Normal Phase (logged as
                rtt_not_validated in <xref target="I-D.custura-tsvwg-careful-resume-qlog"></xref>).
@@ -814,9 +820,9 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
         the minimum RTT while observing the capacity. For example, this could be the minimum
         of a set RTT of measurements measured over the previous 5 minutes.</t>
 
-        <t>Implementations are required include a
-        Lifetime parameter in the CC parameters that is used to remove old CC parameters
-        when no longer needed, or the CC parameters are out of date.</t>
+        <t>Implementations are required to include a
+        Lifetime parameter in the CC parameters. This is used to remove old CC parameters
+        when they are out of date.</t>
 
         <t> <list style="symbols">
             <!-- Avoid unhelpful use of the Careful Resume for small CWNDs.-->
@@ -930,7 +936,7 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
 
             <t>The long-term use of the previously observed parameters is not appropriate,
             a Lifetime needs to define the duration during
-            which the saved CC parameters can be safely re-used.
+            which a set of saved CC parameters can be safely re-used.
         <xref target="RFC9040"></xref> provides guidance on the implementation of
             TCP Control Block Interdependence, but does not specify how long a saved
             parameter can safely be reused.
