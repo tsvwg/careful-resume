@@ -479,6 +479,7 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
         <t>An established connection in the Normal Phase can save a set of CC parameters for the specific path
         to the current endpoint. Each set of CC parameters includes the saved_remote_endpoint and the
         Lifetime (e.g., as a timestamp after which the parameters must not be used).</t>
+         
         <t><list style="symbols">
      <t>Observing (saved_cwnd):
     The saved_cwnd is a measure of the currently utilised capacity for the connection,
