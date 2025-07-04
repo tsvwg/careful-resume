@@ -945,8 +945,13 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
 
             <t>The long-term use of the previously observed parameters is not appropriate,
             a Lifetime needs to define the duration during
-            which a set of saved CC parameters can be safely re-used.
-        <xref target="RFC9040"></xref> provides guidance on the implementation of
+            which a set of saved CC parameters can be safely re-used. 
+            This document does not define limits for the Lifetime. When the path
+          is known to be dynamic, a small value is desirable. For stable paths,
+          a longer value is appropiate, but needs to be traded with the
+          potential for the path bottleneck to change.</t>
+                 
+        <t><xref target="RFC9040"></xref> provides guidance on the implementation of
             TCP Control Block Interdependence, but does not specify how long a saved
             parameter can safely be reused.
          <xref target="RFC7661"></xref> specifies a method for managing an
@@ -958,7 +963,7 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
             However, RFC 7661 targets rate-limited connections using normal
             CC. Careful Resume includes additional
             mechanisms to avoid and mitigate the effects of overshoot, and therefore
-            this can be used to justify a longer period for using the saved_cwnd with
+            a longer period can be justified when using a saved_cwnd with
             Careful Resume.</t>
         
         </section> <!-- End of Reconnaissance:Liftetime of Params -->
