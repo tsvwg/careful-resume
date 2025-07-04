@@ -712,7 +712,7 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
             <t>Safe Retreat Phase (Removing saved information):
             The set of saved CC parameters for
             the path are deleted, to prevent these
-            from being used again by other flows.</t>
+            from being used again by later flows.</t>
 
             <t>Safe Retreat Phase (Re-initializing CWND):
             The CWND MUST be reduced to
