@@ -964,8 +964,13 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
             a longer period can be justified when using a saved_cwnd with
             Careful Resume.</t>
         
-        <t>When the path characteristics are known to be dynamic, or the path varies, a small Lifetime is desirable (e.g., measured in minutes). For stable paths, a longer Lifetime (e.g., measured in hours) can be appropiate. It is not appropiate
-            to use path state for long periods (e.g., measured in days) becauses this would reduce the ability of the Internet to adapt to changes in the path and the level of traffic.</t>
+          <t>When the path characteristics are known to be dynamic, or the path varies,
+          a small Lifetime is desirable (e.g., measured in minutes). For stable paths, 
+          a longer Lifetime (e.g., measured in hours) can be appropiate. After a long
+          period (e.g., measured in days), it is not appropiate
+          to re-use a saved_cwnd that is close to the observed bottleneck capacity, 
+          becauses this would reduce the
+          ability of the Internet to adapt to changes in the path and the level of traffic.</t>
         
         </section> <!-- End of Reconnaissance:Liftetime of Params -->
             
