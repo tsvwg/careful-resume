@@ -1476,8 +1476,11 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
         (which, in this case, is 121-1 = 120 packets) can be used to set the ssthresh on exit
         from Safe Retreat, since it does indicate a measured upper limit to the current capacity.</t>
 
-        <t>At the point where all packets sent in the Unvalidated Phase have been either acknowledged
-        or have been declared lost, the sender updates ssthresh and enters the Normal Phase.
+        <t>At the point where all the (nvalidated packets that were sent in the Unvalidated Phase
+        have been either acknowledged
+        or have been declared lost, the sender updates the ssthresh to be no larger than the recently
+        measured PipeSize multiplied by Beta (the final action of the Safe Retreat Phase), and 
+        the sender enters the Normal Phase.
         Because CWND will now be less than ssthresh, a sender in the Normal Phase is permitted to use
         Slow-Start to grow the CWND towards the ssthresh,
         after which it will enter congestion avoidance.</t>
