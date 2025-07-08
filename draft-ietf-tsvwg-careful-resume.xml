@@ -174,7 +174,7 @@ specify just the year. -->
     same endpoints.</t>
      
     <t> CC algorithms that are rate-based can make
-    similar adjustments to their target sending rate.<
+    similar adjustments to their target sending rate.
     When saving the observed capacity,
     some CC algorithms might save a different parameter
     that is equivalent to the saved_cwnd.
@@ -541,9 +541,9 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
     <!-- -->
 
     <t>In the Reconnaissance Phase, the sender performs the following actions</t>
-</t>
-    <t><list style="symbols">
 
+    <t><list style="symbols">
+x
          <t>Reconnaissance Phase (Received acknowledgment):
          The CWND is increased using normal CC as each ACK
          confirms delivery of previously unacknowledged data
