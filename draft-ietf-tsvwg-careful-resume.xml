@@ -155,15 +155,14 @@ specify just the year. -->
     <t>This document specifies Careful Resume.
     The method seeks to reduce the time to complete
     a transfer when the sending rate is limited by the congestion controller. 
-    (That is, when a transfer seeks to send significantly more data than 
+    That is, when a transfer seeks to send significantly more data than 
     allowed by the Initial congestion Window (IW) and where the BDP of the
     path is also significantly more than the prodduct of the IW and path 
-    Round Trip Time, RTT.)</t>
+    Round Trip Time, RTT.</t>
      
     <t>Careful Resume introduces an alternative method to select initial CC parameters that
     seeks to more rapidly and safely grow the sending rate controlled by
-    the congestion window (CWND). CC algorithms that are rate-based can make
-    similar adjustments to their target sending rate.</t>
+    the congestion window (CWND).</t>
      
     <t>Careful Resume is based on temporal sharing (sometimes known as
     caching) of a saved set of CC parameters that relate to previous observations
@@ -172,7 +171,11 @@ specify just the year. -->
          and a Lifetime for using these parameters. The
     parameters are saved and used to modify the CC
     behaviour of a subsequent connection between the
-    same endpoints. When saving the observed capacity,
+    same endpoints.</t>
+     
+    <t> CC algorithms that are rate-based can make
+    similar adjustments to their target sending rate.<
+    When saving the observed capacity,
     some CC algorithms might save a different parameter
     that is equivalent to the saved_cwnd.
     For example, a rate-based CC algorithm,
@@ -193,7 +196,7 @@ specify just the year. -->
             <t>Information to confirm whether a saved path corresponds to
             the current path.</t>
         <t>Information about the utilised path capacity and observed RTT to
-            set CC parameters.</t>
+            set CC parameters for the current connection.</t>
         <t>Information to check the CC parameters are not too old.</t>
         </list></t>
            
@@ -206,7 +209,7 @@ specify just the year. -->
             to assure safe use and to be robust to changes
             in traffic patterns, network routing, and link/node conditions.
             There are cases where using the saved parameters of a previous
-            connection is not appropriate (see <xref target="sec-phase-rec-phase"></xref>).</t>
+            connection is not appropriate (see <xref target="guidance"></xref>).</t>
     </section>  <!-- End of using with care -->
           
     <section anchor="rec-choice" title="Receiver Preference">
@@ -216,7 +219,7 @@ specify just the year. -->
             is not available at the sender, or might benefit from
             understanding that Careful Resume might be used.
             In these cases, a receiver
-            could explicitly ask to enable or inhibit Careful Resume
+            could explicitly ask to either enable or inhibit Careful Resume
             when an application initiates a new connection.</t>
         
             <t> Examples where a receiver might request to inhibit using Careful Resume include:
@@ -290,7 +293,7 @@ specify just the year. -->
             not appropriate.</t>
         
         <t>The following precautions mitigate the risk of
-            a sender adding excessive congestion to an already congested path:</t>
+            a sender adding excessive congestion to a path:</t>
         
         <t><list>
             <t>The first precaution is to recognise whether the conditions have
@@ -314,8 +317,8 @@ specify just the year. -->
                 to avoid starving other flows that may have started or increased
                 their capacity after the last capacity measurement.
                 The same principle applies for CC algorithms that use different parameters to classic
-                TCP CC: i.e., a sender must not send at rate allowd by more than a fraction
-                of the remembered CC parameters. For example, a connection using a rate-based CC algorithm
+                TCP CC: i.e., a sender must not send faster than allowed by a fraction
+                of the saved CC parameters. For example, a connection using a rate-based CC algorithm
                 (e.g., BBR) will set the
                 pacing rate to half the remembered value of the "bottleneck bandwidth".
                 The sender also needs to pace all unvalidated packets,
@@ -390,7 +393,7 @@ specify just the year. -->
         the Remote Endpoint is not known to have changed (see <xref target="sec-phase-rec-phase"></xref>).</t>
     </section> <!-- End of An Remote Endpoint -->
 
-    <section anchor="sec-QLOG" title="Logging support">
+    <section anchor="sec-QLOG" title="Logging Support">
         <t>This document defines triggers to support logging key events.
         <xref target="I-D.custura-tsvwg-careful-resume-qlog"></xref> provides definitions that enable a
         Careful Resume implementation
@@ -452,7 +455,8 @@ specify just the year. -->
 <section anchor="sec-phase" title="The Phases of CC using Careful Resume">
     <t>This section defines a series of phases that the
     congestion controller moves through as a connection
-    uses Careful Resume.</t>
+    uses Careful Resume. Each rule is prefixed by the
+    name of the relevent phase.</t>
 
     <t>
 <figure title="Key transitions between Phases in Careful Resume">
@@ -474,7 +478,7 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
     
     <t>
     The key phases of Careful Resume are illustrated in Figure 1.
-    Examples of these transitions between phases
+    Examples of transitions between these phases
     are provided in <xref target="Examples"></xref>.</t>
      
     <!-- These subsections to match next section format -->
@@ -513,9 +517,7 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
          a previously observed path (i.e, match the saved_remote_endpoint 
          in a set of saved CC parameters).</t>
 
-         <t> The sender enters the Reconnaissance Phase after connection setup in the Normal Phase.</t>
-
-        <t>     
+         <t> The sender enters the Reconnaissance Phase after connection setup in the Normal Phase.
         In this phase, the CWND is initialised to the IW, and the sender transmits any initial data.</t>
 
         <!-- -->
@@ -538,7 +540,8 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
     </list></t>
     <!-- -->
 
-    <t>The following actions are performed during the Reconnaissance Phase:</t>
+    <t>In the Reconnaissance Phase, the sender performs the following actions</t>
+</t>
     <t><list style="symbols">
 
          <t>Reconnaissance Phase (Received acknowledgment):
@@ -611,7 +614,8 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
           </list></t>
          
           <!-- -->
-          <t>The following actions are performed during the Unvalidated Phase:</t>
+          <t>
+          In the Validating Phase, the sender performs the following actions</t>
           <t><list style="symbols">
                <t>Unvalidated Phase (Pacing transmission): All packets sent in the
                Unvalidated Phase MUST use pacing based on the current rtt.</t>
@@ -663,7 +667,7 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
           <t>The Validating Phase checks whether all packets
           sent in the Unvalidated Phase were received without inducing congestion.
           The CWND remains unvalidated and the sender typically remains in this phase for one RTT.</t>
-          <t>On entry to the Validating Phase, the sender:</t>
+          <t>On entry to the Validating Phase, the following actions are performed:</t>
          
           <t><list style="symbols">
                <t>Validating Phase (Check flight_size on entry):
@@ -677,7 +681,7 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
                than the PipeSize, the CWND is set to the flight_size.</t>
           </list></t> <!-- End of list of actions -->
 
-          <t>During the Validating Phase, the sender performs the following actions:</t>
+          <t>In the Validating Phase, the sender performs the following actions:</t>
 
           <t><list style="symbols">
 
@@ -747,7 +751,7 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
             additional packets might also need to be retransmitted.</t>
         </list></t>
 
-        <t> In the Safe Retreat Phase, the sender performs the following actions:</t>
+        <t>In the Safe Retreat Phase, the sender performs the following actions:</t>
         <t><list style="symbols">
 
             <t>Safe Retreat Phase (Tracking PipeSize):
@@ -803,7 +807,7 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
 <!-- ****************************************************************************************** -->
 <!--- Here we provide guidance on implementation     -->
     
-<section title="Implementation Notes and Guidelines">
+<section anchor="guidance" title="Implementation Notes and Guidelines">
 
     <t>This section provides guidance for implementation and use.</t>
 
@@ -966,11 +970,12 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
         
           <t>When the path characteristics are known to be dynamic, or the path varies,
           a small Lifetime is desirable (e.g., measured in minutes). For stable paths, 
-          a longer Lifetime (e.g., measured in hours) can be appropiate. After a long
-          period (e.g., measured in days), it is not appropiate
-          to re-use a saved_cwnd that is close to the observed bottleneck capacity, 
-          becauses this would reduce the
-          ability of the Internet to adapt to changes in the path and the level of traffic.</t>
+          and where the sender does not expect the path to be shared by many senders,
+          a longer Lifetime (e.g., measured in hours) could be used.
+          A bottleneck that is shared
+          by a large number of senders brings greater risk that CR connections could
+          contribute congestion that leads to prolonged overload with starvation, this can
+          be mitigated by setting a small Lifetime.</t>
         
         </section> <!-- End of Reconnaissance:Liftetime of Params -->
             
