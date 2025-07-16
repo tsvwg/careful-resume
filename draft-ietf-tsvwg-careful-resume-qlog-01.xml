@@ -10,7 +10,7 @@
 <?rfc sortrefs="yes" ?>
 <?rfc compact="yes" ?>
 <?rfc subcompact="no" ?>
-<rfc category="std" docName="draft-ietf-tsvwg-careful-resume-qlog-01"
+<rfc category="std" docName="draft-ietf-tsvwg-careful-resume-qlog-02"
      ipr="trust200902" consensus="true" submissionType="IETF">
     <!-- category values: std, bcp, info, exp, and historic
     ipr values: full3667, noModification3667, noDerivatives3667
@@ -31,7 +31,7 @@ full title is longer than 39 characters -->
       <organization>University of Aberdeen</organization>
       <address>
         <postal>
-          <street>Department of Engineering</street>
+          <street>School of Engineering</street>
           <street>Fraser Noble Building</street>
           <city>Aberdeen</city>
           <code>AB24 3UE</code>
@@ -45,7 +45,7 @@ full title is longer than 39 characters -->
       <organization>University of Aberdeen</organization>
       <address>
         <postal>
-          <street>Department of Engineering</street>
+          <street>School of Engineering</street>
           <street>Fraser Noble Building</street>
           <city>Aberdeen</city>
           <code>AB24 3UE</code>
