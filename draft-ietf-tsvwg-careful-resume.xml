@@ -115,7 +115,7 @@ specify just the year. -->
       It reuses a set of computed congestion control parameters that
       are based on previously observed path characteristics between
       the same pair of transport endpoints. These parameters
-      are saved, allowing them to be later used to modify the 
+      are saved, allowing them to be later used to modify the
       congestion control behaviour of a subsequent connection.</t>
       <t>It describes assumptions and defines requirements for how a
       sender utilises these parameters to provide opportunities for a
@@ -154,10 +154,10 @@ specify just the year. -->
 
     <t>This document specifies Careful Resume.
     The method seeks to reduce the time to complete
-    a transfer when the sending rate is limited by the congestion controller. 
-    That is, when a transfer seeks to send significantly more data than 
+    a transfer when the sending rate is limited by the congestion controller.
+    That is, when a transfer seeks to send significantly more data than
     allowed by the Initial congestion Window (IW) and where the BDP of the
-    path is also significantly more than the prodduct of the IW and path 
+    path is also significantly more than the prodduct of the IW and path
     Round Trip Time, RTT.</t>
      
     <t>Careful Resume introduces an alternative method to select initial CC parameters that
@@ -167,7 +167,7 @@ specify just the year. -->
     <t>Careful Resume is based on temporal sharing (sometimes known as
     caching) of a saved set of CC parameters that relate to previous observations
     of the same path. The parameters include:
-    the saved_cwnd for the path, the minimum RTT, 
+    the saved_cwnd for the path, the minimum RTT,
          and a Lifetime for using these parameters. The
     parameters are saved and used to modify the CC
     behaviour of a subsequent connection between the
@@ -326,15 +326,16 @@ specify just the year. -->
                 This is intended to avoid a sudden influx of
                 packets that could result in building a bottleneck queue and disrupting existing flows.
                 Successful validation can allow further increases of the CWND;
-        after first validating that the used rate did not result in congestion.</t>
+                after first validating that the used rate did not result in congestion.</t>
             
             <t>The third precaution is to enter a "Safe Retreat Phase" if the validation fails,
                 for example if congestion is detected during validation. The risk here is that the
                 trial use of the saved CC parameters could have disrupted existing connections.
                 For example, consider a connection using Reno TCP CC:
-             When exiting "slow start" mode due to loss, Reno would normally update the CWND to a
-             "slow start threshold" set to half the volume of data in flight.
-             However, during this validation
+                When exiting "slow start" mode due to loss,
+                Reno would normally update the CWND to a
+                "slow start threshold" set to half the volume of data in flight.
+                However, during this validation
                 the CWND is restored from the saved CC parameters. The resultant sending rate
                 could be much larger than the value that would have been reached by a
                 "standard" slow start process, resulting in an overload of the path that potentially
@@ -343,7 +344,7 @@ specify just the year. -->
                 congestion window (rate) to a value no greater than what a standard process would have
                 discovered. For other CC algorithms,
                 such as Cubic <xref target="RFC9438"></xref> or BBR, the implementation
-                details may differ, but the principle remains: trying and failing should not 
+                details may differ, but the principle remains: trying and failing should not
                 unduly disadvantage existing connections that
                 share a common bottleneck (e.g., resulting in starving these connections).</t>
         </list></t>
@@ -383,13 +384,13 @@ specify just the year. -->
             IP address).</t>
         </list></t>
         
-        <t>The Remote Endpoint could also include information such as the DSCP, the transport ports, etc. 
+        <t>The Remote Endpoint could also include information such as the DSCP, the transport ports, etc.
         If included, such information needs to be set consistently for a resumed connection
         to the same endpoint.
         Although additional information could improve the path
         differentiation, it could reduce the re-usability of saved parameters.</t>
 
-        <t>The saved CC parameters can only be used to modify the startup when 
+        <t>The saved CC parameters can only be used to modify the startup when
         the Remote Endpoint is not known to have changed (see <xref target="sec-phase-rec-phase"></xref>).</t>
     </section> <!-- End of An Remote Endpoint -->
 
@@ -492,18 +493,18 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
          <t>The following rules apply to observing a flow in the Normal Phase:</t>
          
         <t><list style="symbols">
-     <t>Observing (saved_cwnd):
-    The currently utilised capacity for the connection is
-    measured as the volume of bytes sent during an RTT and is recorded in the 
-    saved_cwnd. This could be computed
-    by measuring the volume of data acknowledged in one RTT.
-    If the measured CWND is less than four times the Initial Window (IW)
+        <t>Observing (saved_cwnd):
+        The currently utilised capacity for the connection is
+        measured as the volume of bytes sent during an RTT and is recorded in the
+        saved_cwnd. This could be computed
+        by measuring the volume of data acknowledged in one RTT.
+        If the measured CWND is less than four times the Initial Window (IW)
         the sender can choose to not save the CC parameters, because the additional actions associated with
-    performing Careful Resume for a small CWND would not justify its use.</t>
-     <t>Observing (saved_rtt): The minimum RTT at the time of observation is saved as the saved_rrt.</t> 
-     <t>Observing (Updating saved CC parameters): A sender MUST NOT retain more than one 
+        performing Careful Resume for a small CWND would not justify its use.</t>
+        <t>Observing (saved_rtt): The minimum RTT at the time of observation is saved as the saved_rrt.</t>
+        <t>Observing (Updating saved CC parameters): A sender MUST NOT retain more than one
         set of CC parameters for a Remote Endpoint,
-        but the set of CC parameters SHOULD be updated (or replaced) 
+        but the set of CC parameters SHOULD be updated (or replaced)
         after a later observation of a path to the same Remote Endpoint.</t>
      
     </list></t>
@@ -514,7 +515,7 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
           
     <section anchor="sec-phase-rec-phase" title="Reconnaissance Phase">
           <t>This phase seeks to determine if the path is consistent with
-         a previously observed path (i.e, match the saved_remote_endpoint 
+         a previously observed path (i.e, match the saved_remote_endpoint
          in a set of saved CC parameters).</t>
 
          <t> The sender enters the Reconnaissance Phase after connection setup in the Normal Phase.
@@ -524,7 +525,7 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
         <t>The following conditions need to be confirmed before the sender
         enters the Reconnaissance Phase:</t>
 
-        <t><list style="symbols">             
+        <t><list style="symbols">
              <t>Reconnaissance Phase (Path change):
             If the Remote Endpoint is not the same as a saved_remote_endpoint,
             or the sender receives a signal from the local stack indicating that the path is now
@@ -543,24 +544,25 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
     <t>In the Reconnaissance Phase, the sender performs the following actions</t>
 
     <t><list style="symbols">
-x
          <t>Reconnaissance Phase (Received acknowledgment):
          The CWND is increased using normal CC as each ACK
          confirms delivery of previously unacknowledged data
           (i.e., the base congestion control algorithm continues to operate normally).</t>
 
          <t>Reconnaissance Phase (Detected congestion): If the sender detects
-            congestion (e.g., packet loss or ECN-CE marking), the sender MUST enter the Normal Phase
-             to respond to the detected congestion.</t>
+         congestion (e.g., packet loss or ECN-CE marking),
+         the sender MUST enter the Normal Phase
+         to respond to the detected congestion.</t>
         
         <t>Reconnaissance Phase (Using saved_cwnd):
-            Only one connection can use a specific set of saved CC parameters.
-            If another connection has already started to use the saved_cwnd, the sender
-            MUST enter the Normal Phase.</t>
+        Only one connection can use a specific set of saved CC parameters.
+        If another connection has already started to use the saved_cwnd, the sender
+        MUST enter the Normal Phase.</t>
 
         <t>Reconnaissance Phase (Path confirmed):
-         When the sender has
-        received an acknowledgement for all the initial data (usually the IW) without reported congestion,
+        When the sender has
+        received an acknowledgement for all the initial data (usually the IW)
+        without reported congestion,
         it MAY then enter the Unvalidated Phase.
         Although a sender can immediately transition to the Unvalidated Phase,
         this transition MAY be deferred to the time at which more data is sent
@@ -582,7 +584,7 @@ x
          <t>The following conditions
         need to be confirmed before the sender enters the Unvalidated Phase:</t>
 
-         <t><list style="symbols"> 
+         <t><list style="symbols">
               <t>Unvalidated Phase (Confirming the path on entry):
                If the minimum RTT recorded in the Reconnaissance Phase is less than or equal to (saved_rtt / 2)
                or the minimum RTT is greater than (saved_rtt x 10)
@@ -632,7 +634,7 @@ x
                (logged as packet_loss or ECN_CE in <xref target="I-D.custura-tsvwg-careful-resume-qlog"></xref>).
                (Note that insufficient time has passed in the Unvalidated Phase for a
                sender to receive any feedback validating the jump in CWND.
-               Therefore, any detected congestion must have resulted from packets 
+               Therefore, any detected congestion must have resulted from packets
                sent before the Unvalidated Phase.)</t>
 
                <t>Unvalidated Phase (Completed sending all unvalidated packets):
@@ -736,7 +738,7 @@ x
             their share of the total capacity.
             (Note: The minimum CWND in QUIC is 2 packets, see: <xref target="RFC9002"></xref> section 4.8).</t>
 
-            <t>Safe Retreat Phase (Loss Recovery): 
+            <t>Safe Retreat Phase (Loss Recovery):
             Loss recovery commences using the newly reduced CWND
             that was set on entry to the Safe Retreat Phase.
             When the CWND is reduced,
@@ -746,7 +748,7 @@ x
             similar method for TCP is described in Section 5 of <xref target="RFC6675"></xref>.
             The loss recovery continues
             until acknowledgment of the last packet number (or a later packet) sent in the
-            Unvalidated or Validating Phase.     
+            Unvalidated or Validating Phase.
             Note: If the last unvalidated packet is not cumulatively acknowledged, then
             additional packets might also need to be retransmitted.</t>
         </list></t>
@@ -782,8 +784,9 @@ x
 
     <section title="Detecting Persistent Congestion while using Careful Resume">
 
-        <t> A sender that experiences persisent congestion (e.g., a Retransmission Time Out, RTO, expiry in TCP)
-          ceases to use Careful Resume.
+        <t> A sender that experiences persisent congestion
+        (e.g., a Retransmission Time Out, RTO, expiry in TCP)
+        ceases to use Careful Resume.
         The sender enters the Normal Phase. If using BBR, the normal
         processing of packet losses will cause it to enter the
         Drain state while the "carefully-resuming" flag is set to True, see <xref target="sec-BBR-SR"></xref>.</t>
@@ -835,7 +838,7 @@ x
             overshoot). It is inappropriate to use an
             overshoot in the CWND as a basis for estimating the
             capacity. In most cases, the CWND will converge to a stable
-            value after several more RTTs. 
+            value after several more RTTs.
             One mitigation when a connection is in Slow Start
             could be to set the
             saved_cwnd based on the validated pipe size (i.e., CWND / 2).</t>
@@ -879,13 +882,13 @@ x
         client device are served by different server processes.)</t>
 
          <t> A sender that is rate-limited <xref target="RFC7661"></xref>,
-           sends insufficient data
+          sends insufficient data
           to be able to validate transmission at a higher rate.
           Such as sender is allowed to remain in the Reconnaissance Phase and to not
-            transition to the Unvalidated Phase until there is
-            more data in the transmission buffer
-            than would normally be permitted by the CC algorithm.
-            </t>
+          transition to the Unvalidated Phase until there is
+          more data in the transmission buffer
+          than would normally be permitted by the CC algorithm.
+          </t>
         <section anchor="sec-confirm-rtt" title="Confirming the Path">
             <t>Path characteristics can change over time for many reasons.
             This can result in the previously observed CC parameters
@@ -898,38 +901,36 @@ x
             saved_rrt, this is regarded as too small. This is an indicator of a path change.
             This factor of two arises, because the jump_cwnd is calculated as half the
             measured saved_cwnd and
-        sending rate ought not to exceed the observed rate when
+            sending rate ought not to exceed the observed rate when
             the saved_cwnd was measured.</t>
              
-        <t> If the current RTT is larger than the saved_rtt,
+             <t> If the current RTT is larger than the saved_rtt,
             this would result
             in a proportionally lower rate for the unvalidated packets, because the transmission
             is paced based on the current rtt. Hence this rate is still safe.
             If the current rtt has been incorrectly measured as larger
             than the actual path RTT, the sender will receive an ACK for an
             unvalidated packet before it has completed the Unvalidated Phase, this
-            ACK resets the CWND to reflect the flight_size, 
-            and the sender then enters the Validating Phase. 
+            ACK resets the CWND to reflect the flight_size,
+            and the sender then enters the Validating Phase.
             The flight_size reflects the amount of outstanding data
             in the network rather than the
-            maximum that is permitted by the CWND.</t> 
+            maximum that is permitted by the CWND.</t>
             <t>A current rtt that is more than ten times the
             saved_rrt is indicative of a path change.
             The value of ten accommodates both increases in latency from buffering
             on a path and any variation between RTT samples.</t>
 
             <t>Note 1: In the Reconaisance Phase, the sender calculates a minimum RTT over the phase
-               and checks this on entry to the Unvalidated Phase.
-              This avoids needing 
-              to check after each current rtt sample.</t>
-             <t>
-              Note 2: During the Unvalidated Phase, the
-              minimum RTT cannot increase, and hence the minimum RTT can never be larger
-              than than (saved_rtt x 10) during the Unvalidated Phase.</t>
+            and checks this on entry to the Unvalidated Phase.
+            This avoids needing to check after each current rtt sample.</t>
+            <t> Note 2: During the Unvalidated Phase, the
+            minimum RTT cannot increase, and hence the minimum RTT can never be larger
+            than than (saved_rtt x 10) during the Unvalidated Phase.</t>
              
-              <t>The sender also verifies that the initial data was acknowledged.
+            <t>The sender also verifies that the initial data was acknowledged.
             Any loss could be indicative of persistent congestion.
-        A sender in Reconnaissance Phase reverts to the Normal Phase if congestion is detected.
+            A sender in Reconnaissance Phase reverts to the Normal Phase if congestion is detected.
             Some transport protocols implement CC mechanisms that infer potential congestion
             from an increase in the current rtt. Designs need to consider if such an indication is
             a suitable trigger to revert to the Normal Phase.</t>
@@ -969,7 +970,7 @@ x
             Careful Resume.</t>
         
           <t>When the path characteristics are known to be dynamic, or the path varies,
-          a small Lifetime is desirable (e.g., measured in minutes). For stable paths, 
+          a small Lifetime is desirable (e.g., measured in minutes). For stable paths,
           and where the sender does not expect the path to be shared by many senders,
           a longer Lifetime (e.g., measured in hours) could be used.
           A bottleneck that is shared
@@ -1042,8 +1043,9 @@ x
         <t>If the flight_size was less than or equal to the PipeSize, the
         sender resets the CWND to the PipeSize, and enters the Normal Phase.</t>
 
-        <t>Otherwise, if the CWND is larger than the flight_size, the CWND is reset to the flight_size.
-               The sender then awaits reception of ACKs to validate the
+        <t>Otherwise, if the CWND is larger than the flight_size,
+        the CWND is reset to the flight_size.
+        The sender then awaits reception of ACKs to validate the
         use of this capacity.</t>
          
         <t>New packets are sent when previously
@@ -1074,12 +1076,12 @@ x
         For this reason, a sender in the Safe Retreat Phase needs to react to detected congestion by
         reducing CWND significantly below the saved_cwnd.</t>
              
-            <t>During loss recovery, a receiver can cumulatively acknowledge
-            data that was previously sent in the Unvalidated Phase in addition
-            to acknowledging the successful retransmission of data.
-            <xref target="RFC3465"></xref> describes how to appropriately
-            account for such ACKs.
-            ACKS received
+        <t>During loss recovery, a receiver can cumulatively acknowledge
+        data that was previously sent in the Unvalidated Phase in addition
+        to acknowledging the successful retransmission of data.
+        <xref target="RFC3465"></xref> describes how to appropriately
+        account for such ACKs.
+        ACKS received
         for unvalidated packets are tracked to
         measure the maximum available capacity, called the "PipeSize"
         (The first unvalidated packet can be determined by
@@ -1091,21 +1093,21 @@ x
         there was also a significant overshoot at the bottleneck,
         and must not be used to reinitialise the CWND.</t>
 
-            <t>Proportional Rate Reduction (PRR) <xref target="I-D.ietf-tcpm-prr-rfc6937bis"></xref>
-            assumes that it is safe to reduce
-            the rate gradually when in congestion avoidance.
-            PRR is therefore not appropriate
-            when there might be significant overshoot in the use of the capacity, which can
-            be the case when the Safe Retreat Phase is entered.</t>
- 
-            <t>The recovery from loss depends on the design of a transport protocol.
-            A TCP or SCTP sender is required to retransmit
-            all lost data <xref target="RFC5681"></xref>.
-            For some transports (e.g., QUIC and DCCP), the need for loss recovery
-            depends on the sender policy for retransmission.
-            On entry to the Safe Retreat Phase, the CWND can be
-            significantly reduced. When there was multiple loss,
-            a sender recovering all lost data could then take multiple RTTs to complete.</t>
+        <t>Proportional Rate Reduction (PRR) <xref target="I-D.ietf-tcpm-prr-rfc6937bis"></xref>
+        assumes that it is safe to reduce
+        the rate gradually when in congestion avoidance.
+        PRR is therefore not appropriate
+        when there might be significant overshoot in the use of the capacity, which can
+        be the case when the Safe Retreat Phase is entered.</t>
+
+        <t>The recovery from loss depends on the design of a transport protocol.
+        A TCP or SCTP sender is required to retransmit
+        all lost data <xref target="RFC5681"></xref>.
+        For some transports (e.g., QUIC and DCCP), the need for loss recovery
+        depends on the sender policy for retransmission.
+        On entry to the Safe Retreat Phase, the CWND can be
+        significantly reduced. When there was multiple loss,
+        a sender recovering all lost data could then take multiple RTTs to complete.</t>
      
     </section><!-- End of Safety for the Safe Retreat Phase -->
 
@@ -1115,7 +1117,7 @@ x
         increased when a sender has passed through
          the Unvalidated Phase. However, note that in some cases the value of the CWND
          could be significnatly lower than the
-         jump_cwnd (e.g., when a sender did not utilise 
+         jump_cwnd (e.g., when a sender did not utilise
          the entire CWND in the Unvalidated Phase).</t>
 
         <t>The implementation details for different CC algorithms depend on the
@@ -1479,7 +1481,7 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
         <t>At the point where all the (nvalidated packets that were sent in the Unvalidated Phase
         have been either acknowledged
         or have been declared lost, the sender updates the ssthresh to be no larger than the recently
-        measured PipeSize multiplied by Beta (the final action of the Safe Retreat Phase), and 
+        measured PipeSize multiplied by Beta (the final action of the Safe Retreat Phase), and
         the sender enters the Normal Phase.
         Because CWND will now be less than ssthresh, a sender in the Normal Phase is permitted to use
         Slow-Start to grow the CWND towards the ssthresh,
