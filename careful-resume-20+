@@ -571,7 +571,8 @@ Normal CC...> Connect -> Reconnaissance --------------------> Normal CC
       not valid for the current path.</t>
  </list></t>
      
-     <t>Note: When a path is not confirmed, Careful Resume does not modify the CWND.</t>
+     <t>Note: When a path is not confirmed, Careful Resume does not modify the CWND
+     before it exits to use normal CC.</t>
      
      <t>The sender is permitted to enter the Univalidated Phase as described below:<list style="symbols">
 
@@ -603,14 +604,12 @@ Normal CC...> Connect -> Reconnaissance --------------------> Normal CC
 
                <t>Unvalidated Phase (Setting the jump_cwnd):
                To avoid starving other flows that could have either started
-               or increased their use of capacity since Observing the capacity of a path,
+               or increased their use of capacity since observing the capacity of a path,
                the jump_cwnd MUST be no more than half of the saved_cwnd.
                Hence, jump_cwnd is less than  or equal to Min(max_jump,(saved_cwnd/2)).
                CWND = jump_cwnd. </t>
 
-          </list></t>
-         
-          <!-- -->
+          </list></t> <!-- -->
           <t>
           In the Validating Phase, the sender performs the following actions:</t>
           <t><list style="symbols">
@@ -811,7 +810,7 @@ Normal CC...> Connect -> Reconnaissance --------------------> Normal CC
          
         <t>Implementation notes are provided in <xref target="req-normal"></xref>.</t>
 
-    </section> <!-- End of define "nomal:" -->
+    </section> <!-- End of define "normal:" -->
         
 </section>
 
@@ -951,7 +950,7 @@ Normal CC...> Connect -> Reconnaissance --------------------> Normal CC
         <t>This section considers the safety
         for using saved CC parameters to tentatively update the CWND.
         This seek to avoid starving other flows that could have either started
-        or increased their use of capacity since Observing the capacity of a path</t>
+        or increased their use of capacity since observing the capacity of a path</t>
         <t>To avoid inducing significant congestion to any connections that
         have started to use a shared bottleneck, a sender must not directly use the previously
         saved_cwnd to directly initialise a new flow causing it to resume sending at the same
@@ -1141,9 +1140,9 @@ Normal CC...> Connect -> Reconnaissance --------------------> Normal CC
         </list></t>-->
 
         <t>Once a sender is no longer using Careful Resume, the sender is permitted to start
-        Observing the capacity of the path.</t>
+        observing the capacity of the path.</t>
                 
-    </section> <!-- End of nomal -->
+    </section> <!-- End of normal -->
     
     <section anchor="flow-control" title="Limitations from Transport Protocols">
 
@@ -1419,7 +1418,7 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
         this indicates that the packet was validated.</t>
 
         <t>When an ACK is received for the last packet that was sent in the Unvalidated Phase,
-        the sender has completed using Careful Resume. It then stops using Careful Resu,e.
+        the sender has completed using Careful Resume. It then stops using Careful Resume.
     For example, if the CWND is less than ssthresh,
         a Reno or Cubic sender using normal CC is permitted to use Slow-Start to grow the CWND towards
         the ssthresh, and will then enter congestion avoidance.</t>
