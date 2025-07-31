@@ -1490,7 +1490,7 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
         have been either acknowledged
         or have been declared lost, the sender updates the ssthresh to be no larger than the recently
         measured PipeSize multiplied by Beta (the final action of the Safe Retreat Phase), and
-        the sender stops using Careful Resum.
+        the sender stops using Careful Resume.
         Because CWND will now be less than ssthresh, a sender using normal CC is permitted to use
         Slow-Start to grow the CWND towards the ssthresh,
         after which it will enter congestion avoidance.</t>
