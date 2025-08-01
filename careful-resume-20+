@@ -10,7 +10,7 @@
 <?rfc sortrefs="yes" ?>
 <?rfc compact="yes" ?>
 <?rfc subcompact="no" ?>
-<rfc category="std" docName="draft-ietf-tsvwg-careful-resume-20"
+<rfc category="std" docName="draft-ietf-tsvwg-careful-resume-21"
      ipr="trust200902" consensus="true" submissionType="IETF">
     <!-- category values: std, bcp, info, exp, and historic
     ipr values: full3667, noModification3667, noDerivatives3667
@@ -1169,7 +1169,9 @@ Normal CC...> Connect -> Reconnaissance --------------------> Normal CC
     Ian Swett, Igor Lubashev, Robin Marx, Roland Bless, Franklin Simo, Kazuho Oku, Tong,
     Ana Custura, Neal Cardwell, Marten Seemann, Matthias Hofstaetter, Nicolai Fischer
     and Joerg Deutschmann for
-    their fruitful comments in developing this specification.</t>
+    their fruitful comments in developing this specification.
+    They also thank Mike Bishop for his careful suggestions
+    on the structure to describe the phases.</t>
     <t>The authors would like to thank Tom Jones for co-authoring
     several previous versions of this document.</t>
 </section>
