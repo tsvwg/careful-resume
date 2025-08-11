@@ -617,7 +617,7 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
          
           <!-- -->
           <t>
-          In the Validating Phase, the sender performs the following actions</t>
+          In the Unvalidated Phase, the sender performs the following actions</t>
           <t><list style="symbols">
                <t>Unvalidated Phase (Pacing transmission): All packets sent in the
                Unvalidated Phase MUST use pacing based on the current rtt.</t>
