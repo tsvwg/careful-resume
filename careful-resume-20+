@@ -157,7 +157,7 @@ specify just the year. -->
     a transfer when the sending rate is limited by the congestion controller.
     That is, when a transfer seeks to send significantly more data than
     allowed by the Initial congestion Window (IW) and where the BDP of the
-    path is also significantly more than the prodduct of the IW and path
+    path is also significantly more than the product of the IW and path
     Round Trip Time, RTT.</t>
      
     <t>Careful Resume introduces an alternative method to select initial CC parameters that
@@ -457,7 +457,7 @@ specify just the year. -->
     <t>This section defines a series of phases that the
     congestion controller moves through as a connection
     uses Careful Resume. Each rule is prefixed by the
-    name of the relevent phase.</t>
+    name of the relevant phase.</t>
 
     <t>
 <figure title="Key transitions between Phases in Careful Resume">
@@ -574,7 +574,7 @@ Normal CC...> Connect -> Reconnaissance --------------------> Normal CC
      <t>Note: When a path is not confirmed, Careful Resume does not modify the CWND
      before it exits to use normal CC.</t>
      
-     <t>The sender is permitted to enter the Univalidated Phase as described below:<list style="symbols">
+     <t>The sender is permitted to enter the Unvalidated Phase as described below:<list style="symbols">
 
         <t>Reconnaissance Phase (Path confirmed):
         When the sender has
@@ -791,7 +791,7 @@ Normal CC...> Connect -> Reconnaissance --------------------> Normal CC
 
     <section title="Detecting Persistent Congestion while using Careful Resume">
 
-        <t> A sender that experiences persisent congestion
+        <t> A sender that experiences persistent congestion
         (e.g., a Retransmission Time Out, RTO, expiry in TCP)
         ceases to use Careful Resume.
         The sender stops using Careful Resume and returns to use normal CC. If using BBR, the normal
@@ -928,7 +928,7 @@ Normal CC...> Connect -> Reconnaissance --------------------> Normal CC
             The value of ten accommodates both increases in latency from buffering
             on a path and any variation between RTT samples.</t>
 
-            <t>Note 1: In the Reconaisance Phase, the sender calculates a minimum RTT over the phase
+            <t>Note 1: In the Reconnaissance Phase, the sender calculates a minimum RTT over the phase
             and checks this on entry to the Unvalidated Phase.
             This avoids needing to check after each current rtt sample.</t>
             <t> Note 2: During the Unvalidated Phase, the
@@ -1124,7 +1124,7 @@ Normal CC...> Connect -> Reconnaissance --------------------> Normal CC
                  <t>The CWND at entry to the phase will have been
         increased when a sender has passed through
          the Unvalidated Phase. However, note that in some cases the value of the CWND
-         could be significnatly lower than the
+         could be significantly lower than the
          jump_cwnd (e.g., when a sender did not utilise
          the entire CWND in the Unvalidated Phase).</t>
 
@@ -1488,7 +1488,7 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
         (which, in this case, is 121-1 = 120 packets) can be used to set the ssthresh on exit
         from Safe Retreat, since it does indicate a measured upper limit to the current capacity.</t>
 
-        <t>At the point where all the (nvalidated packets that were sent in the Unvalidated Phase
+        <t>At the point where all the unvalidated packets that were sent in the Unvalidated Phase
         have been either acknowledged
         or have been declared lost, the sender updates the ssthresh to be no larger than the recently
         measured PipeSize multiplied by Beta (the final action of the Safe Retreat Phase), and
@@ -1619,7 +1619,8 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
      <t>WG-18, NiTs fixed to reconcile with logging in qlog. Removed "current_remote_endpoint" as requested by Doc Shepherd.</t>
      <t>WG-19, after WG Shepherd review.</t>
      <t>WG-20, after AD review. Requested renaming Normal Phase to normal CC; restructured each phase to have a 
-     consistent calassification of events (with no intended change of algorithm). </t>
+     consistent classification of events (with no intended change of algorithm). </t>
+     <t>WG-21, fixed typos. </t>
     </list></t>
      
 </section> <!-- End of Revisions -->
