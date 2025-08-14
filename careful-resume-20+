@@ -664,7 +664,8 @@ Normal CC...> Connect -> Reconnaissance --------------------> Normal CC
           </list></t> <!-- End of list of actions -->
 
           <t>Unvalidated Phase (Check flight_size):
-          Upon any of these events (after updating the PipeSize and flight_size), it checks
+          Upon any of these events (and after processing any Acknowledgments that update
+          the PipeSize and flight_size), the sender checks
           if (flight_size is less than IW) or (flight_size is less than or equal to the PipeSize)
            then the CWND is
            reset to Max(PipeSize,IW) (logged as rate_limited in [LOG]) and the
