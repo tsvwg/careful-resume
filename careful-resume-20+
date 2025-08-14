@@ -665,7 +665,7 @@ Normal CC...> Connect -> Reconnaissance --------------------> Normal CC
 
           <t>Unvalidated Phase (Check flight_size):
           Upon any of these events (after updating the PipeSize and flight_size), it checks
-          if (flight_size<IW) or (flight_size is less than or equal to the PipeSize) 
+          if (flight_size is less than IW) or (flight_size is less than or equal to the PipeSize)
            then the CWND is
            reset to Max(PipeSize,IW) (logged as rate_limited in [LOG]) and the
            sender stops using Careful Resume and returns to use normal CC.
