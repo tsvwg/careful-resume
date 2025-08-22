@@ -214,8 +214,8 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
 +---------------------+-------------------------------+-------+-------+
 | Trigger             | Description                   | From  | To    |
 +---------------------+-------------------------------+-------+-------+
-| cwnd_limited        | When sender has confirmed the | Recon | Unval |
-|                     | RTT, has received an ACK for  |       |       |
+| congestion_window_  | When sender has confirmed the | Recon | Unval |
+| limited             | RTT, has received an ACK for  |       |       |
 |                     | the initial data without      |       |       |
 |                     | reported congestion and has   |       |       |
 |                     | more data to send than the    |       |       |
