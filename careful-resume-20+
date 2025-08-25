@@ -6,11 +6,11 @@
 <?rfc strict="yes" ?>
 <?rfc toc="yes"?>
 <?rfc tocdepth="4"?>
-<?rfc symrefs="yes"?>
-<?rfc sortrefs="yes" ?>
+<?rfc symre"yes"?>
+<?rfc sortre"yes" ?>
 <?rfc compact="yes" ?>
 <?rfc subcompact="no" ?>
-<rfc category="std" docName="draft-ietf-tsvwg-careful-resume-21"
+<rfc category="std" docName="draft-ietf-tsvwg-careful-resume-22"
      ipr="trust200902" consensus="true" submissionType="IETF">
     <!-- category values: std, bcp, info, exp, and historic
     ipr values: full3667, noModification3667, noDerivatives3667
@@ -611,7 +611,7 @@ Normal CC...> Connect -> Reconnaissance --------------------> Normal CC
 
           </list></t> <!-- -->
           <t>
-          In the Validating Phase, the sender performs the following actions:</t>
+          In the Unvalidated Phase, the sender performs the following actions:</t>
           <t><list style="symbols">
                <t>Unvalidated Phase (Pacing transmission): All packets sent in the
                Unvalidated Phase MUST use pacing based on the current rtt.</t>
@@ -650,7 +650,9 @@ Normal CC...> Connect -> Reconnaissance --------------------> Normal CC
                <t>Unvalidated Phase (Completed sending all unvalidated packets):
                The sender enters the Validating Phase when the flight_size equals the CWND
                (logged as
-               last_unvalidated_packet_sent in <xref target="I-D.custura-tsvwg-careful-resume-qlog"></xref>).</t>
+               last_unvalidated_packet_sent in <xref target="I-D.custura-tsvwg-careful-resume-qlog"></xref>).
+               For an implementation that measures the CWND in bytes, this condition is also true
+               when the remaining unused CWND is less than one maximum-sized packet.</t>
              
                <t>Unvalidated Phase (Receiving acknowledgement for an unvalidated packet):
                The sender enters the Validating Phase when an acknowledgement is
@@ -664,9 +666,13 @@ Normal CC...> Connect -> Reconnaissance --------------------> Normal CC
           </list></t> <!-- End of list of actions -->
 
           <t>Unvalidated Phase (Check flight_size):
-          Upon any of these events, if the flight_size is less than or equal to the
-          PipeSize, the CWND is reset to the PipeSize (logged as rate_limited in [LOG])
-          and the sender stops using Careful Resume and returns to use normal CC.
+          Upon any of these events (and after processing any Acknowledgments that update
+          the PipeSize and flight_size), the sender checks
+          if (flight_size is less than IW) or (flight_size is less than or equal to the PipeSize)
+           then the CWND is
+           reset to the PipeSize (logged as rate_limited in [LOG]) and the
+           sender stops using Careful Resume and returns to use normal CC.
+           In the absence of detected congestion, CWND is not reduced below IW.
           (The PipeSize does not include the
           part of the jump_cwnd that was not utilised.) Otherwise, the CWND MUST be set to
           the flight_size and the sender progresses to the Validating Phase.</t>
@@ -824,7 +830,8 @@ Normal CC...> Connect -> Reconnaissance --------------------> Normal CC
     <section anchor="req-observe" title="Observing the Path Capacity">
             
         <t>There are various approaches to measuring the capacity used by a connection.
-        Congestion controllers, such as such as Reno <xref target="RFC5681"></xref>  or Cubic <xref target="RFC9438"></xref>, could estimate the
+        Congestion controllers, such as such as Reno <xref target="RFC5681"></xref> 
+        or Cubic <xref target="RFC9438"></xref>, could estimate the
         capacity based on the
         CWND, flight_size, acknowledged rate, etc. A different approach could
         estimate the same parameters for a rate-based congestion
@@ -896,6 +903,7 @@ Normal CC...> Connect -> Reconnaissance --------------------> Normal CC
           more data in the transmission buffer
           than would normally be permitted by the CC algorithm.
           </t>
+
         <section anchor="sec-confirm-rtt" title="Confirming the Path">
             <t>Path characteristics can change over time for many reasons.
             This can result in the previously observed CC parameters
@@ -1121,12 +1129,18 @@ Normal CC...> Connect -> Reconnaissance --------------------> Normal CC
 
     <section anchor="req-normal" title="Returning to Normal Congestion Control">
         <t>After using Careful Resume, the CC controller returns to using normal CC.</t>
-                 <t>The CWND at entry to the phase will have been
-        increased when a sender has passed through
-         the Unvalidated Phase. However, note that in some cases the value of the CWND
+       
+        <t>The CWND at entry to the phase will have been
+         increased when a sender has passed through
+         the Unvalidated Phase. Unless the sender was rate-limited,
+         which causes the CWND to be reset based on the used 
+         capacity. The CWND is not reduced below IW, unless
+         congestion was detected.
+         However, note that in some cases the value of the CWND
          could be significantly lower than the
          jump_cwnd (e.g., when a sender did not utilise
-         the entire CWND in the Unvalidated Phase).</t>
+         the entire CWND in the Unvalidated Phase).
+         </t>
 
         <t>The implementation details for different CC algorithms depend on the
         design of the algorithm:</t>
@@ -1167,8 +1181,8 @@ Normal CC...> Connect -> Reconnaissance --------------------> Normal CC
 <section anchor="sec-acknowledgments" title="Acknowledgments">
     <t>The authors would like to thank John Border, Gabriel Montenegro, Patrick McManus,
     Ian Swett, Igor Lubashev, Robin Marx, Roland Bless, Franklin Simo, Kazuho Oku, Tong,
-    Ana Custura, Neal Cardwell, Marten Seemann, Matthias Hofstaetter, Nicolai Fischer
-    and Joerg Deutschmann for
+    Ana Custura, Neal Cardwell, Marten Seemann, Matthias Hofstaetter, Nicolai Fischer,
+    Yi Huang, and Joerg Deutschmann for
     their fruitful comments in developing this specification.
     They also thank Mike Bishop for his careful suggestions
     on the structure to describe the phases.</t>
@@ -1181,7 +1195,13 @@ Normal CC...> Connect -> Reconnaissance --------------------> Normal CC
 </section>
 
 <section anchor="sec-security" title="Security Considerations">
-    <t>This document does not exhibit specific security considerations.</t>
+    <t>The security considerations are the same as for other
+    sender-based congestion control methods. Such methods
+     rely on the receiver appropriately acknowledging receipt
+     of data. The ability of an on-path or off-path attacker
+     to influence congestion control depends upon the security
+     properties of the transport protocol being used.</t>
+
     <!-- Security considerations for the
     interactions with the receiver are discussed in
     <xref target="I-D.kuhn-quic-bdpframe-extension"></xref>.-->
@@ -1313,7 +1333,6 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
         <seriesInfo name="ACM CoNEXT" value="" />
       </reference>
 
-      
     </references>
 
 <section anchor="Examples" title="Notes on the Careful Resume Phases">
@@ -1357,17 +1376,23 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
 |or    |         |CR is not|          Retreat       |            |
 |ECNCE:|         |allowed  |                        |            |
 +------+---------+---------+------------+-----------+------------+
-|Next  |Observing|If (     |If (FS=CWND |If (ACK    |If (ACK     |
-|Phase:|(as      |FS=CWND, |or >1 RTT   |>= last    |>= last     |
+|Next  |Observing|If (     |If(FS>CWND  |If (ACK    |If (ACK     |
+|Phase:|(as      |CWND, |or >1 RTT   |>= last    |>= last     |
 |      |needed)  |Lifetime,|has passed  |unvalidated|unvalidated |
 |      |         |and RTT  |or ACK      |packet),   |packet),    |
 |      |         |confirmed|>= first    |use        |ssthresh =  |
 |      |         |), enter |unvalidated |Normal CC  |PS x Beta;  |
 |      |         |Unvalidat|packet),    |           |and use     |
-|      |         |ed else  |enter       |           |Normal CC   |
-|      |         |use      |Validating  |           |            |
-|      |         |Normal CC|            |           |            |
+|      |         |ed; else |If((FS>CWND)|           |Normal CC   |
+|      |         |CWND=Max |or(FS<=PS)) |           |            |
+|      |         |(PS,IW); |cwnd=PS; and|           |            |
+|      |         |and use  |use Normal  |           |            |
+|      |         |Normal CC|CC else     |           |            |
+|      |         |         |cwnd=FS;    |           |            |
+|      |         |         |enter       |           |            |
+|      |         |         |Validating  |           |            |
 +------+---------+---------+------------+-----------+------------+
+
 ]]></artwork>
 </figure></t>
 
@@ -1621,6 +1646,7 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
      <t>WG-20, after AD review. Requested renaming Normal Phase to normal CC; restructured each phase to have a 
      consistent classification of events (with no intended change of algorithm). </t>
      <t>WG-21, fixed typos. </t>
+     <t>WG-22, updated following IETF-LC comment from Yi Huang. </t>
     </list></t>
      
 </section> <!-- End of Revisions -->
