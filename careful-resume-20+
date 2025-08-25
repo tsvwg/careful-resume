@@ -6,8 +6,8 @@
 <?rfc strict="yes" ?>
 <?rfc toc="yes"?>
 <?rfc tocdepth="4"?>
-<?rfc symrefs="yes"?>
-<?rfc sortrefs="yes" ?>
+<?rfc symre"yes"?>
+<?rfc sortre"yes" ?>
 <?rfc compact="yes" ?>
 <?rfc subcompact="no" ?>
 <rfc category="std" docName="draft-ietf-tsvwg-careful-resume-22"
@@ -650,7 +650,9 @@ Normal CC...> Connect -> Reconnaissance --------------------> Normal CC
                <t>Unvalidated Phase (Completed sending all unvalidated packets):
                The sender enters the Validating Phase when the flight_size equals the CWND
                (logged as
-               last_unvalidated_packet_sent in <xref target="I-D.custura-tsvwg-careful-resume-qlog"></xref>).</t>
+               last_unvalidated_packet_sent in <xref target="I-D.custura-tsvwg-careful-resume-qlog"></xref>).
+               This condition is also true for an implementation that measures the CWND
+               in bytes, and the remaining unused CWND is less than one maximum-sized packet.</t>
              
                <t>Unvalidated Phase (Receiving acknowledgement for an unvalidated packet):
                The sender enters the Validating Phase when an acknowledgement is
@@ -1375,7 +1377,7 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
 |ECNCE:|         |allowed  |                        |            |
 +------+---------+---------+------------+-----------+------------+
 |Next  |Observing|If (     |If(FS>CWND  |If (ACK    |If (ACK     |
-|Phase:|(as      |FS=CWND, |or >1 RTT   |>= last    |>= last     |
+|Phase:|(as      |CWND, |or >1 RTT   |>= last    |>= last     |
 |      |needed)  |Lifetime,|has passed  |unvalidated|unvalidated |
 |      |         |and RTT  |or ACK      |packet),   |packet),    |
 |      |         |confirmed|>= first    |use        |ssthresh =  |
