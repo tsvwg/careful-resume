@@ -901,6 +901,7 @@ Normal CC...> Connect -> Reconnaissance --------------------> Normal CC
           more data in the transmission buffer
           than would normally be permitted by the CC algorithm.
           </t>
+
         <section anchor="sec-confirm-rtt" title="Confirming the Path">
             <t>Path characteristics can change over time for many reasons.
             This can result in the previously observed CC parameters
@@ -1126,12 +1127,18 @@ Normal CC...> Connect -> Reconnaissance --------------------> Normal CC
 
     <section anchor="req-normal" title="Returning to Normal Congestion Control">
         <t>After using Careful Resume, the CC controller returns to using normal CC.</t>
-                 <t>The CWND at entry to the phase will have been
-        increased when a sender has passed through
-         the Unvalidated Phase. However, note that in some cases the value of the CWND
+       
+        <t>The CWND at entry to the phase will have been
+         increased when a sender has passed through
+         the Unvalidated Phase. Unless the sender was rate-limited,
+         which causes the CWND to be reset based on the used 
+         capacity. The CWND is not reduced below IW, unless
+         congestion was detected.
+         However, note that in some cases the value of the CWND
          could be significantly lower than the
          jump_cwnd (e.g., when a sender did not utilise
-         the entire CWND in the Unvalidated Phase).</t>
+         the entire CWND in the Unvalidated Phase).
+         </t>
 
         <t>The implementation details for different CC algorithms depend on the
         design of the algorithm:</t>
@@ -1186,7 +1193,13 @@ Normal CC...> Connect -> Reconnaissance --------------------> Normal CC
 </section>
 
 <section anchor="sec-security" title="Security Considerations">
-    <t>This document does not exhibit specific security considerations.</t>
+    <t>The security considerations are the same as for other
+    sender-based congestion control methods. These methods
+     rely on the receiver appropriately acknowledging receipt
+     of data. The ability of an on-path or off-path attacker
+     to influence congestion control depends upon the security
+     properties of the transport protocol being used.</t>
+
     <!-- Security considerations for the
     interactions with the receiver are discussed in
     <xref target="I-D.kuhn-quic-bdpframe-extension"></xref>.-->
@@ -1361,19 +1374,23 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
 |or    |         |CR is not|          Retreat       |            |
 |ECNCE:|         |allowed  |                        |            |
 +------+---------+---------+------------+-----------+------------+
-|Next  |Observing|If (     |If(FS>CWND |If (ACK    |If (ACK     |
+|Next  |Observing|If (     |If(FS>CWND  |If (ACK    |If (ACK     |
 |Phase:|(as      |FS=CWND, |or >1 RTT   |>= last    |>= last     |
 |      |needed)  |Lifetime,|has passed  |unvalidated|unvalidated |
 |      |         |and RTT  |or ACK      |packet),   |packet),    |
 |      |         |confirmed|>= first    |use        |ssthresh =  |
 |      |         |), enter |unvalidated |Normal CC  |PS x Beta;  |
 |      |         |Unvalidat|packet),    |           |and use     |
-|      |         |ed; else |enter       |           |Normal CC   |
-|      |         |CWND=Max |Validating  |           |            |
-|      |         |(PS,IW); |            |           |            |
-|      |         |and use  |            |           |            |
-|      |         |Normal CC|            |           |            |
+|      |         |ed; else |If((FS>CWND)|           |Normal CC   |
+|      |         |CWND=Max |or(FS<=PS)) |           |            |
+|      |         |(PS,IW); |cwnd=PS; and|           |            |
+|      |         |and use  |use Normal  |           |            |
+|      |         |Normal CC|CC else     |           |            |
+|      |         |         |cwnd=FS;    |           |            |
+|      |         |         |enter       |           |            |
+|      |         |         |Validating  |           |            |
 +------+---------+---------+------------+-----------+------------+
+
 ]]></artwork>
 </figure></t>
 
