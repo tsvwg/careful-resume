@@ -1196,7 +1196,7 @@ Normal CC...> Connect -> Reconnaissance --------------------> Normal CC
 
 <section anchor="sec-security" title="Security Considerations">
     <t>The security considerations are the same as for other
-    sender-based congestion control methods. These methods
+    sender-based congestion control methods. Such methods
      rely on the receiver appropriately acknowledging receipt
      of data. The ability of an on-path or off-path attacker
      to influence congestion control depends upon the security
