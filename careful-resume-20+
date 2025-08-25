@@ -651,8 +651,8 @@ Normal CC...> Connect -> Reconnaissance --------------------> Normal CC
                The sender enters the Validating Phase when the flight_size equals the CWND
                (logged as
                last_unvalidated_packet_sent in <xref target="I-D.custura-tsvwg-careful-resume-qlog"></xref>).
-               This condition is also true for an implementation that measures the CWND
-               in bytes, and the remaining unused CWND is less than one maximum-sized packet.</t>
+               For an implementation that measures the CWND in bytes, this condition is also true
+               when the remaining unused CWND is less than one maximum-sized packet.</t>
              
                <t>Unvalidated Phase (Receiving acknowledgement for an unvalidated packet):
                The sender enters the Validating Phase when an acknowledgement is
