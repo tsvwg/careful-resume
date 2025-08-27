@@ -371,15 +371,15 @@ CarefulResumePhase =
         "safe_retreat"
 
 CarefulResumeStateParameters = {
-      pipesize: uint32,
-      first_unvalidated_packet: uint32,
-      last_unvalidated_packet: uint32,
-      ? congestion_window: uint32,
-      ? ssthresh: uint32
+      pipesize: uint64,
+      first_unvalidated_packet: uint64,
+      last_unvalidated_packet: uint64,
+      ? congestion_window: uint64,
+      ? ssthresh: uint64
 }
 
 CarefulResumeRestoredParameters = {
-      saved_congestion_window: uint32,
+      saved_congestion_window: uint64,
       saved_rtt: float32
 }
 
