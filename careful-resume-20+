@@ -1217,8 +1217,16 @@ Normal CC...> Connect -> Reconnaissance --------------------> Normal CC
     path has changed since the observation of that capacity.
     Importantly whenever a sender detects
     that assumptions about the capacity are not valid, the sender
-    safely responds to reduce the impact on other flows (see <xref target="sec-principle"></xref>.
-    </t>
+    safely responds to reduce the impact on other flows (see <xref target="sec-principle"></xref>.</t>
+   
+    
+    <t>There are four ways that the use of Careful Resume can be constrained:
+    <list>
+        <t>The maximum jump window (max_jump), see <xref target="sec-phase-unv-phase"></xref>;</t>
+        <t>The Remote Endpoint (i.e., client in this context) permitted to use a specific set of saved CC parameters;</t>
+          <t>The server (local IP address) permitted to use a specific set of saved CC parameters;</t>
+        <t>The Lifetime for a set of saved CC parameters, see <xref target="req-lifetime"></xref>.</t>
+     </list></t>
     
     <t>Network methods such
     as Equal Cost Multipath Routing, Anycast Routing and Network Address Translation
