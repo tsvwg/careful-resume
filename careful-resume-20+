@@ -69,7 +69,7 @@ full title is longer than 39 characters -->
           <country>UK</country>
         </postal>
 
-        <email>raffaello@erg.abdn.ac.uk</email>
+        <email>r.secchi@abdn.ac.uk</email>
       </address>
     </author>
 
@@ -109,7 +109,7 @@ specify just the year. -->
      keywords will be used for the search engine. -->
 
     <abstract>
-      <t>This document specifies a cautious method for IETF transports that
+      <t>This document specifies a cautious method for Internet transports that
       enables fast startup of congestion control for a wide
       range of connections, known as "Careful Resume".
       It reuses a set of computed congestion control parameters that
@@ -130,7 +130,7 @@ specify just the year. -->
 <section anchor="sec-introduction" title="Introduction">
     <t>All Internet transports are required to either
     use a Congestion Control (CC) algorithm, or
-    to constrain their rate of transmission <xref target="RFC8085"></xref>. In 2010,
+    to constrain their rate of transmission <xref target="RFC2914"></xref><xref target="RFC8085"></xref>. In 2010,
     a survey of alternative CC algorithms <xref target="RFC5783"></xref> noted that there
     are challenges when a CC algorithm operates across an Internet path with a high and/or
     varying Bandwidth-Delay Product (BDP). The specified method targets a
@@ -138,22 +138,39 @@ specify just the year. -->
 
     <t>A CC algorithm typically takes time to ramp up the sending rate,
     called the "Slow-Start Phase", informally known as the time to "Get up
-    to speed". This defines a time in which a sender
+    to speed". This defines a time during which a sender
     intentionally uses less capacity than might be available, with the
     intention to avoid or limit overshoot of the available capacity for the path.
-    This seeks to avoid an increase queuing (latency or jitter) and/or
-    congestion packet loss for the flow. Any overshoot of the bottleneck rate can have a
+    In the context of CC, a path is associated with the end-to-end communication between
+    a pair of transport endpoints, each identified by a source IP unicast 
+    and a unicast or anycast IP destination address. (This document does not define
+    support for broadcast or multicast destination addresses.) A path can
+    also be associated with a specific Differentiated Services Code Point (DSCP).
+    Below the transport layer, a specific path could be realised in various ways, but this
+    is not normally evident to the transport endpoints. (When known, this additional
+    path information could potentially provide an exlicit signal to the CC algorithm
+    to detect a change in the path.)</t>
+
+    <t>A CC algorithm seeks to avoid an increase queuing (latency or jitter) and/or
+    congestion packet loss for the flow. 
+    A separate instance of the algorithm typically executes over a transport path.
+    In the case of a multipath
+    transport, there can be more than one path with a separate CC 
+     context for each path.
+    Any overshoot of the bottleneck rate can have a
     detrimental effect on other flows that share a common bottleneck.
     A sender can also use a method that observes the rate of acknowledged data
     to seek to avoid an overshoot of this bottleneck capacity (e.g., Hystart++
-    <xref target="RFC9406"></xref>).
-    In the extreme case, an overshoot can result in persistent congestion
+    <xref target="RFC9406"></xref>).</t>
+
+    <t>In the extreme case, an overshoot can result in persistent congestion
     with unwanted starvation of
-    other flows <xref target="RFC8867"></xref> (i.e., preventing other flows
-    from successfully sharing the capacity at a common bottleneck).</t>
+    other flows that share a common capacity bottleneck
+    (i.e., preventing other flows
+    from successfully sharing the capacity at a common bottleneck <xref target="RFC2914"></xref>).</t>
 
     <t>This document specifies Careful Resume.
-    The method seeks to reduce the time to complete
+    This seeks to reduce the time to complete
     a transfer when the sending rate is limited by the congestion controller.
     That is, when a transfer seeks to send significantly more data than
     allowed by the Initial congestion Window (IW) and where the BDP of the
@@ -168,7 +185,7 @@ specify just the year. -->
     caching) of a saved set of CC parameters that relate to previous observations
     of the same path. The parameters include:
     the saved_cwnd for the path, the minimum RTT,
-         and a Lifetime for using these parameters. The
+    and a Lifetime for using these parameters. The
     parameters are saved and used to modify the CC
     behaviour of a subsequent connection between the
     same endpoints.</t>
@@ -188,7 +205,7 @@ specify just the year. -->
      the RFC defining TCB does not say how this would be safely done, this is better not said: -->
      <!-- <t>When used with the QUIC transport, this provides transport services that resemble
     those that could be implemented in TCP, using methods such as TCP Control Block (TCB)
-    <xref target="RFC9040"></xref> caching.</t> -->
+    Interdependence <xref target="RFC9040"></xref> caching.</t> -->
 
     <section anchor="sec-CC-params" title="Use of saved CC parameters by a Sender">
         <t>CC parameters are used by Careful Resume for three functions:
@@ -200,11 +217,8 @@ specify just the year. -->
         <t>Information to check the CC parameters are not too old.</t>
         </list></t>
            
-            <t>"Generally, implementations are advised
-            to be cautious when using saved CC parameters on a new path",
-            as stated in <xref target="RFC9000"></xref>.
-            While this statement was in the context of the QUIC transport protocol,
-            this advice is also appropriate for any IETF transport protocol.
+            <t>CC algorithms ought to be cautious when using saved CC parameters on a new path
+            (see <xref target="RFC9000"></xref> and <xref target="RFC9040"></xref>).
             Care is therefore needed
             to assure safe use and to be robust to changes
             in traffic patterns, network routing, and link/node conditions.
@@ -249,11 +263,8 @@ specify just the year. -->
         <t>This section provides a set of examples where Careful Resume is expected
         to improve performance.
         Either endpoint can assume the role of a
-        sender or a receiver. Careful Resume also supports a
-        bidirectional data transfer,
-        where both endpoints simultaneously send data
-        (e.g., remote execution of an application, or a
-        bidirectional video conference call).</t>
+        sender or a receiver. Careful Resume can also be independently used 
+        for each direction of a bidirectional connection.</t>
 
         <t>For example, consider an application that uses a series of connections over a path:
         Without a new method,
@@ -270,14 +281,16 @@ specify just the year. -->
         There is a particular benefit for
         any path with an RTT that is much larger than for typical
         Internet paths.
-        In a specific example, an application connected via a satellite access network
+        In a specific example, an application connected via a geo-stationary satellite access network
         <xref target="IJSCN"></xref>
         could take 9 seconds to complete a 5.3 MB transfer
         using standard CC, whereas a sender using Careful Resume
         could reduce this transfer time to 4 seconds. The time to complete a 1 MB transfer could
         similarly be reduced by 62 % <xref target="MAPRG111"></xref>. This benefit is also
         expected for other sizes of transfer and for different path
-        characteristics when a path has a large BDP.</t>
+        characteristics when a path has a large BDP. 
+        <xref target="CR25"></xref> provides further discussion of the method defined
+        in this document and includes analysis over various types of path.</t></t>
 
     </section> <!-- Introduction: End of examples -->
 
@@ -380,7 +393,7 @@ specify just the year. -->
         <list style="symbols">
             <t>an identifier representing the sending interface (e.g., a globally
             assigned address/prefix or other local identifier);</t>
-            <t> an identifier representing the destination (e.g., a name or
+            <t> an identifier representing the destination (e.g., a unicast or anycast
             IP address).</t>
         </list></t>
         
@@ -395,7 +408,7 @@ specify just the year. -->
     </section> <!-- End of An Remote Endpoint -->
 
     <section anchor="sec-QLOG" title="Logging Support">
-        <t>This document defines triggers to support logging key events.
+        <t>This document defines triggers to support logging key events. For example,
         <xref target="I-D.custura-tsvwg-careful-resume-qlog"></xref> provides definitions that enable a
         Careful Resume implementation
         to generate qlog events when using QUIC.</t>
@@ -410,6 +423,10 @@ specify just the year. -->
             <!-- GF (Feb 2023): Removed the IW from this information block??? -->
             <!-- it could potentially be in the BDP Frame ID, but is not needed here -->
             <!--    <t>IW: Initial Window <xref target="RFC9002"></xref>, ;</t> -->
+            
+            <t>ACK: The indication at the transport-layer that the Remote Endpoint
+            has correctly received the acknowledged data. In a CC algorithm,
+            an ACK also confirms that the acknowledged data is no longer in flight.</t>
 
             <t> Beta: A scaling factor between 0.5 and 1, the default value
             is 0.5.</t>
@@ -430,7 +447,7 @@ specify just the year. -->
 
             <t>jump_cwnd: The resumed CWND, used in the Unvalidated Phase.</t>
 
-            <t>Lifetime: The time after which a set of saved CC parameters can no longer be safely re-used.</t>
+            <t>Lifetime: The configured time after which a set of saved CC parameters can no longer be safely re-used.</t>
 
             <t>max_jump: The configured maximum jump_cwnd;</t>
 
@@ -447,7 +464,7 @@ specify just the year. -->
 
             <t>unvalidated packet: A packet sent when the CWND has been increased
             beyond the size normally permitted by the CC algorithm;
-            if such a packet is acknowledged, it contributes to the PipeSize, but
+            if such a packet is acknowledged by an ACK, it contributes to the PipeSize, but
             if congestion is detected, it triggers entry to the Safe Retreat Phase.</t>
         </list></t>
     </section> <!-- End of Notation: End of terms -->
@@ -486,11 +503,11 @@ Normal CC...> Connect -> Reconnaissance --------------------> Normal CC
     
     <section title="Observing">
         <t>An established connection can save a set of CC parameters for the specific path
-        to the current endpoint. A set of CC parameters includes the
+        to the current endpoint. A set of CC parameters includes a
         Lifetime (e.g., as a timestamp after which the parameters must not be used),
         and corresponds to one saved_remote_endpoint.</t>
          
-         <t>The following rules apply to observing a flow:</t>
+         <t>The following rules apply to observing a connection:</t>
          
         <t><list style="symbols">
         <t>Observing (saved_cwnd):
@@ -540,7 +557,7 @@ Normal CC...> Connect -> Reconnaissance --------------------> Normal CC
          this indicates that
          use of the saved CC parameters is inappropriate.
          The sender stops using Careful Resume and MUST continue using normal CC to
-         respond to the detected congestion. </t>
+         react to the detected congestion. </t>
         
         <t>Reconnaissance Phase (Using saved_cwnd):
         Only one connection can use a specific set of saved CC parameters.
@@ -563,7 +580,7 @@ Normal CC...> Connect -> Reconnaissance --------------------> Normal CC
       RTT recorded in the Reconnaissance Phase is less than or equal to
       (saved_rtt / 2) (see Section 4.2.1), the sender MUST enter stop
       using Careful Resume 
-      (logged as rtt_not_validated in [LOG]) and returns to use normal CC.  
+      (e.g., logged as rtt_not_validated in [LOG]) and returns to use normal CC.  
       This is because the
       calculation of a sending rate from a saved_cwnd is directly
       impacted by the RTT, therefore a significant change in the RTT is
@@ -578,7 +595,7 @@ Normal CC...> Connect -> Reconnaissance --------------------> Normal CC
 
         <t>Reconnaissance Phase (Path confirmed):
         When the sender has
-        received an acknowledgement for all the initial data (usually the IW)
+        received an ACK that acknowledges all the initial data (usually the IW)
         without reported congestion,
         it MAY then enter the Unvalidated Phase.
         Although a sender can immediately transition to the Unvalidated Phase,
@@ -611,13 +628,13 @@ Normal CC...> Connect -> Reconnaissance --------------------> Normal CC
 
           </list></t> <!-- -->
           <t>
-          In the Validating Phase, the sender performs the following actions:</t>
+          In the Unvalidated Phase, the sender performs the following actions:</t>
           <t><list style="symbols">
                <t>Unvalidated Phase (Pacing transmission): All packets sent in the
                Unvalidated Phase MUST use pacing based on the current rtt.</t>
              
             <t>Unvalidated Phase (Tracking PipeSize):
-               The variable PipeSize is increased by the volume of data acknowledged
+               The variable PipeSize is increased by the volume of data that is newly acknowledged
                by each received ACK. (This indicates a previously unvalidated packet has been
                successfully sent over the path.)</t>
 
@@ -630,13 +647,13 @@ Normal CC...> Connect -> Reconnaissance --------------------> Normal CC
                If the sender determines that it is not valid to use the previous CC parameters
                due to a detected path change (e.g., a change in the RTT 
                or an explicit signal indicating a path change),
-               the Safe Retreat Phase MUST be entered (logged as
-               path_changed in <xref target="I-D.custura-tsvwg-careful-resume-qlog"></xref>).</t>
+               the Safe Retreat Phase MUST be entered (e.g., logged as
+               path_changed in [LOG]).</t>
 
                <t>Unvalidated Phase (Detected congestion): If the sender detects
                congestion (e.g., packet loss or ECN-CE marking),
                the Safe Retreat Phase MUST be entered
-               (logged as packet_loss or ECN_CE in <xref target="I-D.custura-tsvwg-careful-resume-qlog"></xref>).
+               (e.g., logged as either packet_loss or ECN_CE in [LOG]).
                (Note that insufficient time has passed in the Unvalidated Phase for a
                sender to receive any feedback validating the jump in CWND.
                Therefore, any detected congestion must have resulted from packets
@@ -649,24 +666,31 @@ Normal CC...> Connect -> Reconnaissance --------------------> Normal CC
 
                <t>Unvalidated Phase (Completed sending all unvalidated packets):
                The sender enters the Validating Phase when the flight_size equals the CWND
-               (logged as
-               last_unvalidated_packet_sent in <xref target="I-D.custura-tsvwg-careful-resume-qlog"></xref>).</t>
+               (e.g., logged as last_unvalidated_packet_sent in [LOG]). For an	
+		 	implementation that measures the CWND in bytes, this condition is	
+		 	also true when the remaining unused CWND is less than one maximum-	
+		 	sized packet.</t>
              
                <t>Unvalidated Phase (Receiving acknowledgement for an unvalidated packet):
-               The sender enters the Validating Phase when an acknowledgement is
-               received for the first packet number (or higher) that was sent in the Unvalidated Phase
-               (logged as first_unvalidated_packet_acknowledged, see <xref target="sec-QLOG"></xref>).</t>
+               The sender enters the Validating Phase when an ACK is
+               received that acknowledges the first packet number (or higher)
+                that was sent in the Unvalidated Phase
+               (e.g., logged as first_unvalidated_packet_acknowledged in [LOG]).</t>
 
                <t>Unvalidated Phase (Limiting time in the Unvalidated Phase): The sender enters the
                Validating Phase if more than one RTT has elapsed while in the Unvalidated Phase
-               (logged as rtt_exceeded, see <xref target="sec-QLOG"></xref>).</t>
+               (e.g., logged as rtt_exceeded in [LOG]).</t>
           
           </list></t> <!-- End of list of actions -->
 
           <t>Unvalidated Phase (Check flight_size):
-          Upon any of these events, if the flight_size is less than or equal to the
-          PipeSize, the CWND is reset to the PipeSize (logged as rate_limited in [LOG])
-          and the sender stops using Careful Resume and returns to use normal CC.
+          Upon any of these events (and
+          after processing any Acknowledgments that update the PipeSize and
+          flight_size), the sender checks if (flight_size is less than IW) or
+          (flight_size is less than or equal to the PipeSize) then the CWND is
+          reset to the PipeSize (e.g., logged as rate_limited in [LOG]) and the
+          sender stops using Careful Resume and returns to use normal CC.  In
+          the absence of detected congestion, CWND is not reduced below IW.
           (The PipeSize does not include the
           part of the jump_cwnd that was not utilised.) Otherwise, the CWND MUST be set to
           the flight_size and the sender progresses to the Validating Phase.</t>
@@ -695,7 +719,7 @@ Normal CC...> Connect -> Reconnaissance --------------------> Normal CC
             <t>Validating Phase (Updating CWND): The CWND is updated using the
             normal rules for the current congestion controller,
             this typically will use "slow start", which
-            allows CWND to be increased for each received acknowledgement that
+            allows CWND to be increased for each received ACK that
             indicates a packet has been successfully sent across the path.</t>
         </list></t> <!-- End of list of actions -->
 
@@ -706,13 +730,13 @@ Normal CC...> Connect -> Reconnaissance --------------------> Normal CC
             If the sender determines that congestion was detected
             (e.g., packet loss or ECN-CE marking), Careful Resume
             enters the Safe Retreat Phase
-            (logged as packet_loss or ECN_CE, see <xref target="sec-QLOG"></xref>).</t>
+            (e.g., logged as either packet_loss or ECN_CE in [LOG]).</t>
 
             <t>Validating Phase (Receiving acknowledgement of the unvalidated packets):
-            The sender enters stops using Careful Resume when an acknowledgement is
-            received for the last packet number (or higher)
+            The sender enters stops using Careful Resume when an ACK is
+            received that acknowledges the last packet number (or higher)
             that was sent in the Unvalidated Phase
-            (logged as last_unvalidated_packet_acknowledged, see <xref target="sec-QLOG"></xref>).
+            (e.g., logged as last_unvalidated_packet_acknowledged in [LOG]).
             This means that the packets sent in the Unvalidated Phase were acknowledged
             without congestion.</t>
         </list></t> <!-- End of list of actions -->
@@ -762,7 +786,7 @@ Normal CC...> Connect -> Reconnaissance --------------------> Normal CC
 
             <t>Safe Retreat Phase (Tracking PipeSize):
             The sender continues to update
-            the PipeSize after processing each acknowledgement.
+            the PipeSize after processing each ACK.
             (The PipeSize will be used to update ssthresh when
            leaving this phase, but does not affect the CWND.)</t>
 
@@ -782,7 +806,7 @@ Normal CC...> Connect -> Reconnaissance --------------------> Normal CC
             is 0.5, chosen to reduce the probability of inducing
             a second round of congestion. Cubic defines a
            Beta__cubic of 0.7 <xref target="RFC9438"></xref>
-            (logged as exit_recovery in <xref target="I-D.custura-tsvwg-careful-resume-qlog"></xref>).</t>
+            (e.g., logged as exit_recovery in [LOG]).</t>
        
      
         <t>Implementation notes are provided in <xref target="req-retreat"></xref>.</t>
@@ -873,20 +897,22 @@ Normal CC...> Connect -> Reconnaissance --------------------> Normal CC
         <t>Careful Resume does not permit multiple concurrent reuse of
         the saved CC parameters. When multiple new concurrent connections
         are made to a server, each can have a valid saved_remote_endpoint,
-        but the saved_cwnd can only be used for one connection at a time.
+        but the saved_cwnd can only be used by one connection at a time.
         This is to prevent the sender from performing multiple jumps in the CWND,
         each individually based on the same saved_cwnd, and hence creating an
         excessive aggregate load at the bottleneck.</t>
 
         <t>The method that is used to prevent re-use of the saved CC parameters
-        will depend upon the design of the server
-        (e.g., if all connections from a given client IP arrive at the
-        same server process, then the server process could use a hash table,
+        will depend upon the design of the server.
+        For example, 
+        if a simple sender receives multiple connections from an Remote Endpoint, 
+        then the sender process could use a hash table to manage the CC parameters,
         whereas when using some types of load
         balancing, a distributed system might be needed to ensure this
         invariant when the load balancing hashes
         connections by 4-tuple and hence multiple connections from the same
-        client device are served by different server processes.)</t>
+        client device are served by different server processes,
+         see also <xref target="req-recon"></xref>.))</t>
 
          <t> A sender that is rate-limited <xref target="RFC7661"></xref>,
           sends insufficient data
@@ -959,8 +985,11 @@ Normal CC...> Connect -> Reconnaissance --------------------> Normal CC
         <section anchor="req-lifetime" title="Lifetime of CC Parameters">
 
             <t>The long-term use of the previously observed parameters is not appropriate,
-            a Lifetime needs to define the duration during
-            which a set of saved CC parameters can be safely re-used.</t>
+            a Lifetime defines the duration during
+            which a set of saved CC parameters can be safely re-used.
+            The maximum Lifetime is a configurable parameter for a sender. 
+            A method also needs to be provided to flush the set of saved CC parameters
+            following a configuration change.</t>
                  
         <t><xref target="RFC9040"></xref> provides guidance on the implementation of
             TCP Control Block Interdependence, but does not specify how long a saved
@@ -990,8 +1019,9 @@ Normal CC...> Connect -> Reconnaissance --------------------> Normal CC
             
         <section anchor="req-pace" title="Pacing in the Unvalidated Phase">
         
-            <t> The sender needs to avoid sending a burst of packets greater than IW as a result of a
-            step-increase in the CWND. This is consistent with <xref target="RFC8085"></xref>,
+           <t>A sender needs to avoid any step-increase in the CWND resulting in a burst of 
+            packets that is greater than the size of the CC algorithm's IW.
+            This is consistent with <xref target="RFC8085"></xref>,
             <xref target="RFC9000"></xref>.</t>
 
             <t> Pacing packets as a function of
@@ -1071,7 +1101,7 @@ Normal CC...> Connect -> Reconnaissance --------------------> Normal CC
         after congestion has been detected for unvalidated packets.</t>
 
         <t>The Safe Retreat Phase sets a safe CWND value to drain any unvalidated packets
-        from the path after a packet loss has been detected or when ACKs that indicate sent
+        from the path after a packet loss has been detected or when ACKs that indicate the sent
         packets were marked as ECN-CE. The CC parameters that were used are invalid,
         and are removed.</t>
 
@@ -1089,8 +1119,8 @@ Normal CC...> Connect -> Reconnaissance --------------------> Normal CC
         to acknowledging the successful retransmission of data.
         <xref target="RFC3465"></xref> describes how to appropriately
         account for such ACKs.
-        ACKS received
-        for unvalidated packets are tracked to
+        The sender tracks received ACKs  that acknowledge
+        unvalidated packets to
         measure the maximum available capacity, called the "PipeSize"
         (The first unvalidated packet can be determined by
         recording the sequence number
@@ -1121,9 +1151,14 @@ Normal CC...> Connect -> Reconnaissance --------------------> Normal CC
 
     <section anchor="req-normal" title="Returning to Normal Congestion Control">
         <t>After using Careful Resume, the CC controller returns to using normal CC.</t>
-                 <t>The CWND at entry to the phase will have been
-        increased when a sender has passed through
-         the Unvalidated Phase. However, note that in some cases the value of the CWND
+                 
+        <t>The CWND at entry to the phase will have been
+        increased when a sender has passed through the Unvalidated Phase,
+        unless the sender was rate-limited, which causes the CWND to be 
+        reset based on the used capacity.  
+        The CWND is not reduced below IW, unless congestion was
+         detected.
+         However, note that in some cases the value of the CWND
          could be significantly lower than the
          jump_cwnd (e.g., when a sender did not utilise
          the entire CWND in the Unvalidated Phase).</t>
@@ -1164,29 +1199,80 @@ Normal CC...> Connect -> Reconnaissance --------------------> Normal CC
     </section> <!-- End of flow control, etc -->
 </section> <!--  End of Guidelines -->
 
-<section anchor="sec-acknowledgments" title="Acknowledgments">
-    <t>The authors would like to thank John Border, Gabriel Montenegro, Patrick McManus,
-    Ian Swett, Igor Lubashev, Robin Marx, Roland Bless, Franklin Simo, Kazuho Oku, Tong,
-    Ana Custura, Neal Cardwell, Marten Seemann, Matthias Hofstaetter, Nicolai Fischer
-    and Joerg Deutschmann for
-    their fruitful comments in developing this specification.
-    They also thank Mike Bishop for his careful suggestions
-    on the structure to describe the phases.</t>
-    <t>The authors would like to thank Tom Jones for co-authoring
-    several previous versions of this document.</t>
-</section>
+<section anchor="ops" title="Operational Considerations">
+<t> As noted, using CC parameters that were observed
+during a previous connection is inherently a tradeoff between the
+potential performance gains for the new connection and the risks of
+degraded performance for other connections that share a common
+bottleneck.</t>
+
+<t>Careful Resume has been designed so that any potential "harm" to
+other flows is constrained. It seeks to detect whether the transport
+path has changed since the observation of that capacity.
+Importantly whenever a sender detects
+that assumptions about the capacity are not valid, it
+safely responds to reduce the impact on other flows.</t>
+
+<t>A transport endpoint often has no visibility of changes in the level of
+network traffic, nor the forwarding path over which the transport path 
+is supported. Network methods such
+as Equal Cost Multipath Routing, Anycast Routing and Network Address Translation
+can result in changes to the forwarding path. The impact of these
+methods can be minimized when configured for paths that
+are provisioned to support equivalent capacity (i.e., a change to
+the forwarding path does not introduce a reduction in the capacity
+of the smallest bottleneck on the end-to-end path).</t>
+
+<t>As an example, consider a client on an access network
+that connects to a remote server with a capacity bottleneck located in the
+access part of this path. The client could
+connect to the server using an anycast destination address. Anycast
+routing may then be configured to distribute each connection to a
+corresponding server. A client is typically unaware of whether
+different instances of the client's
+connections (with the same address pair) would terminate at
+different "server farms". Hence, if a server is configured to 
+send using Careful Resume, there is an onus to appropriately manage the
+use of saved CC parameters (see <xref target="req-recon"></xref>). 
+On the one hand, if all the servers responding to a 
+given address share the same location, e.g., are in the same data center, 
+then a method could be provided to coordinate their sharing of the CC parameters
+that are used to send data using Careful Resume.
+On the other hand, if the service configuration is such that subsquent use of the 
+IP anycast address might
+result in a very different path to a server (e.g., at a different
+location where path is unable to support the same capacity), a server should 
+not sender should not use Careful Resume based on saved CC parameters.</t>
 
 <section anchor="sec-IANA" title="IANA Considerations">
     <t>No current parameters are required to be registered by IANA.</t>
 </section>
 
 <section anchor="sec-security" title="Security Considerations">
-    <t>This document does not exhibit specific security considerations.</t>
+     <t>The security considerations are the same as for other
+     sender-based congestion control methods. Such methods
+     rely on the receiver appropriately acknowledging receipt
+     of data. The ability of an on-path or off-path attacker
+     to influence congestion control depends upon the security
+     properties of the transport protocol being used.</t> 
     <!-- Security considerations for the
     interactions with the receiver are discussed in
     <xref target="I-D.kuhn-quic-bdpframe-extension"></xref>.-->
 </section> <!-- Sec Considerations -->
-        
+
+<section anchor="sec-acknowledgments" title="Acknowledgments">
+    <t>The authors would like to thank John Border, Gabriel Montenegro, Patrick McManus,
+    Ian Swett, Igor Lubashev, Robin Marx, Roland Bless, Franklin Simo, Kazuho Oku, Tong,
+    Ana Custura, Neal Cardwell, Marten Seemann, Matthias Hofstaetter, Nicolai Fischer
+    Yi Huang, and Joerg Deutschmann for
+    their fruitful comments in developing this specification. They	
+    also thank Mike Bishop for his careful suggestions on the structure	
+    to describe the phases.
+    Thanks also to Mohamed Boucadair and to Dan Harkins for his secdir review.</t>
+    <t>The authors would like to thank Tom Jones for co-authoring
+    several previous versions of this document.</t>
+</section>
+
 </middle>
 
   <!--  BACK MATTER -->
@@ -1211,9 +1297,8 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
         <!-- <?rfc include="reference.RFC.6349.xml"?> -->
         <?rfc include="reference.RFC.8085.xml"?>
         <?rfc include="reference.RFC.8174.xml"?>
-        <?rfc include="reference.RFC.9000.xml"?>
         <!-- <?rfc include="reference.RFC.9001.xml"?> -->
-       <!--  <?rfc include="reference.RFC.8610.xml"?> -->
+        <!-- <?rfc include="reference.RFC.8610.xml"?> -->
     </references>
 
     <references title="Informative References">
@@ -1225,10 +1310,12 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
         <?rfc include="reference.RFC.3465.xml"?>
         <?rfc include="reference.RFC.4782.xml"?>
         <?rfc include="reference.RFC.5681.xml"?>
-        <?rfc include="reference.RFC.9438.xml"?>         <!--  Cubic> -->
+        <?rfc include="reference.RFC.9000.xml"?>         <!-- QUIC -->
+        <?rfc include="reference.RFC.9438.xml"?>         <!--  Cubic -->
         <?rfc include="reference.RFC.5783.xml"?>
         <?rfc include="reference.RFC.6675.xml"?>
         <?rfc include="reference.RFC.6928.xml"?>
+        <?rfc include="reference.RFC.9293.xml"?> <!-- TCP -->
        <!-- <?rfc include="reference.RFC.6937.xml"?>-->
         <?rfc include="reference.I-D.ietf-tcpm-prr-rfc6937bis.xml"?>
 
@@ -1313,7 +1400,19 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
         <seriesInfo name="ACM CoNEXT" value="" />
       </reference>
 
-      
+     <reference anchor="CR25">
+        <front>
+          <title>Careful Resumption of Internet Congestion Control from Retained Path State</title>
+
+          <author initials="M" surname="Yanev"></author>
+          <author initials="A" surname="Custura"></author>
+          <author initials="R" surname="Secchi"></author>
+          <author initials="G" surname="Fairhurst"></author>
+          <date year="2025" />
+        </front>
+
+        <seriesInfo name="SSRN" value="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=5240200" />
+      </reference>
     </references>
 
 <section anchor="Examples" title="Notes on the Careful Resume Phases">
@@ -1368,6 +1467,23 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
 |      |         |use      |Validating  |           |            |
 |      |         |Normal CC|            |           |            |
 +------+---------+---------+------------+-----------+------------+
+|Next  |Observing|If (     |If(FS>CWND  |If (ACK    |If (ACK     |
+|Phase:|(as      |CWND,    |or >1 RTT   |>= last    |>= last     |
+|      |needed)  |Lifetime,|has passed  |unvalidated|unvalidated |
+|      |         |and RTT  |or ACK      |packet),   |packet),    |
+|      |         |confirmed|>= first    |use        |ssthresh =  |
+|      |         |), enter |unvalidated |Normal CC  |PS x Beta;  |
+|      |         |Unvalidat|packet),    |           |and use     |
+|      |         |ed; else |If((FS>CWND)|           |Normal CC   |
+|      |         |CWND=Max |or(FS<=PS)) |           |            |
+|      |         |(PS,IW); |cwnd=PS; and|           |            |
+|      |         |and use  |use Normal  |           |            |
+|      |         |Normal CC|CC else     |           |            |
+|      |         |         |cwnd=FS;    |           |            |
+|      |         |         |enter       |           |            |
+|      |         |         |Validating  |           |            |
++------+---------+---------+------------+-----------+------------+
+
 ]]></artwork>
 </figure></t>
 
@@ -1375,7 +1491,7 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
     SS = Slow-Start FS = flight_size; PS = PipeSize; ACK = highest acknowledged packet.
     The PipeSize tracks the validated portion of the CWND. It is set to the CWND
     on entry to the Unvalidated Phase and
-    is updated as each additional packet is acknowledged.
+    is updated as recpetion of each additional packet is acknowledged by ACKs.
     The default value of Beta is 0.5.</t>
 
 
@@ -1410,7 +1526,7 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
         <t>The sender now sends 121 unvalidated packets (the unused portion of the current CWND).
         Each time a packet is sent, the sender checks whether 1 RTT has passed since entering the
         Unvalidated Phase (otherwise, the Validating Phase is entered). This check triggers only
-        for cases where the sender is rate-limited, see the following example.</t>
+        for cases where the sender is rate-limited, as shown in the following example:</t>
 
         <t>The PipeSize increases after each ACK is received.</t>
 
@@ -1419,9 +1535,9 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
         During this phase, the CWND can be increased for each ACK that acknowledges an unvalidated packet, because
         this indicates that the packet was validated.</t>
 
-        <t>When an ACK is received for the last packet that was sent in the Unvalidated Phase,
-        the sender has completed using Careful Resume. It then stops using Careful Resume.
-    For example, if the CWND is less than ssthresh,
+        <t>When an ACK is received that acknowledges the last packet which was sent in the 
+        Unvalidated Phase, the sender stops using Careful Resume.
+        For example, if the CWND is less than ssthresh,
         a Reno or Cubic sender using normal CC is permitted to use Slow-Start to grow the CWND towards
         the ssthresh, and will then enter congestion avoidance.</t>
     </section>
@@ -1445,15 +1561,16 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
         The PipeSize also increases with each ACK received, to reflect the discovered capacity.</t>
 
         <t>The sender completes using Careful Resume,
-    when an ACK is received for the last packet that was sent in the Unvalidated Phase.
+    when a received ACK acknowledges the last packet that was sent in the Unvalidated Phase.
     It then stops using Careful Resume, as in the example with no loss.</t>
     </section>
 
     <section anchor="Examples-loss-recon" title="Example with Loss detected in the Reconnaissance Phase">
-        <t>When a packet is lost in the Reconnaissance Phase, the sender will stop using Careful Resume
-        and recover the loss using the normal algorithm.
-     It is considered that the sender has discovered a potential capacity limit and is not
-        allowed to continue to use Careful Resume, therefore there is no change to
+        <t>When a sender detects that a packet was lost in the Reconnaissance Phase, 
+        it will stop using Careful Resume
+        and recover the loss using the normal loss recovery algorithm and normal CC.
+     It is considered that the sender may have discovered a capacity limit and it is not
+        allowed to continue to use Careful Resume. In this case, there is no change to
     the CC algorithm and the CWND is the same as if Careful Resume had not been attempted.</t>
      </section>
 
@@ -1465,10 +1582,11 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
         This example considers the case when one of the unvalidated packets is lost. We assume
         in the example, that the lost packet is 64 (the 35th packet sent in the Unvalidated Phase).</t>
 
-        <t>ACKs confirm reception of the first 34 unvalidated packets.
+        <t>The received ACKs acknowledge the reception of the first 34 unvalidated packets.
         The PipeSize at this time is equal to 63 (29 + 34) packets.</t>
             
-        <t>A loss is then detected (by a timer or by receiving three ACKs that do not cover packet number 35).
+        <t>A loss is then detected (by a timer or by receiving three ACKs that
+         do not acknowledge packet number 35).
         The sender then enters the Safe Retreat Phase because the CWND was not validated.
         The PipeSize at this point is equal to 66 (29 + 34) packets. Assuming that the IW was 10 packets,
         the CWND is reset to Max(10,PS/2) = Max(10,66/2) = 33 packets.
@@ -1478,10 +1596,10 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
         the path after this potentially severe congestion event.
         There is no further increase in CWND in this phase.</t>
 
-        <t>The sender continues to receive ACKs for the remaining 86 (121-35) unvalidated packets.
+        <t>The sender continues to receive ACKs that acknowledge the remaining 86 (121-35) unvalidated packets.
         Recall that the 35th unvalidated packet was lost and had packet number 64 (29+35).
         The PipeSize tracks the
-        capacity discovered by acknowledgments for the unvalidated packets (i.e., the PipeSize
+        capacity discovered by ACKs that acknowledge the unvalidated packets (i.e., the PipeSize
         is increased for each received ACK that acknowledges new data).
         Although this PipeSize cannot be used to safety initialise the CWND (because it was measured when the sender
         had aggressively created overload), the estimated PipeSize
@@ -1562,8 +1680,8 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
    True, i.e., if less than 2 full rounds have elapsed after
    the sender entered the Unvalidated Phase. The delivery rates measured in
    these conditions are tainted, because packets sent during the attempt
-   are still queued at the bottleneck and could have "pushed out"
-   competing traffic. Therefore any delivery rates measured in the Drain state
+   are still queued at the bottleneck buffer and could have "pushed out" packets belong to any
+   competing flows. Therefore any delivery rates measured in the Drain state
    MUST be discarded if the "carefully-resuming" flag is set to True.
    This flag is cleared upon exiting the Drain state.</t>
 </section>
@@ -1621,6 +1739,8 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
      <t>WG-20, after AD review. Requested renaming Normal Phase to normal CC; restructured each phase to have a 
      consistent classification of events (with no intended change of algorithm). </t>
      <t>WG-21, fixed typos. </t>
+     <t>WG-22, updated following IETF-LC comment from Yi Huang.
+     <t>WG-23, IESG feedback, and secdir review. </t>
     </list></t>
      
 </section> <!-- End of Revisions -->
