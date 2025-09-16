@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="192" width="560" viewBox="0 0 560 192" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
+<path d="M 208,48 L 208,64" fill="none" stroke="black"/>
+<path d="M 208,96 L 208,160" fill="none" stroke="black"/>
+<path d="M 264,96 L 264,112" fill="none" stroke="black"/>
+<path d="M 336,128 L 336,160" fill="none" stroke="black"/>
+<path d="M 504,48 L 504,160" fill="none" stroke="black"/>
+<path d="M 336,32 L 496,32" fill="none" stroke="black"/>
+<path d="M 296,80 L 504,80" fill="none" stroke="black"/>
+<path d="M 264,112 L 288,112" fill="none" stroke="black"/>
+<path d="M 392,112 L 504,112" fill="none" stroke="black"/>
+<path d="M 208,160 L 360,160" fill="none" stroke="black"/>
+<path d="M 480,160 L 504,160" fill="none" stroke="black"/>
+<polygon class="arrowhead" points="512,48 500,42.4 500,53.6" fill="black" transform="rotate(270,504,48)"/>
+<polygon class="arrowhead" points="504,32 492,26.4 492,37.6" fill="black" transform="rotate(0,496,32)"/>
+<polygon class="arrowhead" points="368,160 356,154.4 356,165.6" fill="black" transform="rotate(0,360,160)"/>
+<polygon class="arrowhead" points="296,112 284,106.4 284,117.6" fill="black" transform="rotate(0,288,112)"/>
+<polygon class="arrowhead" points="216,64 204,58.4 204,69.6" fill="black" transform="rotate(90,208,64)"/>
+<g class="text">
+<text x="164" y="36">Observing ...&gt; Connect -&gt; Reconnaissance</text>
+<text x="532" y="36">Normal</text>
+<text x="36" y="52">(Normal)</text>
+<text x="240" y="84">Unvalidated</text>
+<text x="340" y="116">Validating</text>
+<text x="420" y="164">Safe Retreat</text>
+</g>
+</svg>
