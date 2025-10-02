@@ -10,7 +10,7 @@
 <?rfc sortrefs="yes" ?>
 <?rfc compact="yes" ?>
 <?rfc subcompact="no" ?>
-<rfc category="std" docName="draft-ietf-tsvwg-careful-resume-23"
+<rfc category="std" docName="draft-ietf-tsvwg-careful-resume-24"
      ipr="trust200902" consensus="true" submissionType="IETF">
     <!-- category values: std, bcp, info, exp, and historic
     ipr values: full3667, noModification3667, noDerivatives3667
@@ -477,9 +477,38 @@ specify just the year. -->
     name of the relevant phase.</t>
 
     <t>
-<figure title="Key transitions between Phases in Careful Resume">
-<artwork align="left" name="" type="" alt=""><![CDATA[
-     
+        <figure title="Key transitions between Phases in Careful Resume">
+            <artset>
+                <artwork type="svg" name="figure 1.svg">
+                    <svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="192" width="560" viewBox="0 0 560 192" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
+                        <path d="M 208,48 L 208,64" fill="none" stroke="black"/>
+                        <path d="M 208,96 L 208,160" fill="none" stroke="black"/>
+                        <path d="M 264,96 L 264,112" fill="none" stroke="black"/>
+                        <path d="M 336,128 L 336,160" fill="none" stroke="black"/>
+                        <path d="M 504,48 L 504,160" fill="none" stroke="black"/>
+                        <path d="M 336,32 L 496,32" fill="none" stroke="black"/>
+                        <path d="M 296,80 L 504,80" fill="none" stroke="black"/>
+                        <path d="M 264,112 L 288,112" fill="none" stroke="black"/>
+                        <path d="M 392,112 L 504,112" fill="none" stroke="black"/>
+                        <path d="M 208,160 L 360,160" fill="none" stroke="black"/>
+                        <path d="M 480,160 L 504,160" fill="none" stroke="black"/>
+                        <polygon class="arrowhead" points="512,48 500,42.4 500,53.6" fill="black" transform="rotate(270,504,48)"/>
+                        <polygon class="arrowhead" points="504,32 492,26.4 492,37.6" fill="black" transform="rotate(0,496,32)"/>
+                        <polygon class="arrowhead" points="368,160 356,154.4 356,165.6" fill="black" transform="rotate(0,360,160)"/>
+                        <polygon class="arrowhead" points="296,112 284,106.4 284,117.6" fill="black" transform="rotate(0,288,112)"/>
+                        <polygon class="arrowhead" points="216,64 204,58.4 204,69.6" fill="black" transform="rotate(90,208,64)"/>
+                        <g class="text">
+                            <text x="164" y="36">Observing ...&gt; Connect -&gt; Reconnaissance</text>
+                            <text x="532" y="36">Normal</text>
+                            <text x="36" y="52">(Normal)</text>
+                            <text x="240" y="84">Unvalidated</text>
+                            <text x="340" y="116">Validating</text>
+                            <text x="420" y="164">Safe Retreat</text>
+                        </g>
+                    </svg>
+                </artwork>
+                <artwork type="ascii-art" align="left"  alt=""><![CDATA[
+                    
 Normal CC...> Connect -> Reconnaissance --------------------> Normal CC
 (Observing)               |                                    ^
                           v                                    |
@@ -489,9 +518,10 @@ Normal CC...> Connect -> Reconnaissance --------------------> Normal CC
                           |               |                    |
                           |               |                    |
                           +---------------+--> Safe Retreat ---+
-     
- ]]></artwork>
-    </figure>
+                    
+                ]]></artwork>
+            </artset>
+        </figure>
     </t>
     
     <t>
@@ -1279,8 +1309,8 @@ Normal CC...> Connect -> Reconnaissance --------------------> Normal CC
     <t>The authors would like to thank John Border, Gabriel Montenegro, Patrick McManus,
     Ian Swett, Igor Lubashev, Robin Marx, Roland Bless, Franklin Simo, Kazuho Oku, Tong,
     Ana Custura, Neal Cardwell, Marten Seemann, Matthias Hofstaetter, Nicolai Fischer
-    Yi Huang, and Joerg Deutschmann for
-    their fruitful comments in developing this specification. They	
+    Yi Huang, Mihail Yanev and Joerg Deutschmann for
+    their fruitful comments in developing this specification. They
     also thank Mike Bishop for his careful suggestions on the structure	
     to describe the phases.
     Thanks also to Mohamed Boucadair and to Dan Harkins for his secdir review.</t>
@@ -1594,8 +1624,8 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
         <t>A loss is then detected (by a timer or by receiving three ACKs that
          do not acknowledge packet number 35).
         The sender then enters the Safe Retreat Phase because the CWND was not validated.
-        The PipeSize at this point is equal to 66 (29 + 34) packets. Assuming that the IW was 10 packets,
-        the CWND is reset to Max(10,PS/2) = Max(10,66/2) = 33 packets.
+        The PipeSize at this point is equal to 63 (29 + 34) packets. Assuming that the IW was 10 packets,
+        the CWND is reset to Max(10,PS/2) = Max(10,63/2) = 31 packets.
         This CWND is used during the Safe Retreat Phase, because congestion was detected and the
         sender still does not yet know if the remaining unvalidated packets will be
         successfully acknowledged. This conservative CWND calculation ensures the sender drains
@@ -1747,6 +1777,7 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
      <t>WG-21, fixed typos. </t>
      <t>WG-22, updated following IETF-LC comment from Yi Huang. </t>
      <t>WG-23, updated following IESG feedback. </t>
+    <t>WG-24, update requested by RFC-Ed to fix math error (from MY).</t>
     </list></t>
      
 </section> <!-- End of Revisions -->
