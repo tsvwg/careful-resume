@@ -16,9 +16,9 @@
 <polygon class="arrowhead" points="296,112 284,106.4 284,117.6" fill="black" transform="rotate(0,288,112)"/>
 <polygon class="arrowhead" points="216,64 204,58.4 204,69.6" fill="black" transform="rotate(90,208,64)"/>
 <g class="text">
-<text x="164" y="36">Normal CC ...&gt; Connect -&gt; Reconnaissance</text>
+<text x="164" y="36">Normal CC -&gt; Connect -&gt; Reconnaissance</text>
 <text x="542" y="36">Normal CC</text>
-<text x="32" y="52">(Observing)</text>
+<text x="42" y="52">(Observing)</text>
 <text x="240" y="84">Unvalidated</text>
 <text x="340" y="116">Validating</text>
 <text x="420" y="164">Safe Retreat</text>
