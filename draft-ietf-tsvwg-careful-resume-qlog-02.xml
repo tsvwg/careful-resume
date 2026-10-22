@@ -55,7 +55,7 @@ full title is longer than 39 characters -->
       </address>
     </author>
 
-    <date year="2025" />
+    <date year="2026" />
 
     <!-- If the month and year are both specified and are the current ones, xml2rfc will fill
 in the current day for you. If only the current year is specified, xml2rfc will fill
@@ -451,6 +451,7 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
     <list>
         <t>WG -00 Addresses comments from Mike Heard and Joerg Deutschmann.</t>
         <t>WG -01 Adds a new trigger, path_changed, to align with the main draft, fixes formatting NiTs.</t>
+        <t>WG -02 Use uint64 for consistecy with qlog-quic-events, expand congestion_window_limited trigger name, suggested by Nicolai Fischer.</t>
     </list>
 </section> <!-- End of Revisions -->
 
