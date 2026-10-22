@@ -10,7 +10,7 @@
 <?rfc sortrefs="yes" ?>
 <?rfc compact="yes" ?>
 <?rfc subcompact="no" ?>
-<rfc category="std" docName="draft-ietf-tsvwg-careful-resume-qlog-02"
+<rfc category="std" docName="draft-ietf-tsvwg-careful-resume-qlog-03"
      ipr="trust200902" consensus="true" submissionType="IETF">
     <!-- category values: std, bcp, info, exp, and historic
     ipr values: full3667, noModification3667, noDerivatives3667
@@ -90,10 +90,10 @@ specify just the year. -->
 
 <middle>
 <section anchor="sec-introduction" title="Introduction">
- <t> This document defines a way to provide logging for Careful Resume<xref target="I-D.ietf-tsvwg-careful-resume"></xref>
+ <t> This document defines a way to provide logging for Careful Resume<xref target="RFC.9959"></xref>
      when used with QUIC <xref target="RFC9000"></xref><xref target="RFC9002"></xref>.
  </t>
-    <t><xref target="I-D.ietf-tsvwg-careful-resume"></xref> defines a
+    <t><xref target="RFC.9959"></xref> defines a
     Congestion Control (CC) mechanism
     called Careful Resume, which is expected to
     reduce the time to complete a transfer
@@ -122,8 +122,8 @@ specify just the year. -->
          "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
          "OPTIONAL" in this document are to be interpreted as described in
          BCP 14
-         <xref target="RFC2119"/>
-         <xref target="RFC8174"/>
+         <xref target="RFC2119"></xref>.
+         <xref target="RFC8174"></xref>.
          when, and only when, they appear in all
          capitals, as shown here.</t>
     </section>
@@ -135,7 +135,7 @@ specify just the year. -->
    <list>
 
              
-        <t>Careful Resume (CR): The method specified in <xref target="I-D.ietf-tsvwg-careful-resume"></xref>. 
+        <t>Careful Resume (CR): The method specified in <xref target="RFC9959"></xref>. 
           All other terms in this section, except CWND, are defined in the same document. </t>
 
         <t>CWND: The congestion window, or equivalent CC variable limiting
@@ -159,7 +159,7 @@ specify just the year. -->
 </section><!-- End of Notation -->
 
 <section anchor="sec-phase" title="The Phases of CC using Careful Resume">
-    <t>Careful Resume<xref target="I-D.ietf-tsvwg-careful-resume"></xref> defines
+    <t>Careful Resume<xref target="RFC9959"></xref> defines
         a series of phases that a
     congestion controller moves through as a connection
     uses the mechanism. The key phases are illustrated in Figure 1.
@@ -185,7 +185,7 @@ Normal ...> Connect -> Reconnaissance --------------------> Normal
     
     <t>
     Examples of these transitions between phases
-    are provided in the annexe to <xref target="I-D.ietf-tsvwg-careful-resume"></xref>.</t>
+    are provided in the annexe to <xref target="RFC9959"></xref>.</t>
      
     <!-- These subsections to match next section format -->
     
@@ -434,24 +434,23 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
         <?rfc include="reference.RFC.9000.xml"?>
         <!-- <?rfc include="reference.RFC.9001.xml"?> -->
         <?rfc include="reference.RFC.8610.xml"?>
+        <?rfc include="reference.RFC.9959.xml"?>
+        <?rfc include="reference.I-D.ietf-quic-qlog-quic-evenqlog-main-schema.xml"?>
         <?rfc include="reference.I-D.ietf-quic-qlog-quic-events.xml"?>
-        <?rfc include="reference.I-D.ietf-tsvwg-careful-resume.xml"?>
-
     </references>
 
     <references title="Informative References">
         <?rfc include="reference.RFC.9002.xml"?>
         <?rfc include="reference.RFC.9040.xml"?>
         
-
-      
     </references>
       
 <section anchor="rev" title="Internet Draft Revision details">
     <list>
         <t>WG -00 Addresses comments from Mike Heard and Joerg Deutschmann.</t>
         <t>WG -01 Adds a new trigger, path_changed, to align with the main draft, fixes formatting NiTs.</t>
-        <t>WG -02 Use uint64 for consistecy with qlog-quic-events, expand congestion_window_limited trigger name, suggested by Nicolai Fischer.</t>
+        <t>WG -02 Use uint64 for consistency with qlog-quic-events, expand congestion_window_limited trigger name, suggested by Nicolai Fischer.</t>
+        <t>WG -03 Refer to RFC for Careful Resume.</t>
     </list>
 </section> <!-- End of Revisions -->
 
