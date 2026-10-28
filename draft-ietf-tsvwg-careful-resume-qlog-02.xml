@@ -90,10 +90,10 @@ specify just the year. -->
 
 <middle>
 <section anchor="sec-introduction" title="Introduction">
- <t> This document defines a way to provide logging for Careful Resume<xref target="RFC.9959"></xref>
+ <t> This document defines a way to provide logging for Careful Resume<xref target="RFC9959"></xref>
      when used with QUIC <xref target="RFC9000"></xref><xref target="RFC9002"></xref>.
  </t>
-    <t><xref target="RFC.9959"></xref> defines a
+    <t><xref target="RFC9959"></xref> defines a
     Congestion Control (CC) mechanism
     called Careful Resume, which is expected to
     reduce the time to complete a transfer
@@ -435,8 +435,9 @@ filing system or remote ones accessed by http (http://domain/dir/... ).-->
         <!-- <?rfc include="reference.RFC.9001.xml"?> -->
         <?rfc include="reference.RFC.8610.xml"?>
         <?rfc include="reference.RFC.9959.xml"?>
-        <?rfc include="reference.I-D.ietf-quic-qlog-quic-evenqlog-main-schema.xml"?>
+        
         <?rfc include="reference.I-D.ietf-quic-qlog-quic-events.xml"?>
+        <?rfc include="reference.I-D.ietf-quic-qlog-main-schema.xml"?>
     </references>
 
     <references title="Informative References">
